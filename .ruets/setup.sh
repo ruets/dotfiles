@@ -13,6 +13,10 @@ toInstall = (
   "fish"
   "starship"
   "tmux"
+
+  "npm"
+  "nodejs"
+  "python-pipx"
   "libqalculate"
   "texlive-binextra"
   
@@ -39,6 +43,7 @@ toInstall = (
   "responsively"
   "qdirstat"
   "inkscape"
+  "eog"
 )
 
 git clone $RUETS_GIT_URL $DOTFILES_DIR
@@ -48,10 +53,9 @@ chmod +x $DOTFILES_DIR/setup.sh
 $DOTFILES_DIR/setup.sh
 
 yay --noconfirm -S "${toInstall[@]}"
-python -m pip install pipx
 pipx install elia-chat
 
-ln -s $DOTFILES_DIR/fish $HOME/.config
+ln -s $DOTFILES_DIR/fish/ $HOME/.config
 
 # starship preset nerd-fonts-symbols
 

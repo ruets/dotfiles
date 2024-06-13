@@ -28,6 +28,7 @@ toInstall = (
   "ollama"
   "lmstudio-appimage"
 
+  "1password"
   "google-chrome"
   "min-browser-bin"
   "spotify"

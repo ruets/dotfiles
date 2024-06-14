@@ -52,9 +52,9 @@ else
 fi
 
 if command -v xfreerdp >/dev/null 2>&1; then
-	xfreerdp -grab-keyboard /v:$vmip /size:100% /cert-ignore /u:$user /p:$password /d: /dynamic-resolution /gfx-h264:avc444 +gfx-progressive /f &
+	xfreerdp -grab-keyboard /v:$vmip /size:100% /cert-ignore /u:$user /p:$password /d: /dynamic-resolution /gfx-h264:avc444 +gfx-progressive &
 elif command -v xfreerdp3 >/dev/null 2>&1; then
-	xfreerdp3 -v:$vmip -u:$user -p:$password -d: -dynamic-resolution /cert:ignore /f /gfx:AVC444 &
+	xfreerdp3 -v:$vmip -u:$user -p:$password -d: -dynamic-resolution /cert:ignore /gfx:AVC444 &
 else
 	echo "'xfreerdp' or 'xfreerdp3' command not found."
 fi

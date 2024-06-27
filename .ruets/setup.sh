@@ -56,6 +56,7 @@ yay --noconfirm -S "${toInstall[@]}"
 pipx install elia-chat
 
 ln -s $DOTFILES_DIR/fish/ $HOME/.config
+ln -s $DOTFILES_DIR/tmux.conf $HOME/.tmux.conf
 chsh -s /bin/fish
 
 # starship preset nerd-fonts-symbols

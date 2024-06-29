@@ -165,6 +165,16 @@ window#waybar.empty #window {
 #custom-system,
 #custom-hyprshade,
 #custom-hypridle,
+#custom-quicklink1,
+#custom-quicklink2,
+#custom-quicklink3,
+#custom-quicklink4,
+#custom-quicklink5,
+#custom-quicklink6,
+#custom-quicklink7,
+#custom-quicklink8,
+#custom-quicklink9,
+#custom-quicklink10,
 #custom-waybarthemes {
     margin-right: 23px;
     font-size: 20px;
@@ -203,10 +213,11 @@ window#waybar.empty #window {
 
 #custom-ml4w-welcome {
     margin-right: 12px;
-    background-image: url("../assets/ml4w-icon.png");
-    background-repeat: no-repeat;
+    background-image: url("../assets/ml4w-icon.svg");
     background-position: center;
-    padding-right: 24px;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    padding-right: 20px;
 }
 
 #custom-ml4w-hyprland-settings {
@@ -219,10 +230,11 @@ window#waybar.empty #window {
 
 #custom-chatgpt {
     margin-right: 12px;
-    background-image: url("../assets/ai-icon-20.png");
+    background-image: url("../assets/openai.svg");
     background-repeat: no-repeat;
     background-position: center;
-    padding-right: 24px;
+    background-size: contain; 
+    padding-right: 16px;
 }
 
 /* -----------------------------------------------------

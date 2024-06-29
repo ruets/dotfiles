@@ -1,5 +1,18 @@
+Version 2.9.2
+https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.2
+--------------------------------------------------------
+- Works with Hyprland 0.41.2
+- Introducing waypaper as new wallpaper selector
+- Wallpaper cache for generated wallpaper variants. Will speed up the change between wallpapers if cached files exists. https://gitlab.com/stephan-raabe/dotfiles/-/wikis/Home/Wallpapers#wallpaper-cache
+- You can define custom quicklinks in waybar: https://gitlab.com/stephan-raabe/dotfiles/-/wikis/Home/Waybar#define-your-quicklinks
+- New SVG icons in waybar for ML4W and ChatGPT
+- Default waybar theme changed to ml4w-blur/white
+- Alacritty: selected text will be copied to the primary clipboard
+- General/standard Hyprland environment configuration moved to ml4w.conf (will be re-used in kvm.conf and nvidia.conf)
+- The time format in hyprlock is now aligned with the waybar clock time format that is defined in the ML4W Settings App
+
 Version 2.9.1.2
-https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.1.1
+https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.1.2
 --------------------------------------------------------
 - Workspaces module in waybar updated to enable scroll to change the workspace https://gitlab.com/stephan-raabe/dotfiles/-/merge_requests/114
 - More functions deactivated in Game Mode (SUPER+ALT+G)

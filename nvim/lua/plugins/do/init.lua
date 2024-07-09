@@ -18,7 +18,7 @@ return {
       winbar = true,
       doing_prefix = "Doing: ",
       store = {
-        auto_create_file = true, -- automatically create a .do_tasks when calling :Do
+        auto_create_file = false, -- automatically create a .do_tasks when calling :Do
         file_name = ".do_tasks",
       },
     },

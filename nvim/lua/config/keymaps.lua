@@ -3,6 +3,7 @@
 -- Add any additional keymaps here
 local wk = require("which-key")
 wk.register({
+  ["<leader>m"] = { name = "+multiple cursors" },
   ["<leader>l"] = { name = "+lazy"}
 })
 

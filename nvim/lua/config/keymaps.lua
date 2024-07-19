@@ -19,9 +19,9 @@ local cmp = require'cmp'
 cmp.setup({
   mapping = {
     ['<CR>'] = cmp.config.disable,
-    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'}),
-    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'}),
-    ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item
+    ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'}),
+    ['<S-Tab>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'}),
+    ['<Right>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item
     ['<A-c>'] = cmp.mapping.complete(),
   },
 })

@@ -21,7 +21,7 @@ cmp.setup({
     ['<CR>'] = cmp.config.disable,
     ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'}),
     ['<S-Tab>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'}),
-    ['<Right>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item
+    ['<C-Right>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item
     ['<A-c>'] = cmp.mapping.complete(),
   },
 })

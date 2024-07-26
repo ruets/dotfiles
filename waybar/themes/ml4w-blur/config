@@ -51,9 +51,7 @@
         "battery", 
         "network",
         "group/hardware",
-        "custom/cliphist",
-        "custom/hypridle",
-        "custom/hyprshade",
+        "group/tools",
         "custom/exit",
         "custom/ml4w-welcome",
         "clock"

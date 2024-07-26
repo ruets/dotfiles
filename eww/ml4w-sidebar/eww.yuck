@@ -72,8 +72,8 @@
 ;; ** Windows *************************************************************************
 
 (defwindow close
-           :geometry (geometry :x "455px"
-                               :y "-7px"
+           :geometry (geometry :x "20px"
+                               :y "20px"
                                :width "44px"
                                :height "44px"
                                :anchor "top right")
@@ -82,8 +82,8 @@
 (close))
 
 (defwindow ml4wlauncher
-           :geometry (geometry :x "5px"
-                               :y "5px"
+           :geometry (geometry :x "30px"
+                               :y "30px"
                                :width "480px"
                                :anchor "top right")
            :stacking "fg"

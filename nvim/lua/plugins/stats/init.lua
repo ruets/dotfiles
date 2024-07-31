@@ -23,5 +23,7 @@ return {
         telemetry_endpoint = "" -- you'll need to start the restapi for this feature
       })
     end
-  }
+  },
+
+  { 'juansalvatore/git-dashboard-nvim', dependencies = { 'nvim-lua/plenary.nvim' }, enabled = false },
 }

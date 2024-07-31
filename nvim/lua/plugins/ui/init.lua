@@ -17,5 +17,29 @@ return {
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
     }
-  }
+  },
+
+  { "NStefan002/screenkey.nvim", lazy = false, version = "*" },
+
+  {
+    "Pheon-Dev/pigeon",
+    event = "",
+    config = function()
+      local config = {
+        enabled = true,
+        os = "linux", -- linux, windows, osx
+        plugin_manager = "lazy", -- lazy, packer, paq, vim-plug
+        callbacks = {
+          killing_pigeon = nil,
+          respawning_pigeon = nil,
+        },
+        -- more config options here
+      }
+
+      require("pigeon").setup(config)
+    end,
+    enabled = false
+  },
+
+  { "MAHcodes/roll.nvim", dependencies = "RRethy/nvim-base16", enabled = false },
 }

@@ -1,6 +1,6 @@
 -- if true, don't actually load anything here and return an empty spec
 -- stylua: ignore
-local disabled = true
+local disabled = false
 if disabled then return {} end 
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
@@ -26,5 +26,17 @@ return {
       }
     },
     lazy = false
+  },
+
+  {
+    "NStefan002/visual-surround.nvim",
+    config = function()
+      require("visual-surround").setup({
+        -- your config
+      })
+    end,
+    -- or if you don't want to change defaults
+    -- config = true
+    enabled = false
   }
 }

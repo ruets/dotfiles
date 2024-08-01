@@ -1,6 +1,6 @@
 -- if true, don't actually load anything here and return an empty spec
 -- stylua: ignore
-local disabled = false
+local disabled = true
 if disabled then return {} end 
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
@@ -25,7 +25,8 @@ return {
         "~/%.vault-crypt-files/.",
       }
     },
-    lazy = false
+    lazy = false,
+    enabled = false
   },
 
   {

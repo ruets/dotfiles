@@ -4,26 +4,26 @@ local disabled = false
 if disabled then return {} end
 
 -- enabled games
-local enable_snake = true
-local enable_tetris = true
+local enable_snake = false
+local enable_tetris = false
 
 local enable_minesweeper = true
 local enable_sudoku = true
-local enable_15puzzle = true
-local enable_2048 = true
+local enable_15puzzle = false
+local enable_2048 = false
 
-local enable_playtime = true
-local enable_blackjack = true
+local enable_playtime = false
+local enable_blackjack = false
 
-local enable_pond = true
-local enable_td = true
-local enable_killersheep = true
+local enable_pond = false
+local enable_td = false
+local enable_killersheep = false
 local enable_lasersinc = false
 local enable_rogue = false
 
 local enable_vim_be_good = false
 local enable_make_like_a_code = false
-local enable_speedtyper = true
+local enable_speedtyper = false
 
 local enable_cellular_automaton = true
 local enable_hacker = false

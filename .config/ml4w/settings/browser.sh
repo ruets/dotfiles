@@ -1,1 +1,1 @@
-firefox
+google-chrome-stable --enable-features=TouchpadOverscrollHistoryNavigation

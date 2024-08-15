@@ -27,10 +27,13 @@
     // Modules Left
     "modules-left": [
         "custom/appmenu",
+        "custom/windowsvm",
         "group/links",
+        "custom/spotify",
         "group/settings",
         //"wlr/taskbar",
         "group/quicklinks",
+        "tray",
         "hyprland/window",
         "custom/empty"
     ],
@@ -50,7 +53,6 @@
         "network",
         "group/hardware",
         "group/tools",
-        "tray",
         "custom/exit",
         "custom/ml4w-welcome",
         "clock"

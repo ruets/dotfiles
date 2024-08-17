@@ -11,13 +11,15 @@
 
 /* ---- Configuration ---- */
 configuration {
-    modi:                       "drun,run";
+    modi:                       "drun,run,ssh,filebrowser,recursivebrowser";
     font:                       "Fira Sans 11";
     show-icons:                 true;
     icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
+    display-ssh:                "SSH";
     display-filebrowser:        "FILES";
+    display-recursivebrowser:   "FILESR";
     display-window:             "WINDOW";
 	drun-display-format:        "{name}";
     hover-select:               false;

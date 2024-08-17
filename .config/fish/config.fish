@@ -29,9 +29,9 @@ alias ls='eza --icons'
 alias lsa='eza -a --icons'
 alias ll='eza -l --icons'
 alias lla='eza -al --icons'
-alias lt='eza - --tree --level=1 --icons'
+alias lt='eza --tree --level=1 --icons'
 alias lta='eza -a --tree --level=1 --icons'
-alias lT='eza - --tree --icons'
+alias lT='eza --tree --icons'
 alias lTa='eza -a --tree --icons'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
@@ -93,15 +93,15 @@ alias setkb='setxkbmap fr;echo "Keyboard set back to fr."'
 # -----------------------------------------------------
 # VIRTUAL MACHINE
 # -----------------------------------------------------
-alias vm='~/dotfiles/scripts/launchvm.sh'
-alias lg='~/dotfiles/scripts/looking-glass.sh'
+alias vm='~/.config/ml4w/scripts/launchvm.sh'
+alias lg='~/.config/ml4w/scripts/looking-glass.sh'
 
 # -----------------------------------------------------
 # EDIT CONFIG FILES
 # -----------------------------------------------------
-alias confq='$EDITOR ~/dotfiles/qtile/config.py'
-alias confp='$EDITOR ~/dotfiles/picom/picom.conf'
-alias confb='$EDITOR ~/dotfiles/fish/config.fish'
+alias confq='$EDITOR ~/.config/qtile/config.py'
+alias confp='$EDITOR ~/.config/picom/picom.conf'
+alias confb='$EDITOR ~/.config/fish/config.fish'
 
 # -----------------------------------------------------
 # EDIT NOTES

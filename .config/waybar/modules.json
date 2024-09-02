@@ -20,7 +20,7 @@
       "default": ""
     },
     "persistent-workspaces": {
-      "*": 5
+            "*": 5
     }
   },
 
@@ -112,6 +112,13 @@
     "format": "",
     "on-click": "~/.config/ml4w/apps/ML4W_Dotfiles_Settings-x86_64.AppImage",
     "tooltip-format": "ML4W Dotfiles Settings"
+  },
+
+  // Keybindings
+  "custom/keybindings": {
+    "format": "",
+    "on-click": "~/.config/hypr/scripts/keybindings.sh",
+    "tooltip": false
   },
 
   // Spotify

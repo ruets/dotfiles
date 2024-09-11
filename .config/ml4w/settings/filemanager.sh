@@ -1,1 +1,1 @@
-nautilus
+alacritty -e ranger

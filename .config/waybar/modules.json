@@ -20,7 +20,7 @@
       "default": ""
     },
     "persistent-workspaces": {
-            "*": 5
+      "*": 5
     }
   },
 
@@ -152,6 +152,30 @@
     "tooltip": false
   },
 
+  // RDP
+  "custom/rdp": {
+    "format": "  ",
+    "on-click": "~/.config/ml4w/scripts/launchrdp.sh",
+    "tooltip": false
+  },
+
+  // scrcpy
+  "custom/scrcpy": {
+    "format": " 󰄜  ",
+    "on-click": "scrcpy",
+    "tooltip": false
+  },
+
+  // Group Remote
+  "group/remote": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": true
+    },
+    "modules": ["custom/windowsvm", "custom/rdp", "custom/scrcpy"]
+  },
   // Rofi Application Launcher
   "custom/appmenu": {
     // START APPS LABEL
@@ -284,10 +308,7 @@
   // Group Links
   "group/links": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/chatgpt",
-      "custom/empty"      
-    ]
+    "modules": ["custom/chatgpt", "custom/empty"]
   },
 
   // Group Settings
@@ -298,11 +319,7 @@
       "children-class": "not-memory",
       "transition-left-to-right": true
     },
-    "modules": [
-      "custom/settings",
-      "custom/waybarthemes",
-      "custom/wallpaper"
-    ]
+    "modules": ["custom/settings", "custom/waybarthemes", "custom/wallpaper"]
   },
 
   // Network

@@ -97,6 +97,11 @@ alias vm='~/.config/ml4w/scripts/launchvm.sh'
 alias lg='~/.config/ml4w/scripts/looking-glass.sh'
 
 # -----------------------------------------------------
+# RDP
+# -----------------------------------------------------
+alias rdp='~/.config/ml4w/scripts/launchrdp.sh'
+
+# -----------------------------------------------------
 # EDIT CONFIG FILES
 # -----------------------------------------------------
 alias confq='$EDITOR ~/.config/qtile/config.py'

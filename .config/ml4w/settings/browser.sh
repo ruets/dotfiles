@@ -1,1 +1,2 @@
-google-chrome-stable --enable-features=TouchpadOverscrollHistoryNavigation
+google-chrome-stable --enable-features=TouchpadOverscrollHistoryNavigation $1
+

@@ -50,7 +50,9 @@
       "(.*) - Outlook": "$1",
       "(.*) Microsoft Teams": "$1"
     },
-    "separate-outputs": true
+    "separate-outputs": true,
+    "max-length": 25,
+    "tooltip-format": "dunstify \"$(hyprctl activewindow -j | jq -r .title)\""
   },
 
   // ML4W Welcome App
@@ -66,7 +68,12 @@
     "format": ""
   },
 
-  // Empty
+  // Space
+  "custom/space": {
+    "format": " "
+  },
+
+  // Tools
   "custom/tools": {
     "format": "",
     "tooltip-format": "Tools"
@@ -121,16 +128,6 @@
     "tooltip": false
   },
 
-  // Spotify
-  "custom/spotify": {
-    "exec": "python ~/.config/ml4w/scripts/mediaplayer.py --player spotify",
-    "format": "{}    ",
-    "return-type": "json",
-    "on-click": "playerctl play-pause",
-    "on-click-right": "playerctl next",
-    "on-click-middle": "playerctl previous"
-  },
-
   // ChatGPT Launcher
   "custom/chatgpt": {
     "format": " ",
@@ -152,30 +149,6 @@
     "tooltip": false
   },
 
-  // RDP
-  "custom/rdp": {
-    "format": "  ",
-    "on-click": "~/.config/ml4w/scripts/launchrdp.sh",
-    "tooltip": false
-  },
-
-  // scrcpy
-  "custom/scrcpy": {
-    "format": " 󰄜  ",
-    "on-click": "scrcpy",
-    "tooltip": false
-  },
-
-  // Group Remote
-  "group/remote": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 300,
-      "children-class": "not-memory",
-      "transition-left-to-right": true
-    },
-    "modules": ["custom/windowsvm", "custom/rdp", "custom/scrcpy"]
-  },
   // Rofi Application Launcher
   "custom/appmenu": {
     // START APPS LABEL
@@ -308,7 +281,13 @@
   // Group Links
   "group/links": {
     "orientation": "horizontal",
-    "modules": ["custom/chatgpt", "custom/empty"]
+    "modules": [
+      "custom/chatgpt",
+      "custom/protonmail",
+      "custom/space",
+      "custom/space",
+      "custom/empty"
+    ]
   },
 
   // Group Settings
@@ -412,5 +391,68 @@
       ""
     ],
     "scroll-step": 1
+  },
+
+  ///////////////////////
+  /// CUSTOMS MODULES ///
+  ///////////////////////
+
+  // ProtonMail
+  "custom/protonmail": {
+    "exec": "bar-protonmail",
+    "return-type": "json",
+    "interval": 10,
+    "tooltip": false,
+    "on-click": "~/.config/ml4w/settings/mail.sh"
+  },
+
+  // RDP
+  "custom/rdp": {
+    "format": "  ",
+    "on-click": "~/.config/ml4w/scripts/launchrdp.sh",
+    "tooltip": false
+  },
+
+  // scrcpy
+  "custom/scrcpy": {
+    "format": " 󰄜  ",
+    "on-click": "scrcpy",
+    "tooltip": false
+  },
+
+  // Spotify
+  "custom/spotify": {
+    "exec": "python ~/.config/ml4w/scripts/mediaplayer.py --player spotify",
+    "format": "{}    ",
+    "return-type": "json",
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous"
+  },
+
+  //////////////////////
+  /// CUSTOMS GROUPS ///
+  //////////////////////
+
+  // Group Remote
+  "group/remote": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": true
+    },
+    "modules": ["custom/windowsvm", "custom/rdp", "custom/scrcpy"]
+  },
+
+  // Group Audio
+  "group/audio": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": false
+    },
+    "modules": ["pulseaudio", "custom/spotify"]
   }
 }

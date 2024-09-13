@@ -41,6 +41,7 @@ alias matrix='cmatrix'
 alias wifi='nmtui'
 alias dot="cd ~/dotfiles"
 alias cleanup='~/.config/ml4w/scripts/cleanup.sh'
+alias combinedaudio='pactl load-module module-combine-sink'
 
 # -----------------------------------------------------
 # ML4W Apps

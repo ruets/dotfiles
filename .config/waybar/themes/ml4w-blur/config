@@ -30,6 +30,7 @@
         "group/remote",
         "group/links",
         "group/settings",
+        "custom/rotation",
         //"wlr/taskbar",
         "group/quicklinks",
         "tray",

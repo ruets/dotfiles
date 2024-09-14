@@ -430,6 +430,13 @@
     "on-click-middle": "playerctl previous"
   },
 
+  // Rotation toggler
+  "custom/rotation": {
+    "format": "󰑵  ",
+    "on-click": "~/.config/hypr/scripts/toggle-rotation.sh",
+    "tooltip": false
+  },
+
   //////////////////////
   /// CUSTOMS GROUPS ///
   //////////////////////

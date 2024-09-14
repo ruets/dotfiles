@@ -19,7 +19,13 @@ fi
 if [ "$CURRENT_TRANSFORM" -eq 0 ]; then
   # Si la rotation est normale (0), on la change à 90°
   hyprctl keyword monitor ,transform,1
+
+  hyprctl keyword input:touchdevice:transform 1
+  hyprctl keyword input:tablet:transform 1
 else
   # Sinon, on la remet à normale (0)
   hyprctl keyword monitor ,transform,0
+
+  hyprctl keyword input:touchdevice:transform 0
+  hyprctl keyword input:tablet:transform 0
 fi

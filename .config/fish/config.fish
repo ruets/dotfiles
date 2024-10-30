@@ -35,7 +35,9 @@ alias lT='eza --tree --icons --group-directories-first'
 alias lTa='eza -a --tree --icons --group-directories-first':
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
+alias sv='sudoedit'
 alias vim='$EDITOR'
+alias svim='sudoedit'
 alias ts='~/.config/ml4w/scripts/snapshot.sh'
 alias matrix='cmatrix'
 alias wifi='nmtui'
@@ -46,13 +48,18 @@ alias combinedaudio='pactl load-module module-combine-sink'
 # -----------------------------------------------------
 # ML4W Apps
 # -----------------------------------------------------
-alias ml4w='~/.config/ml4w/apps/ML4W_Welcome-x86_64.AppImage'
-alias ml4w-settings='~/.config/ml4w/apps/ML4W_Dotfiles_Settings-x86_64.AppImage'
+alias ml4w='com.ml4w.welcome'
+alias ml4w-settings='com.ml4w.dotfilessettings'
+alias ml4w-hyprland='com.ml4w.hyprland.settings'
 alias ml4w-sidebar='~/.config/ml4w/eww/ml4w-sidebar/launch.sh'
-alias ml4w-hyprland='~/.config/ml4w/apps/ML4W_Hyprland_Settings-x86_64.AppImage'
 alias ml4w-diagnosis='~/.config/ml4w/hypr/scripts/diagnosis.sh'
 alias ml4w-hyprland-diagnosis='~/.config/ml4w/hypr/scripts/diagnosis.sh'
 alias ml4w-qtile-diagnosis='~/.config/ml4w/qtile/scripts/diagnosis.sh'
+
+# -----------------------------------------------------
+# Apps
+# -----------------------------------------------------
+alias pvpn='protonvpn-cli'
 
 # -----------------------------------------------------
 # Window Managers
@@ -60,6 +67,13 @@ alias ml4w-qtile-diagnosis='~/.config/ml4w/qtile/scripts/diagnosis.sh'
 
 alias Qtile='startx'
 # Hyprland with Hyprland
+
+# -----------------------------------------------------
+# NPM DEV TOOLS
+# -----------------------------------------------------
+alias viteinit="npm create vite"
+alias addelectron="~/.config/ml4w/scripts/browser.sh https://medium.com/@utkuy.ceng/converting-your-react-app-to-an-electron-desktop-app-5efdafd15d7b"
+alias czinit="commitizen init cz-conventional-changelog --save-dev --save-exact"
 
 # -----------------------------------------------------
 # GIT

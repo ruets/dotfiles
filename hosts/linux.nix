@@ -7,6 +7,7 @@
     ../home/cli/cli.nix
     ../home/desktop/desktop.nix
 
+    ../home/languages/rust.nix
     ../home/languages/texlive.nix
   ];
 }

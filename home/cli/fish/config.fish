@@ -41,7 +41,7 @@ alias svim='sudoedit'
 alias ts='~/.config/ml4w/scripts/snapshot.sh'
 alias matrix='cmatrix'
 alias wifi='nmtui'
-alias dot="cd ~/dotfiles"
+alias dot="cd ~/.config/home-manager"
 alias cleanup='~/.config/ml4w/scripts/cleanup.sh'
 alias combinedaudio='pactl load-module module-combine-sink'
 

@@ -3,6 +3,9 @@
 {
   imports = [
     ../config/config.nix
-    ../home/git/git.nix
+
+    ../home/cli/cli.nix
+
+    ../home/languages/texlive.nix
   ];
 }

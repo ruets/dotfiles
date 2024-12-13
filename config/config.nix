@@ -9,4 +9,12 @@
     homeDirectory = "/home/ruets";
     language.base = "fr_FR.UTF-8";
   };
+
+  nix = {
+    package = pkgs.nixStable;
+
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+  };
 }

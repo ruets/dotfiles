@@ -6,6 +6,7 @@
 
     ../home/cli/cli.nix
 
+    ../home/languages/python.nix
     ../home/languages/rust.nix
     ../home/languages/texlive.nix
   ];

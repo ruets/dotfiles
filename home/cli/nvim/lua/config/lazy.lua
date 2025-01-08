@@ -14,6 +14,7 @@ require("lazy").setup({
     -- import/override with your plugins
     { import = "plugins" },
   },
+  lockfile = "~/.lazy-lock.json",
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
     -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
@@ -59,10 +60,7 @@ require("lazy").setup({
           local plugins_md = {}
           for plugin, spec in pairs(plugins) do
             if spec.url then
-              table.insert(
-                plugins_md,
-                ("- [%s](%s)"):format(plugin, spec.url:gsub("%.git$", ""))
-              )
+              table.insert(plugins_md, ("- [%s](%s)"):format(plugin, spec.url:gsub("%.git$", "")))
             end
           end
 
@@ -85,7 +83,7 @@ require("lazy").setup({
 
           local file, err = io.open(vim.fn.stdpath("config") .. "/README.md", "w")
           if not file then
-              error(err)
+            error(err)
           end
 
           file:write(table.concat(file_content, "\n"))

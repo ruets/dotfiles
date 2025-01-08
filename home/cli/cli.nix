@@ -49,6 +49,8 @@
   home.packages = with pkgs; [
     gum
     libqalculate
+
+    commitizen
   ];
 
   home.file = {

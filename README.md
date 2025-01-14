@@ -5,7 +5,6 @@ waydroid
 gitkraken
 npm / node
 ( adb-wifi
-( commitizen
 ( gitignore
 obsidian
 pvpn-cli
@@ -49,6 +48,7 @@ qemu
 virt-manager
 elia-chat (pipx)
 btop
+warp terminal
 
 script :
 
@@ -60,7 +60,6 @@ script :
 - ask for wallpapers & scripts repos (https://github.com/mylinuxforwork/wallpaper)
 - ask for installer by OS (yay for example)
   sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
-
 
 ```
 script nix (nixos.com)
@@ -74,3 +73,11 @@ cd home manager config dir
 
 home-manager switch --flake ./#wsl --extra-experimental-features "nix-command flakes"
 ```
+
+For windows :
+
+- powertoys settings
+- quake mode terminal (on CTR+ALT+T)
+
+https://render.com/docs/cli
+ADB

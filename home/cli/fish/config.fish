@@ -41,9 +41,14 @@ alias svim='sudoedit'
 alias ts='~/.config/ml4w/scripts/snapshot.sh'
 alias matrix='cmatrix'
 alias wifi='nmtui'
-alias dot="cd ~/.config/home-manager"
 alias cleanup='~/.config/ml4w/scripts/cleanup.sh'
 alias combinedaudio='pactl load-module module-combine-sink'
+
+# -----------------------------------------------------
+# Nix HomeManager
+# -----------------------------------------------------
+alias dot='cd ~/.config/home-manager'
+alias reloadNix='dot; home-manager switch --flake ./#wsl --extra-experimental-features "nix-command flakes"'
 
 # -----------------------------------------------------
 # ML4W Apps

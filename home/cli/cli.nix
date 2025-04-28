@@ -47,6 +47,7 @@
   };
 
   home.packages = with pkgs; [
+    less
     gum
     libqalculate
 

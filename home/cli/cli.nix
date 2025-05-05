@@ -19,6 +19,7 @@
 
     git = {
       enable = true;
+      lfs.enable = true;
 
       userName = "ruets";
       userEmail = "dev@ruets.pro";

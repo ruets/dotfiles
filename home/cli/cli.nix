@@ -11,6 +11,7 @@
 
     neovim.enable = true;
     ripgrep.enable = true;
+    fzf.enable = true;
 
     ranger.enable = true;
     lazygit.enable = true;
@@ -28,6 +29,22 @@
         core.editor = "nvim";
         init = { defaultBranch = "main"; };
       };
+    };
+    
+    gh = {
+      enable = true;
+      extensions = [
+        # pkgs.gh-copilot
+        # pkgs.gh-dash
+        # pkgs.gh-markdown-preview
+        # pkgs.gh-eco
+        # pkgs.gh-branch
+        # pkgs.gh-notify
+        # pkgs.gh-cp
+        # pkgs.gh-lazy
+        # pkgs.gh-repo-stats
+
+      ];
     };
 
     tmux = {
@@ -52,6 +69,7 @@
     gum
     libqalculate
 
+    lazycli
     commitizen
   ];
 

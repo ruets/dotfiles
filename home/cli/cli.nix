@@ -17,6 +17,7 @@
     lazygit.enable = true;
     htop.enable = true;
     btop.enable = true;
+    adb.enable = true;
 
     git = {
       enable = true;
@@ -69,8 +70,20 @@
     gum
     libqalculate
 
+    w3m
+    nnn
+
+    gcc
+
+    gitleaks
     lazycli
     commitizen
+
+    fprintd
+    cmatrix
+
+    _1password-cli
+    spotify-player
   ];
 
   home.file = {

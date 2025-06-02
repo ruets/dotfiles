@@ -1,54 +1,14 @@
 packages :
 
-waydroid
-1password
-gitkraken
 npm / node
 ( adb-wifi
 ( gitignore
-obsidian
+
 pvpn-cli
-w3m
-grip (md)
-networkmanager (nmtui, nm-applet)
-barrier
-discord
-eog
-gnome-disks
-onedriver
-gimp
-inskape
-kooha
-lutris
-lm studio
-meld (diff tool)
 min browser
-missioncenter
-obs studio
-qdirstat
-responsively
-galaxy buds client
-rnote
-showmethekey
-smile
-spotify
-virt-manager
-zathura
-nnn
-mpv video player
 pacseek
-scrcpy
 bar-protonmail
 spotify-tui
-eza
-fprint
-lazygit
-cmatrix
-qemu
-virt-manager
-elia-chat (pipx)
-btop
-warp terminal
 
 script :
 

@@ -55,9 +55,16 @@
 
     waypaper
     nwg-dock-hyprland
+    smile
 
     ags
     dunst
+
+    eog
+    meld
+
+    networkmanager
+    network-manager-applet
   ];
 
   home.file = {

@@ -10,6 +10,7 @@
 
     ../home/languages/node.nix
     ../home/languages/python.nix
+    ../home/languages/java.nix
     ../home/languages/rust.nix
     ../home/languages/texlive.nix
   ];

@@ -15,16 +15,16 @@
       pkgs = import nixpkgs { inherit system; };
     in {
       homeConfigurations = {
-        linux = home-manager.lib.homeManagerConfiguration {
+        gui = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            ./hosts/linux.nix
+            ./hosts/gui.nix
           ];
         };
-        wsl = home-manager.lib.homeManagerConfiguration {
+        cli = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            ./hosts/wsl.nix
+            ./hosts/cli.nix
           ];
         };
       };

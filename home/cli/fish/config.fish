@@ -48,8 +48,8 @@ alias combinedaudio='pactl load-module module-combine-sink'
 # Nix HomeManager
 # -----------------------------------------------------
 alias dot='cd ~/.config/home-manager'
-alias reloadNixWSL='dot; home-manager switch -b backup --flake ./#wsl --extra-experimental-features "nix-command flakes"'
-alias reloadNixLinux='dot; home-manager switch -b backup --flake ./#linux --extra-experimental-features "nix-command flakes"'
+alias reloadNixCLI='dot; home-manager switch -b backup --flake ./#cli --extra-experimental-features "nix-command flakes"'
+alias reloadNixGUI='dot; home-manager switch -b backup --flake ./#gui --extra-experimental-features "nix-command flakes"'
 
 # -----------------------------------------------------
 # ML4W Apps

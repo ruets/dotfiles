@@ -17,7 +17,6 @@
     lazygit.enable = true;
     htop.enable = true;
     btop.enable = true;
-    adb.enable = true;
 
     git = {
       enable = true;

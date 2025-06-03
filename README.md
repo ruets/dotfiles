@@ -4,6 +4,7 @@ npm / node
 ( adb-wifi
 ( gitignore
 
+adb
 pvpn-cli
 min browser
 pacseek

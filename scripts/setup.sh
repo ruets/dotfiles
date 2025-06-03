@@ -10,10 +10,9 @@ AVAILABLE_CONFIGS=(
 )
 
 DOTFILES_REPO="git@github.com:ruets/dotfiles"
-GITHUB_REPOS=(
-  "https://github.com/tweag/nickel"
-  "https://github.com/nix-community/home-manager"
-  "https://github.com/nix-dot-dev/getting-started"
+EXTRA_REPOS=(
+  "git@github.com:mylinuxforwork/wallpaper"
+  "git@github.com:ruets/scripts"
 )
 
 REQUIRED_COMMANDS=(
@@ -142,7 +141,7 @@ fi
 gum style "  -> 4.1 Clone extra repos"
 
 if gum confirm "🐙 Do you want to clone extra GitHub repositories?"; then
-  SELECTED_REPOS=$(printf '%s\n' "${GITHUB_REPOS[@]}" | gum filter --placeholder "Select repositories to clone" --no-limit)
+  SELECTED_REPOS=$(printf '%s\n' "${EXTRA_REPOS[@]}" | gum filter --placeholder "Select repositories to clone" --no-limit)
 
   if [[ -z "$SELECTED_REPOS" ]]; then
     echo "🚫 No repositories selected. Skipping."

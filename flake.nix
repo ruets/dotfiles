@@ -27,7 +27,18 @@
             ./hosts/cli.nix
           ];
         };
+        hostinger = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./hosts/hostinger.nix
+          ];
+        };
+        wsl = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./hosts/wsl.nix
+          ];
+        };
       };
-
     };
 }

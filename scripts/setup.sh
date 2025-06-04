@@ -4,11 +4,6 @@ set -euo pipefail
 
 # === CONSTANTS ===
 DOTFILES_DIR="$HOME/.config/home-manager"
-AVAILABLE_CONFIGS=(
-  "cli"
-  "gui"
-)
-
 DOTFILES_REPO="git@github.com:ruets/dotfiles"
 EXTRA_REPOS=(
   "git@github.com:ruets/scripts"
@@ -20,6 +15,7 @@ REQUIRED_COMMANDS=(
   git
   xz
 )
+
 NIX_PACKAGES=(
   gum
 )
@@ -53,25 +49,30 @@ load_nix_profile() {
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 }
 
-nix_package_installed() {
-  nix-env -q "$1" >/dev/null 2>&1
-}
-
 winget_package_installed() {
   winget.exe list --name "$1" | grep -q "$1"
 }
 
 # === MAIN STEP FUNCTIONS ===
 require_admin_privileges() {
+  if [ "$(id -u)" -eq 0 ]; then
+    echo "🔐 Already running as root, no need to sudo."
+    IS_ROOT=true
+    return 0
+  fi
+
+  IS_ROOT=false
   echo "🔐 This script needs administrative privileges to perform certain actions."
   echo "    Please enter your password when prompted below.\n"
   sudo -v
-  (while true; do
-    sudo -v
-    sleep 60
-  done) &
+
+  (
+    while true; do
+      sudo -v
+      sleep 60
+    done
+  ) &
   sudo_keeppid=$!
-  trap 'kill $sudo_keeppid' EXIT
 }
 
 check_user_var() {
@@ -84,7 +85,12 @@ check_user_var() {
 }
 
 ensure_home_symlink() {
-  [ -d "/home/$USER" ] || sudo ln -s "$HOME" "/home/$USER"
+  if [ "$IS_ROOT" = "true" ]; then
+    [ -d "/home/$USER" ] || ln -s "$HOME" "/home/$USER"
+  else
+    [ -d "/home/$USER" ] || sudo ln -s "$HOME" "/home/$USER"
+  fi
+
   echo "✅ /home/$USER is ready."
 }
 
@@ -123,7 +129,7 @@ install_home_manager() {
 
 install_nix_packages() {
   for pkg in "${NIX_PACKAGES[@]}"; do
-    if ! nix_package_installed "$pkg"; then
+    if ! command_exists "$pkg"; then
       echo "📦 Installing nix package: $pkg"
       nix-env -iA "nixpkgs.$pkg"
       echo "✅ nix package $pkg installed successfully."
@@ -176,19 +182,22 @@ configure_wsl_environment() {
 }
 
 setup_dotfiles() {
-  SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-  if git -C "$SCRIPT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    if [ "$SCRIPT_DIR" != "$DOTFILES_DIR" ]; then
+  if git -C "$DOTFILES_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    origin_url="$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null)"
+    if [ "$origin_url" = "$DOTFILES_REPO" ]; then
+      echo "✅ Dotfiles repository already exists at $DOTFILES_DIR and matches $DOTFILES_REPO."
+      return
+    else
+      echo "⚠️ Dotfiles directory exists but origin doesn't match. Replacing..."
       rm -rf "$DOTFILES_DIR"
-      mv "$SCRIPT_DIR" "$DOTFILES_DIR"
-      echo "✅ Moved dotfiles from $SCRIPT_DIR to $DOTFILES_DIR."
     fi
-    echo "✅ Dotfiles repository is already in $DOTFILES_DIR."
   else
+    echo "📁 Dotfiles directory is not a git repository. Replacing..."
     rm -rf "$DOTFILES_DIR"
-    gum spin --title "🐙 Cloning $DOTFILES_REPO..." -- git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
-    echo "✅ Dotfiles repository cloned to $DOTFILES_DIR."
   fi
+
+  gum spin --title "📦 Cloning $DOTFILES_REPO..." -- git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+  echo "✅ Dotfiles repository cloned to $DOTFILES_DIR."
 }
 
 clone_extra_repos() {
@@ -217,13 +226,41 @@ clone_extra_repos() {
 }
 
 apply_home_manager_config() {
+  AVAILABLE_CONFIGS=($(nix eval .#homeConfigurations --apply builtins.attrNames --extra-experimental-features "nix-command flakes" | tr -d '[]"'))
   CHOICE=$(printf '%s\n' "${AVAILABLE_CONFIGS[@]}" | gum choose --header="Choose your Home Manager configuration")
   home-manager switch -b backup --flake "./#$CHOICE" --extra-experimental-features "nix-command flakes"
   echo "✅ Home Manager configuration $CHOICE applied."
 }
 
+# === CLEANUP ===
+cleanup() {
+  echo "🧹 Cleaning up..."
+  if [ -n "${sudo_keeppid-}" ]; then
+    kill "$sudo_keeppid"
+    echo "✅ Stopped sudo keep-alive process."
+  else
+    echo "🚫 No sudo keep-alive process found."
+  fi
+
+  if command_exists nix-env; then
+    for pkg in "${NIX_PACKAGES[@]}"; do
+      if nix-env -q "$pkg" >/dev/null 2>&1; then
+        echo "­🧹 Removing nix package: $pkg"
+        nix-env -e "$pkg"
+      fi
+    done
+    echo "✅ Nix packages cleanup done."
+  else
+    echo "🚫 nix-env not found, skipping Nix package cleanup."
+  fi
+
+  echo "✅ Cleanup complete."
+}
+
 # === MAIN ENTRYPOINT ===
 main() {
+  trap cleanup EXIT INT TERM
+
   echo "==> 1. Check environment and dependencies"
   require_admin_privileges
   check_user_var

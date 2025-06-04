@@ -73,6 +73,7 @@
     nnn
 
     gcc
+    jq
 
     gitleaks
     lazycli

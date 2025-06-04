@@ -1,13 +1,18 @@
 { config, pkgs, ... }:
 
-{
+let
+  user = let
+    envUser = builtins.getEnv "USER";
+  in
+    if envUser == "" then "ruets" else envUser;
+in{
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
 
   home = {
     stateVersion = "24.11";
-    username = "ruets";
-    homeDirectory = "/home/ruets";
+    username = user;
+    homeDirectory = "/home/${user}";
     language.base = "fr_FR.UTF-8";
   };
 

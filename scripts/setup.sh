@@ -4,10 +4,10 @@ set -euo pipefail
 
 # === CONSTANTS ===
 DOTFILES_DIR="$HOME/.config/home-manager"
-DOTFILES_REPO="git@github.com:ruets/dotfiles"
+DOTFILES_REPO="git@github.com:ruets/dotfiles.git"
 EXTRA_REPOS=(
-  "git@github.com:ruets/scripts"
-  "git@github.com:mylinuxforwork/wallpaper"
+  "git@github.com:ruets/scripts.git"
+  "git@github.com:mylinuxforwork/wallpaper.git"
 )
 
 REQUIRED_COMMANDS=(
@@ -212,7 +212,7 @@ clone_extra_repos() {
         TARGET_DIR="$HOME/$REPO_NAME"
 
         if [ -d "$TARGET_DIR" ]; then
-          echo "✅ Repository $REPO_NAME already exists at $TARGET_DIR"
+          echo "✅ Directory $TARGET_DIR already exists. Skipping clone for $REPO_NAME."
         else
           gum spin --title "🐙 Cloning $repo..." -- git clone "$repo" "$TARGET_DIR"
           echo "✅ Repository $REPO_NAME cloned to $TARGET_DIR"

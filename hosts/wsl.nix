@@ -8,7 +8,8 @@
 
     ../home/languages/java.nix
     ../home/languages/node.nix
-    ../home/languages/python.nix 
+    ../home/languages/python.nix
     ../home/languages/texlive.nix
+    ../home/languages/go.nix
   ];
 }

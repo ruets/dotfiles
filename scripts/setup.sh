@@ -32,6 +32,7 @@ WINGET_PACKAGES=(
   "Axosoft.GitKraken"
   "qBittorrent.qBittorrent"
   "Responsively.ResponsivelyApp"
+  "Docker.DockerDesktop"
 
   "Proton.ProtonMail"
   "Proton.ProtonVPN"
@@ -43,190 +44,211 @@ WINGET_PACKAGES=(
   "DebaucheeOpenSourceGroup.Barrier"
 )
 
-# === 1. Check environment and dependencies ===
-echo "==> 1. Check environment and dependencies"
-# == 1.0 Check if the scripts have admin privileges ==
-echo "  -> 1.0 Check if the scripts have admin privileges"
+# === UTILITY FUNCTIONS ===
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
 
-echo "🔐 This script needs administrative privileges to perform certain actions."
-echo "    Please enter your password when prompted below."
-echo ""
-sudo -v
+load_nix_profile() {
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+}
 
-(while true; do
+nix_package_installed() {
+  nix-env -q "$1" >/dev/null 2>&1
+}
+
+winget_package_installed() {
+  winget.exe list --name "$1" | grep -q "$1"
+}
+
+# === MAIN STEP FUNCTIONS ===
+require_admin_privileges() {
+  echo "🔐 This script needs administrative privileges to perform certain actions."
+  echo "    Please enter your password when prompted below.\n"
   sudo -v
-  sleep 60
-done) &
-sudo_keeppid=$!
-trap 'kill $sudo_keeppid' EXIT
+  (while true; do
+    sudo -v
+    sleep 60
+  done) &
+  sudo_keeppid=$!
+  trap 'kill $sudo_keeppid' EXIT
+}
 
-# == 1.1 Check if $USER is defined ==
-echo "  -> 1.1 Check if \$USER is defined"
-
-if [ -z "${USER-}" ]; then
-  export USER=$(whoami)
-  echo "✅ \$USER is set to '$USER'."
-else
-  echo "✅ \$USER is already set to '$USER'."
-fi
-
-# == 1.2 Check if /home/$USER exists ==
-echo "  -> 1.2 Check if /home/\$USER exists"
-if [ ! -d "/home/$USER" ]; then
-  sudo ln -s $HOME "/home/$USER"
-else
-  echo "✅ /home/$USER exists."
-fi
-
-# == 1.3 Verify required commands/tools ==
-echo "  -> 1.3 Verify required commands/tools"
-
-for cmd in "${REQUIRED_COMMANDS[@]}"; do
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "❌ Command '$cmd' is required but not found. Aborting."
-    exit 1
-  fi
-done
-
-echo "✅ All required commands are available."
-
-# === 2. Install Nix ===
-echo "==> 2. Install Nix"
-# == 2.1 Install Nix==
-echo "  -> 2.1 Install Nix"
-
-if ! command -v nix >/dev/null 2>&1; then
-  echo "📦 Installing Nix..."
-  sh <(curl -L https://nixos.org/nix/install) --daemon
-  echo "✅ Nix installed successfully."
-else
-  echo "✅ Nix is already installed."
-fi
-
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-
-# == 2.2 Install home-manager==
-echo "  -> 2.2 Install home-manager"
-
-if ! command -v home-manager >/dev/null 2>&1; then
-  echo "📦 Installing Home Manager..."
-  nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-  nix-channel --update
-  nix-shell '<home-manager>' -A install
-  echo "✅ Home Manager installed successfully."
-else
-  echo "✅ Home Manager already installed."
-fi
-
-# == 2.3 Install additional nix packages ==
-echo "  -> 2.3 Install additional nix packages"
-
-for pkg in "${NIX_PACKAGES[@]}"; do
-  if ! nix-env -q "$pkg" >/dev/null 2>&1; then
-    echo "📦 Installing nix package: $pkg"
-    nix-env -iA "nixpkgs.$pkg"
-    echo "✅ nix package $pkg installed successfully."
+check_user_var() {
+  if [ -z "${USER-}" ]; then
+    export USER=$(whoami)
+    echo "✅ \$USER is set to '$USER'."
   else
-    echo "✅ nix package $pkg is already installed."
+    echo "✅ \$USER is already set to '$USER'."
   fi
-done
+}
 
-# === 3. Configure environment for specific OS ===
-echo "==> 3. Configure environment for specific OS"
-# == 3.1 Apply WSL-specific Configuration ==
-echo "  -> 3.1 Apply WSL-specific configuration"
+ensure_home_symlink() {
+  [ -d "/home/$USER" ] || sudo ln -s "$HOME" "/home/$USER"
+  echo "✅ /home/$USER is ready."
+}
 
-IS_WSL=$(gum confirm "💻 Is this installation under WSL?" && echo "true" || echo "false")
+check_required_commands() {
+  for cmd in "${REQUIRED_COMMANDS[@]}"; do
+    command_exists "$cmd" || {
+      echo "❌ Command '$cmd' is required but not found. Aborting."
+      exit 1
+    }
+  done
+  echo "✅ All required commands are available."
+}
 
-if [[ "$IS_WSL" == "true" ]]; then
-  if command -v ssh.exe >/dev/null 2>&1; then
-    git config --global core.sshCommand "ssh.exe"
-    echo "✅ Git configured to use ssh.exe for WSL."
+install_nix() {
+  if ! command_exists nix; then
+    echo "📦 Installing Nix..."
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    echo "✅ Nix installed successfully."
   else
-    echo "🚫 Command ssh.exe is not found. Skipping git configuration."
+    echo "✅ Nix is already installed."
   fi
+  load_nix_profile
+}
 
-  if command -v winget.exe >/dev/null 2>&1; then
-    for pkg in "${WINGET_PACKAGES[@]}"; do
-      if ! winget.exe list --name "$pkg" | grep -q "$pkg"; then
-        echo "📦 Installing $pkg via winget..."
-        winget.exe install --id="$pkg" --silent --accept-source-agreements --accept-package-agreements
-        echo "✅ $pkg installed successfully."
+install_home_manager() {
+  if ! command_exists home-manager; then
+    echo "📦 Installing Home Manager..."
+    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
+    nix-shell '<home-manager>' -A install
+    echo "✅ Home Manager installed successfully."
+  else
+    echo "✅ Home Manager already installed."
+  fi
+}
+
+install_nix_packages() {
+  for pkg in "${NIX_PACKAGES[@]}"; do
+    if ! nix_package_installed "$pkg"; then
+      echo "📦 Installing nix package: $pkg"
+      nix-env -iA "nixpkgs.$pkg"
+      echo "✅ nix package $pkg installed successfully."
+    else
+      echo "✅ nix package $pkg is already installed."
+    fi
+  done
+}
+
+configure_wsl_environment() {
+  IS_WSL=$(gum confirm "💻 Is this installation under WSL?" && echo "true" || echo "false")
+
+  if [[ "$IS_WSL" == "true" ]]; then
+    if command_exists ssh.exe; then
+      git config --global core.sshCommand "ssh.exe"
+      echo "✅ Git configured to use ssh.exe for WSL."
+    else
+      echo "🚫 Command ssh.exe is not found. Skipping git configuration."
+    fi
+
+    if command_exists winget.exe; then
+      if gum confirm "📦 Do you want to install Windows packages via winget?"; then
+        SELECTED_PACKAGES=$(printf '%s\n' "${WINGET_PACKAGES[@]}" | gum filter --placeholder "Select packages to install" --no-limit)
+
+        if [[ -z "$SELECTED_PACKAGES" ]]; then
+          echo "🚫 No packages selected. Skipping winget installation."
+        else
+          while IFS= read -r pkg; do
+            if ! winget.exe list --name "$pkg" | grep -q "$pkg"; then
+              gum spin --title "📦 Installing $pkg via winget..." -- \
+                winget.exe install --id="$pkg" --silent --accept-source-agreements --accept-package-agreements
+              echo "✅ $pkg installed successfully."
+            else
+              echo "✅ $pkg already installed."
+            fi
+            sleep 2
+          done <<<"$SELECTED_PACKAGES"
+        fi
       else
-        echo "✅ $pkg already installed."
+        echo "🚫 Skipping winget package installation."
       fi
-    done
+    else
+      echo "🚫 winget is not available on this system. Skipping winget installations."
+    fi
+
+    echo "✅ WSL-specific configuration applied."
   else
-    echo "🚫 winget is not available on this system. Skipping winget installations."
+    echo "🚫 Skipping WSL-specific configuration."
   fi
+}
 
-  echo "✅ WSL-specific configuration applied."
-else
-  echo "🚫 Skipping WSL-specific configuration."
-fi
-
-# === 4. Clone or move dotfiles ===
-echo "==> 4. Clone or move dotfiles"
-# == 4.1 Clone or move base repo
-echo "  -> 4.1 Clone or move base repo"
-
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-
-if git -C "$SCRIPT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  if [ "$SCRIPT_DIR" != "$DOTFILES_DIR" ]; then
+setup_dotfiles() {
+  SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+  if git -C "$SCRIPT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if [ "$SCRIPT_DIR" != "$DOTFILES_DIR" ]; then
+      rm -rf "$DOTFILES_DIR"
+      mv "$SCRIPT_DIR" "$DOTFILES_DIR"
+      echo "✅ Moved dotfiles from $SCRIPT_DIR to $DOTFILES_DIR."
+    fi
+    echo "✅ Dotfiles repository is already in $DOTFILES_DIR."
+  else
     rm -rf "$DOTFILES_DIR"
-    mv "$SCRIPT_DIR" "$DOTFILES_DIR"
-    echo "✅ Moved dotfiles from $SCRIPT_DIR to $DOTFILES_DIR."
+    gum spin --title "🐙 Cloning $DOTFILES_REPO..." -- git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+    echo "✅ Dotfiles repository cloned to $DOTFILES_DIR."
   fi
-  echo "✅ Dotfiles repository is already in $DOTFILES_DIR."
-else
-  rm -rf "$DOTFILES_DIR"
-  gum spin --title "🐙 Cloning $DOTFILES_REPO..." -- git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
-  echo "✅ Dotfiles repository cloned to $DOTFILES_DIR."
-fi
+}
 
-# == 4.2 Clone extra repos ==
-echo "  -> 4.1 Clone extra repos"
+clone_extra_repos() {
+  if gum confirm "🐙 Do you want to clone extra GitHub repositories?"; then
+    SELECTED_REPOS=$(printf '%s\n' "${EXTRA_REPOS[@]}" | gum filter --placeholder "Select repositories to clone" --no-limit)
 
-if gum confirm "🐙 Do you want to clone extra GitHub repositories?"; then
-  SELECTED_REPOS=$(printf '%s\n' "${EXTRA_REPOS[@]}" | gum filter --placeholder "Select repositories to clone" --no-limit)
+    if [[ -z "$SELECTED_REPOS" ]]; then
+      echo "🚫 No repositories selected. Skipping."
+    else
+      while IFS= read -r repo; do
+        REPO_NAME=$(basename "$repo" .git)
+        TARGET_DIR="$HOME/$REPO_NAME"
 
-  if [[ -z "$SELECTED_REPOS" ]]; then
-    echo "🚫 No repositories selected. Skipping."
+        if [ -d "$TARGET_DIR" ]; then
+          echo "✅ Repository $REPO_NAME already exists at $TARGET_DIR"
+        else
+          gum spin --title "🐙 Cloning $repo..." -- git clone "$repo" "$TARGET_DIR"
+          echo "✅ Repository $REPO_NAME cloned to $TARGET_DIR"
+        fi
+        sleep 2
+      done <<<"$SELECTED_REPOS"
+    fi
   else
-    while IFS= read -r repo; do
-      REPO_NAME=$(basename "$repo" .git)
-      TARGET_DIR="$HOME/$REPO_NAME"
-
-      if [ -d "$TARGET_DIR" ]; then
-        echo "✅ Repository $REPO_NAME already exists at $TARGET_DIR"
-      else
-        gum spin --title "🐙 Cloning $repo..." -- git clone "$repo" "$TARGET_DIR"
-        echo "✅ Repository $REPO_NAME cloned to $TARGET_DIR"
-      fi
-      sleep 2
-    done <<<"$SELECTED_REPOS"
+    echo "🚫 Skipping GitHub repository installation."
   fi
-else
-  echo "🚫 Skipping GitHub repository installation."
-fi
+}
 
-cd "$DOTFILES_DIR"
+apply_home_manager_config() {
+  CHOICE=$(printf '%s\n' "${AVAILABLE_CONFIGS[@]}" | gum choose --header="Choose your Home Manager configuration")
+  home-manager switch -b backup --flake "./#$CHOICE" --extra-experimental-features "nix-command flakes"
+  echo "✅ Home Manager configuration $CHOICE applied."
+}
 
-# === 5. Apply home-manager configuration ===
-echo "==> 5. Apply home-manager configuration"
+# === MAIN ENTRYPOINT ===
+main() {
+  echo "==> 1. Check environment and dependencies"
+  require_admin_privileges
+  check_user_var
+  ensure_home_symlink
+  check_required_commands
 
-# == 5.1 Present available configs for selection ==
-echo "  -> 5.1 Present available configs for selection"
-CHOICE=$(printf '%s\n' "${AVAILABLE_CONFIGS[@]}" | gum choose --header="Choose your Home Manager configuration")
-echo "✅ Selected configuration: $CHOICE"
+  echo "==> 2. Install Nix and Home Manager"
+  install_nix
+  install_home_manager
+  install_nix_packages
 
-# == 5.2 Apply selected configuration with home-manager ==
-echo "  -> 5.2 Apply selected configuration with home-manager"
-home-manager switch -b backup --flake "./#$CHOICE" --extra-experimental-features "nix-command flakes"
-echo "✅ Home Manager configuration applied."
+  echo "==> 3. Configure WSL (if applicable)"
+  configure_wsl_environment
 
-# === 6. Finalization ===
-echo "==> 6. Finalization"
+  echo "==> 4. Setup dotfiles and extra repos"
+  setup_dotfiles
+  clone_extra_repos
+  cd "$DOTFILES_DIR"
 
-echo "✅ All done! Your environment is ready."
+  echo "==> 5. Apply Home Manager configuration"
+  apply_home_manager_config
+
+  # === 6. Finalization ===
+  echo "==> 6. Finalization"
+  echo "✅ All done! Your environment is ready."
+}
+
+main "$@"

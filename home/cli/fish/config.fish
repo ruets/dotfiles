@@ -48,6 +48,7 @@ alias combinedaudio='pactl load-module module-combine-sink'
 # Nix HomeManager
 # -----------------------------------------------------
 alias dot='cd ~/.config/home-manager'
+alias updateDots='dot; scripts/setup.sh'
 
 function reloadNix
     if test (count $argv) -lt 1
@@ -61,6 +62,8 @@ end
 
 alias reloadNixCLI='dot; reloadNix cli'
 alias reloadNixGUI='dot; reloadNix gui'
+alias reloadNixHostinger='dot; reloadNix hostinger'
+alias reloadNixWSL='dot; reloadNix wsl'
 
 # -----------------------------------------------------
 # ML4W Apps

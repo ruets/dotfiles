@@ -1,0 +1,22 @@
+{
+    "Dominus": {
+        "Degrees": 8,
+		"UpDown": -1,
+		"LeftRight": 0
+    },
+	"Octane": {
+        "Degrees": 8,
+		"UpDown": -1,
+		"LeftRight": 1
+    },
+	"Fennec": {
+        "Degrees": 6,
+		"UpDown": 0.6,
+		"LeftRight": 2.5
+    },
+	"Breakout": {
+        "Degrees": 9,
+		"UpDown": -0.5,
+		"LeftRight": 0
+    }
+}

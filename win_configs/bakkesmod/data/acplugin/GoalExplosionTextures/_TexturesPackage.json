@@ -1,0 +1,10 @@
+{
+	"Blocks": {
+		"ItemID": 2329,
+        "Params": {
+			"Diffuse": "Blocks.png",
+			"Popcorn_SubUV_D": "Blocks.png",
+			"Normal": "blocksn.png"
+		}
+    }
+}

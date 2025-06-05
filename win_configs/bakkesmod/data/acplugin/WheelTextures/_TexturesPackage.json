@@ -1,0 +1,9 @@
+{
+	"AC Terminal": {
+		"ItemID": 820,
+        "Params": {
+			"ImageSeq_SubUV": "ACTerminal.png",
+			"ImageSeq": "ACTerminal.png"
+		}
+    }
+}

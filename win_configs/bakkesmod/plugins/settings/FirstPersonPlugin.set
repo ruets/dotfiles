@@ -1,0 +1,14 @@
+First Person Camera
+0|Enable##FP|FirstPersonEnable
+7
+0|Disable##FP|FirstPersonDisable
+7
+1|Use true first person ball cam##FP|FirstPerson_UseCustomBallCam
+8|
+9|If you want to play first person games with friends, set up a private match with match length set to unlimited time
+9|
+9|KNOWN BUGS
+9|    - Some car bodies will clip through the camera.
+9|    - Audio may cut out when the car is upside down.
+9|	If you are recording a video, save the replay and record the audio from that in post.
+9|    - Transitioning in and out of ballcam looks weird. If it becomes too annoying then set your camera's transition speed higher.

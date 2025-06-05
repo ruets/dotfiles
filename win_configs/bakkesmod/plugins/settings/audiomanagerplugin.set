@@ -1,0 +1,10 @@
+Audio manager
+9|Read the BakkesPlugins description for info on how to use this plugin!
+1|Enable audiomanager|audio_enabled
+8|
+10|audio_enabled
+12|Ranked start script|audio_onrankedstart
+12|Ranked leave script|audio_ongameleave
+12|Training start script|audio_ontrainingstart
+11|
+9|If you want any more events to execute scripts on, let me know (Bakkes#8746)

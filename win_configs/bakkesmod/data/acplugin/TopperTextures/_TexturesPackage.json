@@ -1,0 +1,10 @@
+{
+    "Pikachu Ears": {
+        "Group": "",
+        "ItemID": 1677,
+        "Params": {
+            "Diffuse": "PikachuEars_D.png",
+            "TextureDiffuse": "PikachuEars_D.png"
+        }
+    }
+}

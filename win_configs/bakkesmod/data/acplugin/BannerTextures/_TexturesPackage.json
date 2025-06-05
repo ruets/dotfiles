@@ -1,0 +1,27 @@
+{
+	"PS1": {
+        "Diffuse": "PS1.png",
+        "Paint": "",
+        "Tint": ""
+    },
+	"PS4": {
+        "Diffuse": "PS4.png",
+        "Paint": "",
+        "Tint": ""
+    },
+	"Steam": {
+        "Diffuse": "Steam.png",
+        "Paint": "",
+        "Tint": ""
+    },
+	"Twitch": {
+        "Diffuse": "Twitch.png",
+        "Paint": "",
+        "Tint": ""
+    },
+	"Xbox": {
+        "Diffuse": "Xbox.png",
+        "Paint": "",
+        "Tint": ""
+    }
+}

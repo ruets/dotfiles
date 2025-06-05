@@ -1,0 +1,4 @@
+RCON plugin
+9|RCON allows external tools on your computer to communicate with BakkesMod. Feel free to disable if you do not use such tools.
+1|Enable RCON|rcon_enabled
+14|RCON password|rcon_password

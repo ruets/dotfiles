@@ -1,0 +1,9 @@
+{
+    "AlphaConsole": {
+		"Params": {
+			"Diffuse": "ACPuck_D.png",
+			"Normal": "BlankPuck_N.png",
+			"Mask": "BlankPuck_RGB.png"
+		}
+    }
+}

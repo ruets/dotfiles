@@ -1,0 +1,62 @@
+<!-- %appdata%\bakkesmod\bakkesmod\data\RocketStats\RocketStats_images -->
+<html>
+	<head>
+		<script type="text/javascript">
+			function readTextFile( file )
+			{
+				return new Promise( ( resolve, reject ) => {
+					var request = new XMLHttpRequest();
+					request.open( 'GET', file, false );
+
+					request.onreadystatechange = () => {
+						if ( request.readyState === 4 )
+						{
+							if ( request.status === 200 || request.status == 0 )
+								resolve( request.responseText );
+							else
+								reject( request );
+						}
+					}
+
+					request.send( null );
+				} );
+			}
+
+			window.addEventListener( 'load', () => {
+				let vid1 = document.getElementById( 'vid1' )
+				let vid2 = document.getElementById( 'vid2' );
+
+				vid1.currentTime = 0;
+				vid2.currentTime = 0;
+
+				let save = '0';
+				window.setInterval(() => {
+					readTextFile( '../RocketStats_BoostState.txt' ).then( value => {
+						if ( value == "1" && save != value ) // Boost
+						{
+							vid1.hidden = false;
+							vid2.hidden = true;
+						}
+						else if ( value == '0' && save != value ) // No Boost
+						{
+							vid1.hidden = true;
+							vid2.hidden = false;
+						}
+						else if ( value == '-1' && save != value )
+						{
+							vid1.hidden = true;
+							vid2.hidden = true;
+						}
+
+						save = value;
+					} );
+				}, 100 );
+			} );
+		</script>
+	</head>
+
+	<body>
+		<video autoplay muted loop src="boost.webm" id="vid1" position="absolute" z-index="1" hidden></video>
+		<video autoplay muted loop src="noboost.webm" id="vid2" position="absolute" z-index="2" hidden></video>
+	</body>
+</html>

@@ -1,0 +1,11 @@
+BallPossession
+
+1|Enable|BallPossession_Enable
+
+5|X Position|BallPossession_X_Position|0|100
+5|Y Position|BallPossession_Y_Position|0|100
+5|Scale|BallPossession_Scale|0|100
+5|Opacity|BallPossession_Opacity|0|100
+
+13|Text Color|BallPossession_Color
+

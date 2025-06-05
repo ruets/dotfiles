@@ -1,0 +1,32 @@
+Predictdator V2.3
+1|On/Off|cl_soccar_predictball2
+5|Length [standart:480]|cl_soccar_predictball2_steps|150|480
+1|Ball Hitmarker|cl_soccar_predictball2_bounce_points
+1|Performance Option 1 (size)|cl_soccar_predictball2_performance_option_1
+1|Performance Option 2 (opacity)|cl_soccar_predictball2_performance_option_2
+1|[Experimental] Thread mode|cl_soccar_predictball2_experimental_mode
+8|
+9|Line color
+5|Red [standart:0]|cl_soccar_predictball2_color_red|0|255
+5|Green [standart:255]|cl_soccar_predictball2_color_green|0|255
+5|Blue [standart:0]|cl_soccar_predictball2_color_blue|0|255
+8|
+9|For Problems(wait min. 2 sec between): Unload->Load->RefreshPlugins->LoadSettings
+0|Unload|plugin unload predictdator
+7
+0|Load|plugin load predictdator
+7
+0|RefreshPlugins|cl_settings_refreshplugins
+7
+0|LoadSettings|exec config
+8|
+9|Plugin ONLY works in freeplay, replays and in trainingpacks.
+8|
+9|Credit for the ball prediction code goes to Chip.
+9|Credit for parts of the plugin code goes to Bakkes.
+9|V2 updated by Jan.
+8|
+9|
+9|
+9|Besucht doch gern einmal unseren deutschen Rocket League Clan :)
+9|black-diamonds-clan.de

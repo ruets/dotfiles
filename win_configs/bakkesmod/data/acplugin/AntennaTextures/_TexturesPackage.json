@@ -1,0 +1,10 @@
+{
+    "ACFlag": {
+        "Group": "",
+        "ItemID": 630,
+        "Params": {
+            "Diffuse": "ACFlag.png",
+            "TextureDiffuse": "ACFlag.png"
+        }
+    }
+}

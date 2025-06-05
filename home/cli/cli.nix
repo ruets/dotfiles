@@ -69,6 +69,7 @@
     gum
     libqalculate
 
+    #distant
     w3m
     nnn
 

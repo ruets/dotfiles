@@ -24,20 +24,30 @@ WINGET_PACKAGES=(
   "AgileBits.1Password"
   "Discord.Discord"
   "Spotify.Spotify"
-
+  "Parsec.Parsec"
+  ""
   "Axosoft.GitKraken"
   "qBittorrent.qBittorrent"
   "Responsively.ResponsivelyApp"
   "Docker.DockerDesktop"
-
+  ""
   "Proton.ProtonMail"
   "Proton.ProtonVPN"
   "Notion.Notion"
   "Notion.NotionCalendar"
-
+  ""
   "Microsoft.PowerToys"
   "Samsung.GalaxyBudsManager"
   "DebaucheeOpenSourceGroup.Barrier"
+  ""
+  "MedalB.V.Medal"
+  "Valve.Steam"
+  "EpicGames.EpicGamesLauncher"
+  "RiotGames.Valorant.EU"
+  "ppy.osu"
+  "Logitech.GHUB"
+  "RivaFarabi.Deckboard"
+  "WeMod.WeMod"
 )
 
 # === UTILITY FUNCTIONS ===

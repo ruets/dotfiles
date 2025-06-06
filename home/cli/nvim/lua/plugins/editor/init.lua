@@ -1,7 +1,9 @@
 -- if true, don't actually load anything here and return an empty spec
 -- stylua: ignore
-local disabled = true
-if disabled then return {} end 
+local disabled = false
+if disabled then
+  return {}
+end
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
 --
@@ -13,7 +15,7 @@ return {
   {
     "bgaillard/readonly.nvim",
     dependencies = {
-      "rcarriga/nvim-notify"
+      "rcarriga/nvim-notify",
     },
     opts = {
       -- see https://neovim.io/doc/user/lua.html#vim.fs.normalize()
@@ -23,10 +25,22 @@ return {
         "~/%.ssh/.",
         "~/%.secrets.yaml",
         "~/%.vault-crypt-files/.",
-      }
+      },
     },
     lazy = false,
-    enabled = false
+    enabled = false,
+  },
+
+  {
+    "kenis1108/wslcwin.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("wslcwin").setup()
+    end,
+    -- Only enable in WSL environment
+    cond = function()
+      return vim.fn.getenv("WSL_DISTRO_NAME") ~= vim.NIL
+    end,
   },
 
   {
@@ -38,6 +52,6 @@ return {
     end,
     -- or if you don't want to change defaults
     -- config = true
-    enabled = false
-  }
+    enabled = false,
+  },
 }

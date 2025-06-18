@@ -6,6 +6,8 @@
 
     ../home/cli/cli.nix
 
+    ../home/softwares/gallery-dl/gallery-dl.nix
+
     ../home/languages/java.nix
     ../home/languages/node.nix
     ../home/languages/python.nix

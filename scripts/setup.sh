@@ -36,6 +36,8 @@ WINGET_PACKAGES=(
   "Notion.Notion"
   "Notion.NotionCalendar"
   ""
+  "VideoLAN.VLC"
+  "FilesCommunity.Files"
   "Microsoft.PowerToys"
   "Samsung.GalaxyBudsManager"
   "DebaucheeOpenSourceGroup.Barrier"

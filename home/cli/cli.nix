@@ -12,6 +12,7 @@
     neovim.enable = true;
     ripgrep.enable = true;
     fzf.enable = true;
+    fd.enable = true;
 
     ranger.enable = true;
     lazygit.enable = true;
@@ -76,6 +77,8 @@
     gcc
     jq
 
+    # codex
+    xclip
     gitleaks
     lazycli
     commitizen

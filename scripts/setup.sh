@@ -41,6 +41,7 @@ WINGET_PACKAGES=(
   "Microsoft.PowerToys"
   "Samsung.GalaxyBudsManager"
   "DebaucheeOpenSourceGroup.Barrier"
+  "Google.QuickShare"
   ""
   "MedalB.V.Medal"
   "Valve.Steam"

@@ -30,3 +30,5 @@ bar-protonmail
 spotify-tui
 render cli
 posting (api tui)
+
+lm studio

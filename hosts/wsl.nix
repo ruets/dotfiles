@@ -6,6 +6,8 @@
 
     ../home/cli/cli.nix
 
+    ../home/modules/wallpapers/wallpapers.nix
+
     ../home/softwares/gallery-dl/gallery-dl.nix
 
     ../home/languages/java.nix

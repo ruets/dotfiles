@@ -3,42 +3,34 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    wallpapers = {
+      url = "github:mylinuxforwork/wallpapers";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
+
+      mkHome = host: home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./hosts/${host}.nix ];
+      };
     in {
       homeConfigurations = {
-        gui = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./hosts/gui.nix
-          ];
-        };
-        cli = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./hosts/cli.nix
-          ];
-        };
-        hostinger = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./hosts/hostinger.nix
-          ];
-        };
-        wsl = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./hosts/wsl.nix
-          ];
-        };
+        gui       = mkHome "gui";
+        cli       = mkHome "cli";
+        hostinger = mkHome "hostinger";
+        wsl       = mkHome "wsl";
       };
     };
 }

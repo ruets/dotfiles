@@ -1,0 +1,17 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/settings/
+title: ruets
+description: ruets' VPS Homepage
+
+layout:
+  "\u00A0":
+    columns: 2
+    style: row
+  Admin:
+  Dev:
+  Productivity:
+  Socials:
+
+disableCollapse: true
+logpath: /logs

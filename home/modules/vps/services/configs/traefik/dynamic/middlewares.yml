@@ -1,0 +1,47 @@
+http:
+  middlewares:
+    security-headers:
+      headers:
+        sslRedirect: true
+        stsSeconds: 315360000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        customResponseHeaders:
+          X-Robots-Tag: "noindex,nofollow,noarchive,nosnippet,noimageindex"
+    auth:
+      forwardAuth:
+        address: "http://authelia:9091/api/authz/forward-auth"
+        trustforwardheader: true
+    neko-firefox-sablier:
+      plugin:
+        sablier:
+          dynamic:
+            displayName: Firefox
+            refreshFrequency: 5s
+            showDetails: "true"
+            theme: ghost
+          sablierUrl: http://sablier:10000
+          names: neko-firefox
+    neko-tor-sablier:
+      plugin:
+        sablier:
+          dynamic:
+            displayName: Firefox
+            refreshFrequency: 5s
+            showDetails: "true"
+            theme: ghost
+          sablierUrl: http://sablier:10000
+          names: neko-tor
+    neko-chrome-sablier:
+      plugin:
+        sablier:
+          dynamic:
+            displayName: Firefox
+            refreshFrequency: 5s
+            showDetails: "true"
+            theme: ghost
+          sablierUrl: http://sablier:10000
+          names: neko-chrome

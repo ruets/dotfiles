@@ -6,6 +6,8 @@
 
     ../home/cli/cli.nix
 
+    ../home/modules/vps/vps.nix
+
     ../home/languages/node.nix
     ../home/languages/python.nix
     ../home/languages/texlive.nix

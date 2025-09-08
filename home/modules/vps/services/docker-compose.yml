@@ -1,0 +1,450 @@
+services:
+  traefik:
+    image: "traefik"
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    command: --configfile=/config/config.yml
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`proxy.${DOMAIN_NAME}`)
+      - traefik.http.routers.traefik.middlewares=auth@file
+      - traefik.http.routers.traefik.service=api@internal
+      - homepage.group=Admin
+      - homepage.name=Traefik
+      - homepage.icon=https://proxy.${DOMAIN_NAME}/dashboard/icons/favicon.ico
+      - homepage.href=https://proxy.${DOMAIN_NAME}/
+      - homepage.description=Reverse proxy
+      - homepage.target=_self
+      - homepage.weight=1
+    environment:
+      - TRAEFIK_CERTIFICATESRESOLVERS_MYTLSCHALLENGE_ACME_EMAIL=${SSL_EMAIL}
+    volumes:
+      - traefik_data:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./configs/traefik:/config:ro
+    networks:
+      - proxy
+
+  authelia:
+    image: authelia/authelia:latest
+    container_name: authelia
+    restart: unless-stopped
+    command: --config /config/config.yml
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.authelia.rule=Host(`auth.${DOMAIN_NAME}`)
+      - traefik.http.services.authelia.loadbalancer.server.port=9091
+      - homepage.group=Admin
+      - homepage.name=Authelia
+      - homepage.icon=https://authelia.com/favicon.ico
+      - homepage.href=https://auth.${DOMAIN_NAME}/
+      - homepage.description=Auth wall
+      - homepage.target=_self
+      - homepage.weight=2
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - X_AUTHELIA_CONFIG_EXPAND_ENV="true"
+      - X_AUTHELIA_CONFIG_FILTERS=template
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
+      - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret
+      - AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE=/run/secrets/authelia_storage_encryption_key
+    secrets:
+      - authelia_jwt_secret
+      - authelia_session_secret
+      - authelia_storage_encryption_key
+      - authelia_oidc_hmac_secret
+      - authelia_oidc_private_key.pem
+      - authelia_oidc_public_key.pem
+      - authelia_oidc_actual_secret
+      - smtp_user
+      - smtp_pass
+      - lldap_bind_pass
+    volumes:
+      - authelia_data:/data
+      - ./configs/authelia:/config:ro
+    networks:
+      - proxy
+
+  lldap:
+    image: lldap/lldap:stable
+    container_name: lldap
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lldap.rule=Host(`admin.${DOMAIN_NAME}`)
+      - traefik.http.routers.lldap.middlewares=auth@file
+      - traefik.http.services.lldap.loadbalancer.server.port=17170
+      - homepage.group=Admin
+      - homepage.name=LLDAP
+      - homepage.icon=https://avatars.githubusercontent.com/u/129409591?s=48&v=4
+      - homepage.href=https://admin.${DOMAIN_NAME}/
+      - homepage.description=LDAP server
+      - homepage.target=_self
+      - homepage.weight=3
+    environment:
+      - LLDAP_LDAP_BASE_DN=${LDAP_BASE_DN}
+      - LLDAP_JWT_SECRET_FILE=/run/secrets/lldap_jwt_secret
+      - LLDAP_KEY_SEED_FILE=/run/secrets/lldap_key_seed
+      - LLDAP_LDAP_USER_PASS_FILE=/run/secrets/lldap_bind_pass
+    secrets:
+      - lldap_bind_pass
+      - lldap_jwt_secret
+      - lldap_key_seed
+    volumes:
+      - lldap_data:/data
+    networks:
+      - proxy
+
+  dockge:
+    image: louislam/dockge:1
+    container_name: dockge
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dockge.rule=Host(`docker.${DOMAIN_NAME}`)
+      - traefik.http.routers.dockge.middlewares=auth@file
+      - traefik.http.services.dockge.loadbalancer.server.port=5001
+      - homepage.group=Admin
+      - homepage.name=Dockge
+      - homepage.icon=https://docker.${DOMAIN_NAME}/favicon.ico
+      - homepage.href=https://docker.${DOMAIN_NAME}/
+      - homepage.description=Docker dashboard
+      - homepage.target=_self
+      - homepage.weight=4
+    environment:
+      - DOCKGE_STACKS_DIR=${PWD}/..
+    volumes:
+      - ${PWD}/..:${PWD}/..
+      - dockge_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kuma.rule=Host(`status.${DOMAIN_NAME}`)
+      - traefik.http.routers.kuma.middlewares=auth@file
+      - traefik.http.services.kuma.loadbalancer.server.port=3001
+      - homepage.group=Admin
+      - homepage.name=Uptime kuma
+      - homepage.icon=https://status.${DOMAIN_NAME}/favicon.ico
+      - homepage.href=https://status.${DOMAIN_NAME}/
+      - homepage.description=Status dashboard
+      - homepage.target=_self
+      - homepage.weight=5
+    volumes:
+      - kuma_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy
+
+  protonmail-bridge:
+    image: ghcr.io/videocurio/proton-mail-bridge:latest
+    container_name: protonmail-bridge
+    restart: unless-stopped
+    environment:
+      - CONTAINER_SMTP_PORT=25
+    volumes:
+      - mail_data:/root
+    networks:
+      - proxy
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homepage.rule=Host(`${DOMAIN_NAME}`)
+      - traefik.http.routers.homepage.middlewares=auth@file
+      - traefik.http.services.homepage.loadbalancer.server.port=3000
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=${DOMAIN_NAME}
+      - HOMEPAGE_VAR_DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      - ./configs/homepage:/app/config:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+  erugo:
+    image: wardy784/erugo:latest
+    container_name: erugo
+    restart: unless-stopped
+    expose:
+      - "9998"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.erugo.rule=Host(`share.${DOMAIN_NAME}`)
+      - traefik.http.routers.erugo.middlewares=auth@file
+      # - traefik.http.services.erugo.loadbalancer.server.port=9998
+      - homepage.group=Productivity
+      - homepage.name=Erugo
+      - homepage.icon=https://erugo.app/content/images/size/w256h256/2025/03/icon.png
+      - homepage.href=https://share.${DOMAIN_NAME}/
+      - homepage.description=Files sharing tool
+      - homepage.target=_self
+      - homepage.weight=1
+    volumes:
+      - erugo_data:/var/www/html/storage
+    networks:
+      - proxy
+
+  actual:
+    image: docker.io/actualbudget/actual-server:latest
+    container_name: actual
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node src/scripts/health-check.js"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.actual.rule=Host(`wallet.${DOMAIN_NAME}`)
+      - traefik.http.routers.actual.middlewares=auth@file
+      - traefik.http.services.actual.loadbalancer.server.port=5006
+      - homepage.group=Productivity
+      - homepage.name=Actual
+      - homepage.icon=https://wallet.${DOMAIN_NAME}/favicon.ico
+      - homepage.href=https://wallet.${DOMAIN_NAME}/
+      - homepage.description=Budget tracking tool
+      - homepage.target=_self
+      - homepage.weight=2
+    volumes:
+      - actual_data:/data
+    networks:
+      - proxy
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN_NAME}`)
+      - traefik.http.routers.n8n.middlewares=auth@file
+      - traefik.http.services.n8n.loadbalancer.server.port=5678
+      - homepage.group=Productivity
+      - homepage.name=n8n
+      - homepage.icon=https://n8n.${DOMAIN_NAME}/favicon.ico
+      - homepage.href=https://n8n.${DOMAIN_NAME}/
+      - homepage.description=Low code tool
+      - homepage.target=_self
+      - homepage.weight=4
+    environment:
+      - N8N_HOST=n8n.${DOMAIN_NAME}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n.${DOMAIN_NAME}/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - /local-files:/files
+    networks:
+      - proxy
+
+  omni-tools:
+    image: iib0011/omni-tools:latest
+    container_name: omni-tools
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.omni.rule=Host(`tools.${DOMAIN_NAME}`)
+      - traefik.http.routers.omni.middlewares=auth@file
+      - traefik.http.services.omni.loadbalancer.server.port=80
+      - homepage.group=Productivity
+      - homepage.name=Omni-tools
+      - homepage.icon=https://tools.${DOMAIN_NAME}/favicon.ico
+      - homepage.href=https://tools.${DOMAIN_NAME}/
+      - homepage.description=Many files tools
+      - homepage.target=_self
+      - homepage.weight=9
+    networks:
+      - proxy
+
+  sablier:
+    image: sablierapp/sablier:1.10.1
+    container_name: sablier
+    restart: unless-stopped
+    command:
+      - start
+      - --provider.name=docker
+    labels:
+      - traefik.enable=true
+      # Neko Firefox
+      - traefik.http.routers.neko-firefox.rule=Host(`firefox.${DOMAIN_NAME}`)
+      - traefik.http.routers.neko-firefox.middlewares=auth@file,neko-firefox-sablier@file
+      - traefik.http.routers.neko-firefox.service=neko-firefox
+      - traefik.http.services.neko-firefox.loadbalancer.server.url=http://neko-firefox:8080
+      # Neko Tor
+      - traefik.http.routers.neko-tor.rule=Host(`tor.${DOMAIN_NAME}`)
+      - traefik.http.routers.neko-tor.middlewares=auth@file,neko-tor-sablier@file
+      - traefik.http.routers.neko-tor.service=neko-tor
+      - traefik.http.services.neko-tor.loadbalancer.server.url=http://neko-tor:8080
+      # Neko Chrome
+      - traefik.http.routers.neko-chrome.rule=Host(`chrome.${DOMAIN_NAME}`)
+      - traefik.http.routers.neko-chrome.middlewares=auth@file,neko-chrome-sablier@file
+      - traefik.http.routers.neko-chrome.service=neko-chrome
+      - traefik.http.services.neko-chrome.loadbalancer.server.url=http://neko-chrome:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+  neko-firefox:
+    image: ghcr.io/m1k1o/neko/firefox:latest
+    container_name: neko-firefox
+    profiles: ["neko"]
+    restart: unless-stopped
+    ports:
+      - "59000-59099:59000-59099/udp"
+    labels:
+      - homepage.group=Socials
+      - homepage.name=Neko (Firefox)
+      - homepage.icon=https://neko.m1k1o.net/img/icons/firefox.svg
+      - homepage.href=https://firefox.{{HOMEPAGE_VAR_DOMAIN_NAME}}/
+      - homepage.description=Navigateur Firefox (Neko)
+      - homepage.target=_self
+      - homepage.weight=1
+    environment:
+      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: user
+      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
+      NEKO_DESKTOP_SCREEN: "1920x1080@30"
+      NEKO_WEBRTC_EPR: "59000-59099"
+      NEKO_SERVER_PROXY: "true"
+    volumes:
+      - neko_firefox_profile:/home/neko/.mozilla/firefox/profile.default
+    networks:
+      - proxy
+
+  neko-tor:
+    image: ghcr.io/m1k1o/neko/tor-browser:latest
+    container_name: neko-tor
+    profiles: ["neko"]
+    restart: unless-stopped
+    ports:
+      - "59100-59199:59100-59199/udp"
+    labels:
+      - homepage.group=Socials
+      - homepage.name=Neko (Tor)
+      - homepage.icon=https://neko.m1k1o.net/img/icons/tor-browser.svg
+      - homepage.href=https://tor.{{HOMEPAGE_VAR_DOMAIN_NAME}}/
+      - homepage.description=Navigateur Tor (Neko)
+      - homepage.target=_self
+      - homepage.weight=2
+    environment:
+      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: user
+      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
+      NEKO_DESKTOP_SCREEN: "1920x1080@30"
+      NEKO_WEBRTC_EPR: "59100-59199"
+      NEKO_SERVER_PROXY: "true"
+    volumes:
+      - neko_tor_profile:/opt/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default
+    networks:
+      - proxy
+
+  neko-chrome:
+    image: ghcr.io/m1k1o/neko/google-chrome:latest
+    container_name: neko-chrome
+    profiles: ["neko"]
+    restart: unless-stopped
+    ports:
+      - "59200-59299:59200-59299/udp"
+    shm_size: 2g
+    cap_add:
+      - SYS_ADMIN
+    labels:
+      - homepage.group=Socials
+      - homepage.name=Neko (Chrome)
+      - homepage.icon=https://neko.m1k1o.net/img/icons/google-chrome.svg
+      - homepage.href=https://chrome.{{HOMEPAGE_VAR_DOMAIN_NAME}}/
+      - homepage.description=Navigateur Chrome (Neko)
+      - homepage.target=_self
+      - homepage.weight=6
+    environment:
+      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: user
+      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
+      NEKO_DESKTOP_SCREEN: "1920x1080@30"
+      NEKO_WEBRTC_EPR: "59200-59299"
+      NEKO_SERVER_PROXY: "true"
+    volumes:
+      - neko_chrome_profile:/home/neko/.config/google-chrome
+    networks:
+      - proxy
+
+  mumble:
+    image: mumblevoip/mumble-server
+    container_name: mumble-server
+    restart: unless-stopped
+    ports:
+      - "64738:64738/tcp"
+      - "64738:64738/udp"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mumble.rule=Host(`mumble.${DOMAIN_NAME}`)
+      - homepage.group=Socials
+      - homepage.name=Mumble
+      - homepage.icon=https://www.mumble.info/favicon.ico
+      - homepage.href=mumble://mumble.${DOMAIN_NAME}
+      - homepage.description=Open source VOIP server
+      - homepage.target=_self
+      - homepage.weight=9
+    volumes:
+      - mumble_data:/data
+    networks:
+      - proxy
+
+secrets:
+  authelia_jwt_secret:
+    file: ./secrets/authelia_jwt_secret
+  authelia_session_secret:
+    file: ./secrets/authelia_session_secret
+  authelia_storage_encryption_key:
+    file: ./secrets/authelia_storage_encryption_key
+  authelia_oidc_hmac_secret:
+    file: ./secrets/authelia_oidc_hmac_secret
+  authelia_oidc_private_key.pem:
+    file: ./secrets/authelia_oidc_private_key.pem
+  authelia_oidc_public_key.pem:
+    file: ./secrets/authelia_oidc_public_key.pem
+  authelia_oidc_actual_secret:
+    file: ./secrets/authelia_oidc_actual_secret
+  lldap_bind_pass:
+    file: ./secrets/lldap_bind_pass
+  lldap_jwt_secret:
+    file: ./secrets/lldap_jwt_secret
+  lldap_key_seed:
+    file: ./secrets/lldap_key_seed
+  smtp_user:
+    file: ./secrets/smtp_user
+  smtp_pass:
+    file: ./secrets/smtp_pass
+
+volumes:
+  traefik_data:
+  authelia_data:
+  lldap_data:
+  dockge_data:
+  kuma_data:
+  mail_data:
+  erugo_data:
+  actual_data:
+  n8n_data:
+  neko_firefox_profile:
+  neko_tor_profile:
+  neko_chrome_profile:
+  mumble_data:
+
+networks:
+  proxy:

@@ -1,0 +1,107 @@
+theme: dark
+
+server:
+  address: "tcp://0.0.0.0:9091/"
+  buffers:
+    read: 4096
+    write: 4096
+  endpoints:
+    enable_pprof: false
+    enable_expvars: false
+    authz:
+      forward-auth:
+        implementation: "ForwardAuth"
+
+  disable_healthcheck: false
+
+log:
+  level: info
+
+authentication_backend:
+  ldap:
+    implementation: lldap
+    address: ldap://lldap:3890
+    base_dn: {{ env "LDAP_BASE_DN" }}
+    user: UID=admin,ou=people,{{ env "LDAP_BASE_DN" }}
+    password: {{ fileContent "/run/secrets/lldap_bind_pass" }}
+
+identity_validation:
+  reset_password:
+    jwt_secret: {{fileContent "/run/secrets/authelia_jwt_secret"}}
+    jwt_lifespan: 5m
+
+webauthn:
+  display_name: "ruets VPS"
+  enable_passkey_login: true
+  attestation_conveyance_preference: indirect
+  user_verification: preferred
+  timeout: 60s
+  disable: false
+
+totp:
+  disable: true
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain:
+        - 'n8n.{{ env "DOMAIN_NAME" }}'
+        - 'share.{{ env "DOMAIN_NAME" }}'
+      policy: bypass
+    - domain:
+        - '{{ env "DOMAIN_NAME" }}'
+        - '*.{{ env "DOMAIN_NAME" }}'
+      policy: one_factor
+    - domain: 'auth.{{ env "DOMAIN_NAME" }}'
+      policy: two_factor
+
+session:
+  name: authelia_session
+  same_site: lax
+  expiration: 1h
+  inactivity: 5m
+  remember_me: 2M
+  cookies:
+    - domain: {{env "DOMAIN_NAME"}}
+      authelia_url: https://auth.{{ env "DOMAIN_NAME" }}
+
+identity_providers:
+  oidc:
+    hmac_secret: {{fileContent "/run/secrets/authelia_oidc_hmac_secret"}}
+    jwks:
+      - key: {{fileContent "/run/secrets/authelia_oidc_private_key.pem" | mindent 10 "|"}}
+
+    cors:
+      allowed_origins_from_client_redirect_uris: true
+      endpoints:
+        - "authorization"
+        - "token"
+        - "revocation"
+        - "introspection"
+    clients:
+      - client_id: "actual"
+        public: false
+        client_secret: {{fileContent "/run/secrets/authelia_oidc_actual_secret"}}
+        authorization_policy: one_factor
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris:
+          - 'https://wallet.{{ env "DOMAIN_NAME" }}/openid/callback'
+
+regulation:
+  max_retries: 3
+  find_time: 10m
+  ban_time: 12h
+
+storage:
+  local:
+    path: /data/db.sqlite3
+
+notifier:
+  smtp:
+    host: protonmail-bridge
+    username: {{fileContent "/run/secrets/smtp_user"}}
+    password: {{fileContent "/run/secrets/smtp_pass"}}
+    sender: "ruets <noreply@ruets.fr>"
+    subject: "[ruets.fr] {title}"
+    tls:
+      skip_verify: true

@@ -1,0 +1,19 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+
+- search:
+    provider: [google, duckduckgo]
+    target: _self
+
+- datetime:
+    locale: fr
+    format:
+      dateStyle: long
+      timeStyle: short
+      hourCycle: h23

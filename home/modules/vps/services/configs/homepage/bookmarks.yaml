@@ -1,0 +1,33 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/bookmarks
+
+- Developpement:
+    - Github:
+        - abbr: GH
+          href: https://github.com/ruets/
+          target: _self
+    - Hostinger:
+        - abbr: HG
+          href: https://hpanel.hostinger.com/
+          target: _self
+
+- Communication:
+    - ProtonMail:
+        - abbr: PM
+          href: https://mail.proton.me/
+          target: _self
+    - ProtonDrive:
+        - abbr: PD
+          href: https://drive.proton.me/
+          target: _self
+
+- Utils:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/
+          target: _self
+    - Notion:
+        - abbr: NO
+          href: https://www.notion.so/
+          target: _self

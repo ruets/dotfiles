@@ -1,0 +1,20 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+- "\u00A0":
+    - Network:
+        - IP Address:
+            widget:
+              type: customapi
+              url: https://api.ipify.org?format=json
+              refreshInterval: 60000
+              mappings:
+                - field: ip
+    - Fun:
+        - Joke:
+            widget:
+              type: customapi
+              url: https://v2.jokeapi.dev/joke/Any?type=twopart&lang=fr
+              mappings:
+                - field: setup
+                - field: delivery

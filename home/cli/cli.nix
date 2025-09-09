@@ -73,6 +73,7 @@
     #distant
     w3m
     nnn
+    dua
 
     gcc
     jq

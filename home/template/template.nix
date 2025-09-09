@@ -17,14 +17,11 @@
   ];
 
   home.file = {
-    ".config/APP_DIR/" = {
-      enable = true;
-      source = ./APP_DIR;
-    };
+    ".config/APP_DIR/".source = ./APP_DIR;
 
     ".config/APP_DIR/CONFIG_FILE" = {
-      enable = true;
       source = ./APP_DIR/CONFIG_FILE;
+      recursive = true;
     };
   };
 }

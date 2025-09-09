@@ -68,49 +68,22 @@
   ];
 
   home.file = {
-    ".config/waybar/" = {
-      enable = true;
-      source = ./waybar;
-    };
+    ".config/waybar/".source = ./waybar;
 
-    ".config/rofi/" = {
-      enable = true;
-      source = ./rofi;
-    };
+    ".config/rofi/".source = ./rofi;
 
-    ".config/wlogout/" = {
-      enable = true;
-      source = ./wlogout;
-    };
+    ".config/wlogout/".source = ./wlogout;
 
-    ".config/hypr/" = {
-      enable = true;
-      source = ./hypr;
-    };
+    ".config/hypr/".source = ./hypr;
 
-    ".config/waypaper/config.ini" = {
-      enable = true;
-      source = ./waypaper/config.ini;
-    };
+    ".config/waypaper/config.ini".source = ./waypaper/config.ini;
 
-    ".config/nwg-dock-hyprland/" = {
-      enable = true;
-      source = ./nwg-dock-hyprland;
-    };
+    ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
 
-    ".config/ags/" = {
-      enable = true;
-      source = ./ags;
-    };
+    ".config/ags/".source = ./ags;
 
-    ".config/dunst/dunstrc" = {
-      enable = true;
-      source = ./dunst/dunstrc;
-    };
+    ".config/dunst/dunstrc".source = ./dunst/dunstrc;
 
-    ".config/ml4w/" = {
-      enable = true;
-      source = ./ml4w;
-    };
+    ".config/ml4w/".source = ./ml4w;
   };
 }

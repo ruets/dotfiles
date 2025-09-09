@@ -92,33 +92,18 @@
 
   home.file = {
     ".config/fish/" = {
-      enable = true;
       source = ./fish;
+      recursive = true;
     };
 
-    ".config/fastfetch/config.jsonc" = {
-      enable = true;
-      source = ./fastfetch/config.jsonc;
-    };
+    ".config/fastfetch/config.jsonc".source = ./fastfetch/config.jsonc;
 
-    ".config/starship/starship.toml" = {
-      enable = true;
-      source = ./starship/starship.toml;
-    };
+    ".config/starship/starship.toml".source = ./starship/starship.toml;
 
-    ".config/wal/templates" = {
-      enable = true;
-      source = ./wal/templates;
-    };
+    ".config/wal/templates".source = ./wal/templates;
 
-    ".config/nvim/" = {
-      enable = true;
-      source = ./nvim;
-    };
+    ".config/nvim/".source = ./nvim;
 
-    ".config/htop/htoprc" = {
-      enable = true;
-      source = ./htop/htoprc;
-    };
+    ".config/htop/htoprc".source = ./htop/htoprc;
   };
 }

@@ -1,11 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    docker
-    docker-compose
-  ];
-
   home.file = {
     "services/scripts" = {
       source = ./services/scripts;

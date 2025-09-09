@@ -6,9 +6,6 @@
   };
 
   home.file = {
-    ".config/cava/" = {
-      enable = true;
-      source = ./cava;
-    };
+    ".config/cava/".source = ./cava;
   };
 }

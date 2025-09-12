@@ -74,6 +74,7 @@
     w3m
     nnn
     dua
+    posting
 
     gcc
     jq

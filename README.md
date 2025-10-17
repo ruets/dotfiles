@@ -18,10 +18,6 @@ docker run -it --rm \
 
 packages :
 
-npm / node
-( adb-wifi
-( gitignore
-
 adb
 pvpn-cli
 min browser

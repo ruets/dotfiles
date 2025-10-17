@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  npm_tools = pkgs.callPackage ./npm_tools {};
+in
 {
   programs = {
     fish.enable = true;
@@ -19,6 +22,10 @@
     htop.enable = true;
     btop.enable = true;
 
+    codex.enable = true;
+    # claude-code.enable = true;
+    gemini-cli.enable = true;
+
     git = {
       enable = true;
       lfs.enable = true;
@@ -31,7 +38,7 @@
         init = { defaultBranch = "main"; };
       };
     };
-    
+
     gh = {
       enable = true;
       extensions = [
@@ -66,7 +73,10 @@
   };
 
   home.packages = with pkgs; [
+    npm_tools
+
     less
+    csvlens
     gum
     libqalculate
 
@@ -79,7 +89,6 @@
     gcc
     jq
 
-    # codex
     xclip
     gitleaks
     lazycli

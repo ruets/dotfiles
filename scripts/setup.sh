@@ -5,10 +5,6 @@ set -euo pipefail
 # === CONSTANTS ===
 DOTFILES_DIR="$HOME/.config/home-manager"
 DOTFILES_REPO="git@github.com:ruets/dotfiles.git"
-EXTRA_REPOS=(
-  "git@github.com:ruets/scripts.git"
-  "git@github.com:mylinuxforwork/wallpaper.git"
-)
 
 REQUIRED_COMMANDS=(
   curl
@@ -213,31 +209,6 @@ setup_dotfiles() {
   echo "✅ Dotfiles repository cloned to $DOTFILES_DIR."
 }
 
-clone_extra_repos() {
-  if gum confirm "🐙 Do you want to clone extra GitHub repositories?"; then
-    SELECTED_REPOS=$(printf '%s\n' "${EXTRA_REPOS[@]}" | gum filter --placeholder "Select repositories to clone" --no-limit)
-
-    if [[ -z "$SELECTED_REPOS" ]]; then
-      echo "🚫 No repositories selected. Skipping."
-    else
-      while IFS= read -r repo; do
-        REPO_NAME=$(basename "$repo" .git)
-        TARGET_DIR="$HOME/$REPO_NAME"
-
-        if [ -d "$TARGET_DIR" ]; then
-          echo "✅ Directory $TARGET_DIR already exists. Skipping clone for $REPO_NAME."
-        else
-          gum spin --title "🐙 Cloning $repo..." -- git clone "$repo" "$TARGET_DIR"
-          echo "✅ Repository $REPO_NAME cloned to $TARGET_DIR"
-        fi
-        sleep 2
-      done <<<"$SELECTED_REPOS"
-    fi
-  else
-    echo "🚫 Skipping GitHub repository installation."
-  fi
-}
-
 apply_home_manager_config() {
   AVAILABLE_CONFIGS=($(nix eval .#homeConfigurations --apply builtins.attrNames --extra-experimental-features "nix-command flakes" | tr -d '[]"'))
   CHOICE=$(printf '%s\n' "${AVAILABLE_CONFIGS[@]}" | gum choose --header="Choose your Home Manager configuration")
@@ -288,9 +259,8 @@ main() {
   echo "==> 3. Configure WSL (if applicable)"
   configure_wsl_environment
 
-  echo "==> 4. Setup dotfiles and extra repos"
+  echo "==> 4. Setup dotfiles"
   setup_dotfiles
-  clone_extra_repos
   cd "$DOTFILES_DIR"
 
   echo "==> 5. Apply Home Manager configuration"

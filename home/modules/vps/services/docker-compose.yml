@@ -344,16 +344,6 @@ services:
       - traefik.http.routers.neko-firefox.middlewares=auth@file,neko-firefox-sablier@file
       - traefik.http.routers.neko-firefox.service=neko-firefox
       - traefik.http.services.neko-firefox.loadbalancer.server.url=http://neko-firefox:8080
-      # Neko Tor
-      - traefik.http.routers.neko-tor.rule=Host(`tor.${DOMAIN_NAME}`)
-      - traefik.http.routers.neko-tor.middlewares=auth@file,neko-tor-sablier@file
-      - traefik.http.routers.neko-tor.service=neko-tor
-      - traefik.http.services.neko-tor.loadbalancer.server.url=http://neko-tor:8080
-      # Neko Chrome
-      - traefik.http.routers.neko-chrome.rule=Host(`chrome.${DOMAIN_NAME}`)
-      - traefik.http.routers.neko-chrome.middlewares=auth@file,neko-chrome-sablier@file
-      - traefik.http.routers.neko-chrome.service=neko-chrome
-      - traefik.http.services.neko-chrome.loadbalancer.server.url=http://neko-chrome:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
@@ -382,61 +372,6 @@ services:
       NEKO_SERVER_PROXY: "true"
     volumes:
       - neko_firefox_profile:/home/neko/.mozilla/firefox/profile.default
-    networks:
-      - proxy
-
-  neko-tor:
-    image: ghcr.io/m1k1o/neko/tor-browser:latest
-    container_name: neko-tor
-    profiles: ["neko"]
-    restart: unless-stopped
-    ports:
-      - "59100-59199:59100-59199/udp"
-    labels:
-      - homepage.group=Socials
-      - homepage.name=Neko (Tor)
-      - homepage.icon=https://neko.m1k1o.net/img/icons/tor-browser.svg
-      - homepage.href=https://tor.{{HOMEPAGE_VAR_DOMAIN_NAME}}/
-      - homepage.description=Navigateur Tor (Neko)
-      - homepage.target=_self
-      - homepage.weight=2
-    environment:
-      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: user
-      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
-      NEKO_DESKTOP_SCREEN: "1920x1080@30"
-      NEKO_WEBRTC_EPR: "59100-59199"
-      NEKO_SERVER_PROXY: "true"
-    volumes:
-      - neko_tor_profile:/opt/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default
-    networks:
-      - proxy
-
-  neko-chrome:
-    image: ghcr.io/m1k1o/neko/google-chrome:latest
-    container_name: neko-chrome
-    profiles: ["neko"]
-    restart: unless-stopped
-    ports:
-      - "59200-59299:59200-59299/udp"
-    shm_size: 2g
-    cap_add:
-      - SYS_ADMIN
-    labels:
-      - homepage.group=Socials
-      - homepage.name=Neko (Chrome)
-      - homepage.icon=https://neko.m1k1o.net/img/icons/google-chrome.svg
-      - homepage.href=https://chrome.{{HOMEPAGE_VAR_DOMAIN_NAME}}/
-      - homepage.description=Navigateur Chrome (Neko)
-      - homepage.target=_self
-      - homepage.weight=6
-    environment:
-      NEKO_MEMBER_MULTIUSER_USER_PASSWORD: user
-      NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: admin
-      NEKO_DESKTOP_SCREEN: "1920x1080@30"
-      NEKO_WEBRTC_EPR: "59200-59299"
-      NEKO_SERVER_PROXY: "true"
-    volumes:
-      - neko_chrome_profile:/home/neko/.config/google-chrome
     networks:
       - proxy
 
@@ -503,8 +438,6 @@ volumes:
   linkding_data:
   jupyter_data:
   neko_firefox_profile:
-  neko_tor_profile:
-  neko_chrome_profile:
   mumble_data:
 
 networks:

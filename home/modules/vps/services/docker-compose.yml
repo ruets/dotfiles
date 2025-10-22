@@ -60,9 +60,10 @@ services:
       - authelia_oidc_private_key.pem
       - authelia_oidc_public_key.pem
       - authelia_oidc_actual_secret
+      - authelia_oidc_linkding_secret
       - smtp_user
       - smtp_pass
-      - lldap_bind_pass
+      - admin_pass
     volumes:
       - authelia_data:/data
       - ./configs/authelia:/config:ro
@@ -89,9 +90,9 @@ services:
       - LLDAP_LDAP_BASE_DN=${LDAP_BASE_DN}
       - LLDAP_JWT_SECRET_FILE=/run/secrets/lldap_jwt_secret
       - LLDAP_KEY_SEED_FILE=/run/secrets/lldap_key_seed
-      - LLDAP_LDAP_USER_PASS_FILE=/run/secrets/lldap_bind_pass
+      - LLDAP_LDAP_USER_PASS_FILE=/run/secrets/admin_pass
     secrets:
-      - lldap_bind_pass
+      - admin_pass
       - lldap_jwt_secret
       - lldap_key_seed
     volumes:
@@ -254,6 +255,39 @@ services:
     networks:
       - proxy
 
+  linkding:
+    image: sissbruecker/linkding:latest
+    # image: sissbruecker/linkding:latest-plus
+
+    container_name: linkding
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.linkding.rule=Host(`bookmarks.${DOMAIN_NAME}`)
+      - traefik.http.routers.linkding.middlewares=auth@file
+      - traefik.http.services.linkding.loadbalancer.server.port=9090
+      - homepage.group=Productivity
+      - homepage.name=Linkding
+      - homepage.icon=https://bookmarks.${DOMAIN_NAME}/static/favicon.ico
+      - homepage.href=https://bookmarks.${DOMAIN_NAME}/
+      - homepage.description=Bookmarks manager
+      - homepage.target=_self
+      - homepage.weight=5
+    environment: 
+      - LD_ENABLE_OIDC=True
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/authorization
+      - OIDC_OP_TOKEN_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/token
+      - OIDC_OP_USER_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/userinfo
+      - OIDC_OP_JWKS_ENDPOINT=https://auth.${DOMAIN_NAME}/jwks.json
+      - OIDC_RP_CLIENT_ID=linkding
+      - OIDC_RP_CLIENT_SECRET=myClientSecret
+      # TODO : change that to a file query
+    secrets:
+      - admin_pass
+    volumes:
+      - linkding_data:/etc/linkding/data
+    networks:
+      - proxy
   omni-tools:
     image: iib0011/omni-tools:latest
     container_name: omni-tools
@@ -420,8 +454,10 @@ secrets:
     file: ./secrets/authelia_oidc_public_key.pem
   authelia_oidc_actual_secret:
     file: ./secrets/authelia_oidc_actual_secret
-  lldap_bind_pass:
-    file: ./secrets/lldap_bind_pass
+  authelia_oidc_linkding_secret:
+    file: ./secrets/authelia_oidc_linkding_secret
+  admin_pass:
+    file: ./secrets/admin_pass
   lldap_jwt_secret:
     file: ./secrets/lldap_jwt_secret
   lldap_key_seed:
@@ -441,6 +477,7 @@ volumes:
   erugo_data:
   actual_data:
   n8n_data:
+  linkding_data:
   neko_firefox_profile:
   neko_tor_profile:
   neko_chrome_profile:

@@ -2,28 +2,40 @@
 
 {
   programs = {
-    waybar.enable = true;
-    rofi.enable = true;
-    wlogout.enable = true;
+    waybar = {
+      enable = true;
+      package = config.lib.nixGL.wrap pkgs.waybar;
+    };
+    rofi = {
+      enable = true;
+      package = config.lib.nixGL.wrap pkgs.rofi;
+    };
+    wlogout = {
+      enable = true;
+      package = config.lib.nixGL.wrap pkgs.wlogout;
+    };
   };
 
-  home.packages = with pkgs; [
-    hyprland
-    hypridle
-    hyprlock
-    hyprpaper
+  home.packages = with pkgs; let
+    gl = config.lib.nixGL.wrap;
+  in [
+    (gl hyprland)
+    (gl hypridle)
+    (gl hyprlock)
+    (gl hyprpaper)
 
-    waypaper
-    nwg-dock-hyprland
-    smile
+    (gl waypaper)
+    (gl nwg-dock-hyprland)
+    (gl smile)
 
-    ags
-    dunst
+    (gl ags)
+    (gl dunst)
 
-    eog
+    (gl eog)
+    (gl meld)
 
-    networkmanager
-    network-manager-applet
+    (gl networkmanager)
+    # (gl network-manager-applet)
   ];
 
   home.file = {

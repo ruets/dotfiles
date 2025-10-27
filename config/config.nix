@@ -12,7 +12,7 @@ in{
   home = {
     stateVersion = "24.11";
     username = user;
-    homeDirectory = "/home/${user}";
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${user}" else "/home/${user}";
     language.base = "fr_FR.UTF-8";
   };
 

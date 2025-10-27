@@ -15,22 +15,27 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-
-      mkHome = host: home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = { inherit inputs; };
-        modules = [ ./hosts/${host}.nix ];
-      };
-    in {
-      homeConfigurations = {
-        gui       = mkHome "gui";
-        cli       = mkHome "cli";
-        hostinger = mkHome "hostinger";
-        wsl       = mkHome "wsl";
-      };
+      supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      pkgs = forAllSystems (system: import nixpkgs { inherit system; });
+    in
+    {
+      homeConfigurations =
+        let
+          mkHome = host: system: home-manager.lib.homeManagerConfiguration {
+            pkgs = pkgs.${system};
+            extraSpecialArgs = { inherit inputs; };
+            modules = [ ./hosts/${host}.nix ];
+          };
+        in
+        {
+          cli = mkHome "cli" "x86_64-linux";
+          gui = mkHome "gui" "x86_64-linux";
+          wsl = mkHome "wsl" "x86_64-linux";
+          hostinger = mkHome "hostinger" "x86_64-linux";
+          darwin = mkHome "darwin" "aarch64-darwin";
+        };
     };
 }

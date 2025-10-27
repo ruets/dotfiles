@@ -9,13 +9,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixgl = {
+      url = "github:nix-community/nixGL";
+    };
+
     wallpapers = {
       url = "github:mylinuxforwork/wallpapers";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixgl, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
@@ -24,18 +28,30 @@
     {
       homeConfigurations =
         let
-          mkHome = host: system: home-manager.lib.homeManagerConfiguration {
-            pkgs = pkgs.${system};
-            extraSpecialArgs = { inherit inputs; };
-            modules = [ ./hosts/${host}.nix ];
-          };
+          mkHome = username: hostname: system:
+            home-manager.lib.homeManagerConfiguration {
+              pkgs = pkgs.${system};
+              extraSpecialArgs = { inherit inputs; };
+              modules = [
+                ./hosts/${hostname}.nix
+                {
+                  home.username = username;
+                  home.homeDirectory = if username == "root" then "/root"
+                                      else if pkgs.${system}.stdenv.isDarwin then "/Users/${username}"
+                                      else "/home/${username}";
+                }
+              ];
+            };
         in
         {
-          cli = mkHome "cli" "x86_64-linux";
-          gui = mkHome "gui" "x86_64-linux";
-          wsl = mkHome "wsl" "x86_64-linux";
-          hostinger = mkHome "hostinger" "x86_64-linux";
-          darwin = mkHome "darwin" "aarch64-darwin";
+          "cli" = mkHome "ruets" "cli" "x86_64-linux";
+          "gui" = mkHome "ruets" "gui" "x86_64-linux";
+          "wsl" = mkHome "ruets" "wsl" "x86_64-linux";
+          "darwin" = mkHome "ruets" "darwin" "aarch64-darwin";
+
+          "hostinger" = mkHome "root" "hostinger" "x86_64-linux";
+
+          "work" = mkHome "sruet" "work" "x86_64-linux";
         };
     };
 }

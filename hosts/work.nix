@@ -13,4 +13,7 @@
     ../home/languages/python.nix
     ../home/languages/texlive.nix
   ];
+
+  home.username = "sruet";
+  home.homeDirectory = "/home/sruet";
 }

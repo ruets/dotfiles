@@ -1,11 +1,14 @@
 { config, pkgs, ... }:
-
+# let
+#   gl = config.lib.nixGL.wrap;
+# in
 {
   programs = {
     PROGRAM.enable = true;
 
     PROGRAM = {
       enable = true;
+      # package = gl pkgs.PRGRM;
       extraConfig = ''
         EXTRA_CONFIG
       '';
@@ -13,7 +16,8 @@
   };
 
   home.packages = with pkgs; [
-    PACKAGES
+    PACKAGE
+    # (gl pkgs.PACKAGE)
   ];
 
   home.file = {

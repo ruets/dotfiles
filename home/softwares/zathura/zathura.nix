@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    zathura-with-plugins
-  ];
+  programs = {
+    zathura.enable = true;
+  };
 }

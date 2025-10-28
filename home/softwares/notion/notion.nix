@@ -2,6 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    _1password-gui
+    notion-app
   ];
 }

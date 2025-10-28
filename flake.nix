@@ -28,20 +28,17 @@
     {
       homeConfigurations =
         let
-          mkHome = hostname: system:
+          mkHome = host: system:
             home-manager.lib.homeManagerConfiguration {
               pkgs = pkgs.${system};
               extraSpecialArgs = { inherit inputs; };
-              modules = [
-                ./hosts/${hostname}.nix
-              ];
+              modules = [ ./hosts/${host}.nix ];
             };
         in
         {
-          "darwin" = mkHome "darwin" "aarch64-darwin";
-          "hostinger" = mkHome "hostinger" "x86_64-linux";
-          "linux" = mkHome "linux" "x86_64-linux";
-          "work" = mkHome "work" "x86_64-linux";
+          "hostinger" = mkHome "hostinger"  "x86_64-linux";
+          "macbook"   = mkHome "macbook"    "aarch64-darwin";
+          "work"      = mkHome "work"       "x86_64-linux";
         };
     };
 }

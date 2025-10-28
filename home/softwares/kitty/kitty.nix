@@ -34,11 +34,11 @@
         selection_background        none
 
         # Include pywal colors
-        include $HOME/.cache/wal/colors-kitty.conf
+        # include $HOME/.cache/wal/colors-kitty.conf
 
         # Include Custom Configuration
         # Create the file custom.conf in ~/.config/kitty to overwrite the default configuration
-        include ./custom.conf
+        # include ./custom.conf
       '';
     };
   };

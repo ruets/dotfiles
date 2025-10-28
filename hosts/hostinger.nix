@@ -11,4 +11,7 @@
     ../home/languages/texlive.nix
     ../home/languages/go.nix
   ];
+
+  home.username = "root";
+  home.homeDirectory = "/root";
 }

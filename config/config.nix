@@ -1,5 +1,14 @@
 { config, pkgs, inputs, ... }:
 
+let
+  nixGLModule = pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+    nixGL = {
+      packages = inputs.nixgl.packages;
+      defaultWrapper = "mesa";
+      installScripts = [ "mesa" ];
+    };
+  };
+in
 {
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
@@ -15,11 +24,5 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
     };
-  };
-
-  nixGL = {
-    packages = inputs.nixgl.packages;
-    defaultWrapper = "mesa";
-    installScripts = [ "mesa" ];
   };
 }

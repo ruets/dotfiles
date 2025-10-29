@@ -74,6 +74,7 @@ in
 
   home.packages = with pkgs; [
     npm_tools
+    prefetch-npm-deps
 
     less
     csvlens

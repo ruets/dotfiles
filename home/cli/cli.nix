@@ -76,6 +76,7 @@ in
     npm_tools
     prefetch-npm-deps
 
+    android-tools
     less
     csvlens
     gum

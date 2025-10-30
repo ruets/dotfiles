@@ -4,6 +4,7 @@
   programs = {
     kitty = {
       enable = true;
+      package = config.lib.nixGL.wrap pkgs.kitty;
       extraConfig = ''
         #    __ ___ __  __
         #   / //_(_) /_/ /___ __

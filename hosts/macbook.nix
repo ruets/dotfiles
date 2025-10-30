@@ -21,7 +21,7 @@
 
     ../home/languages/node.nix
     ../home/languages/python.nix
-    # ../home/languages/texlive.nix
+    ../home/languages/texlive.nix
   ];
 
   home.username = "ruets";

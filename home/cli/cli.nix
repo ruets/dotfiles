@@ -30,10 +30,11 @@ in
       enable = true;
       lfs.enable = true;
 
-      userName = "ruets";
-      userEmail = "dev@ruets.pro";
-
-      extraConfig = {
+      settings = {
+        user = {
+          name = "ruets";
+          email = "dev@ruets.pro";
+        };
         core.editor = "nvim";
         init = { defaultBranch = "main"; };
       };

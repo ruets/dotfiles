@@ -51,14 +51,13 @@ alias dot='cd ~/.config/home-manager'
 alias updateDots='dot; scripts/setup.sh'
 
 function reloadNix
-    dot
     if test (count $argv) -lt 1
         set AVAILABLE_CONFIGS (nix eval .#homeConfigurations --apply builtins.attrNames | tr -d '[]"' | string trim | tr ' ' '\n')
         set CHOICE (printf '%s\n' $AVAILABLE_CONFIGS | gum choose --header="Choose your configuration")
     else
         set CHOICE $argv[1]
     end
-    home-manager switch -b backup --flake "./#$CHOICE" --extra-experimental-features "nix-command flakes"
+    home-manager switch -b backup --flake "$HOME/.config/home-manager/#$CHOICE" --extra-experimental-features "nix-command flakes"
 end
 
 # -----------------------------------------------------

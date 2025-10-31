@@ -20,8 +20,7 @@ let
   # Collect all binaries from all packages
   allBinaries = lib.flatten (lib.mapAttrsToList (pkgPath: pkg:
     let
-      # Extract package name from pkgPath (e.g., "node_modules/adb-wifi" -> "adb-wifi")
-      packageName = lib.last (lib.splitString "/" pkgPath);
+      packageName = lib.removePrefix "node_modules/" pkgPath;
     in
     # Only consider actual dependency packages, not the root package ""
     if pkgPath != "" && pkgPath != "node_modules/.bin" then # Exclude .bin directory
@@ -31,26 +30,24 @@ let
   ) packageLock.packages);
 
   # Generate wrapper scripts
-  wrapperScripts = lib.concatStringsSep "\n" (lib.map (bin: ''
-    cat > $out/bin/${bin.name} << EOF
-    #!${pkgs.runtimeShell}
-    export NODE_PATH="$out/node_modules"
-    exec "${pkgs.lib.getExe pkgs.nodejs}" "$out/node_modules/${bin.pkgName}/${bin.path}" "$@"
-    EOF
-    chmod +x $out/bin/${bin.name}
+  makeWrappers = lib.concatStringsSep "\n" (lib.map (bin: ''
+    makeWrapper ${pkgs.nodejs}/bin/node $out/bin/${bin.name} \
+      --add-flags "$out/lib/node_modules/${bin.pkgName}/${bin.path}" \
+      --set NODE_PATH "$out/lib/node_modules"
   '') allBinaries);
 
 in pkgs.buildNpmPackage rec {
-  pname = "npm_tools";
+  pname = "npm_packages";
   version = "1.0.0";
   src = ./.;
-  npmDepsHash = "sha256-KrZfKp7K86ZY7b03I4LVeM0R1nJJvsgUZbLi64kb1iU=";
+  npmDepsHash = "sha256-/GxHDxfm59IKbVyXKqD0Aqks+qvKWP1BpRTjb3EgsNs=";
   dontNpmBuild = true;
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp -r node_modules $out/
+  nativeBuildInputs = [ pkgs.makeWrapper ];
 
-    ${wrapperScripts}
+  installPhase = ''
+    mkdir -p $out/lib
+    cp -r node_modules $out/lib/
+    ${makeWrappers}
   '';
 }

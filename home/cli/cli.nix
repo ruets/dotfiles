@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  npm_tools = pkgs.callPackage ./npm_tools {};
-in
 {
   programs = {
     fish.enable = true;
@@ -74,10 +71,9 @@ in
   };
 
   home.packages = with pkgs; [
-    npm_tools
-    prefetch-npm-deps
-
+    gitnr
     android-tools
+    lyto
     less
     csvlens
     gum

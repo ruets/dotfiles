@@ -1,7 +1,0 @@
-{
-  "name": "npm_tools",
-  "dependencies": {
-    "adb-wifi": "^0.1.2",
-    "gitignore": "^0.7.0"
-  }
-}

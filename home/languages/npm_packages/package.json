@@ -1,0 +1,6 @@
+{
+  "name": "npm_tools",
+  "dependencies": {
+    "@ionic/cli": "^7.2.1"
+  }
+}

@@ -17,6 +17,11 @@
       url = "github:mylinuxforwork/wallpapers";
       flake = false;
     };
+
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixgl, ... }@inputs:

@@ -85,6 +85,8 @@
     dua
     posting
 
+    tty-clock
+
     gcc
     jq
 

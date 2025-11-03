@@ -85,9 +85,6 @@
     dua
     posting
 
-    tty-clock
-    acpi
-
     gcc
     jq
 
@@ -102,6 +99,8 @@
     spotify-player
   ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
     fprintd
+    ttyclock
+    acpi
   ];
 
   home.file = {

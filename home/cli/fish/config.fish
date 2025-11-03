@@ -46,6 +46,7 @@ alias matrix='cmatrix'
 alias wifi='nmtui'
 alias cleanup='~/.config/ml4w/scripts/cleanup.sh'
 alias combinedaudio='pactl load-module module-combine-sink'
+alias clock='tty-clock -sc'
 
 # -----------------------------------------------------
 # Nix HomeManager

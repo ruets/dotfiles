@@ -24,7 +24,7 @@
     ../home/softwares/waydroid/waydroid.nix
     ../home/softwares/zathura/zathura.nix
 
-    # ../home/languages/node.nix
+    ../home/languages/node.nix
     ../home/languages/python.nix
     ../home/languages/texlive.nix
   ];

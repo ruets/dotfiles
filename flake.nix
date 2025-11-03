@@ -22,6 +22,10 @@
       url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixgl, ... }@inputs:

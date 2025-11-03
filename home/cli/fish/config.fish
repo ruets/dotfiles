@@ -18,6 +18,9 @@ set -g fish_key_bindings fish_vi_key_bindings
 # Define Editor
 set EDITOR nvim
 
+# Define AI Tool
+set AI gemini
+
 # -----------------------------------------------------
 # ALIASES
 # -----------------------------------------------------
@@ -52,7 +55,7 @@ alias updateDots='dot; scripts/setup.sh'
 
 function reloadNix
     if test (count $argv) -lt 1
-        set AVAILABLE_CONFIGS (nix eval .#homeConfigurations --apply builtins.attrNames | tr -d '[]"' | string trim | tr ' ' '\n')
+        set AVAILABLE_CONFIGS (nix eval $HOME/.config/home-manager/#homeConfigurations --apply builtins.attrNames | tr -d '[]"' | string trim | tr ' ' '\n')
         set CHOICE (printf '%s\n' $AVAILABLE_CONFIGS | gum choose --header="Choose your configuration")
     else
         set CHOICE $argv[1]

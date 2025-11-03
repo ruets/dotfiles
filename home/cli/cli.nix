@@ -86,6 +86,7 @@
     posting
 
     tty-clock
+    acpi
 
     gcc
     jq

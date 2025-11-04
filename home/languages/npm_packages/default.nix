@@ -40,7 +40,7 @@ in pkgs.buildNpmPackage rec {
   pname = "npm_packages";
   version = "1.0.0";
   src = ./.;
-  npmDepsHash = "sha256-/GxHDxfm59IKbVyXKqD0Aqks+qvKWP1BpRTjb3EgsNs=";
+  npmDepsHash = "sha256-PXUmfEJVc2322NZS+2PjgU9U3gjHqFuMzYGMJTcOW1M=";
   dontNpmBuild = true;
 
   nativeBuildInputs = [ pkgs.makeWrapper ];

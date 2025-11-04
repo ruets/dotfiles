@@ -176,29 +176,6 @@ services:
     networks:
       - proxy
 
-  erugo:
-    image: wardy784/erugo:latest
-    container_name: erugo
-    restart: unless-stopped
-    expose:
-      - "9998"
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.erugo.rule=Host(`share.${DOMAIN_NAME}`)
-      - traefik.http.routers.erugo.middlewares=auth@file
-      # - traefik.http.services.erugo.loadbalancer.server.port=9998
-      - homepage.group=Productivity
-      - homepage.name=Erugo
-      - homepage.icon=https://erugo.app/content/images/size/w256h256/2025/03/icon.png
-      - homepage.href=https://share.${DOMAIN_NAME}/
-      - homepage.description=Files sharing tool
-      - homepage.target=_self
-      - homepage.weight=1
-    volumes:
-      - erugo_data:/var/www/html/storage
-    networks:
-      - proxy
-
   actual:
     image: docker.io/actualbudget/actual-server:latest
     container_name: actual
@@ -220,7 +197,7 @@ services:
       - homepage.href=https://wallet.${DOMAIN_NAME}/
       - homepage.description=Budget tracking tool
       - homepage.target=_self
-      - homepage.weight=2
+      - homepage.weight=1
     volumes:
       - actual_data:/data
     networks:
@@ -241,7 +218,7 @@ services:
       - homepage.href=https://n8n.${DOMAIN_NAME}/
       - homepage.description=Low code tool
       - homepage.target=_self
-      - homepage.weight=4
+      - homepage.weight=2
     environment:
       - N8N_HOST=n8n.${DOMAIN_NAME}
       - N8N_PORT=5678
@@ -252,40 +229,6 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
       - /local-files:/files
-    networks:
-      - proxy
-
-  linkding:
-    image: sissbruecker/linkding:latest
-    # image: sissbruecker/linkding:latest-plus
-
-    container_name: linkding
-    restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.linkding.rule=Host(`bookmarks.${DOMAIN_NAME}`)
-      - traefik.http.routers.linkding.middlewares=auth@file
-      - traefik.http.services.linkding.loadbalancer.server.port=9090
-      - homepage.group=Productivity
-      - homepage.name=Linkding
-      - homepage.icon=https://bookmarks.${DOMAIN_NAME}/static/favicon.ico
-      - homepage.href=https://bookmarks.${DOMAIN_NAME}/
-      - homepage.description=Bookmarks manager
-      - homepage.target=_self
-      - homepage.weight=5
-    environment: 
-      - LD_ENABLE_OIDC=True
-      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/authorization
-      - OIDC_OP_TOKEN_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/token
-      - OIDC_OP_USER_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/userinfo
-      - OIDC_OP_JWKS_ENDPOINT=https://auth.${DOMAIN_NAME}/jwks.json
-      - OIDC_RP_CLIENT_ID=linkding
-      - OIDC_RP_CLIENT_SECRET=myClientSecret
-      # TODO : change that to a file query
-    secrets:
-      - admin_pass
-    volumes:
-      - linkding_data:/etc/linkding/data
     networks:
       - proxy
 
@@ -305,7 +248,7 @@ services:
       - homepage.href=https://jupyter.${DOMAIN_NAME}/
       - homepage.description=Jupyter notebook
       - homepage.target=_self
-      - homepage.weight=6
+      - homepage.weight=3
     volumes:
       - jupyter_data:/home/jovyan
     networks:
@@ -372,6 +315,62 @@ services:
       NEKO_SERVER_PROXY: "true"
     volumes:
       - neko_firefox_profile:/home/neko/.mozilla/firefox/profile.default
+    networks:
+      - proxy
+
+  erugo:
+    image: wardy784/erugo:latest
+    container_name: erugo
+    restart: unless-stopped
+    expose:
+      - "9998"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.erugo.rule=Host(`share.${DOMAIN_NAME}`)
+      - traefik.http.routers.erugo.middlewares=auth@file
+      # - traefik.http.services.erugo.loadbalancer.server.port=9998
+      - homepage.group=Socials
+      - homepage.name=Erugo
+      - homepage.icon=https://erugo.app/content/images/size/w256h256/2025/03/icon.png
+      - homepage.href=https://share.${DOMAIN_NAME}/
+      - homepage.description=Files sharing tool
+      - homepage.target=_self
+      - homepage.weight=2
+    volumes:
+      - erugo_data:/var/www/html/storage
+    networks:
+      - proxy
+
+  linkding:
+    image: sissbruecker/linkding:latest
+    # image: sissbruecker/linkding:latest-plus
+    container_name: linkding
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.linkding.rule=Host(`bookmarks.${DOMAIN_NAME}`)
+      - traefik.http.routers.linkding.middlewares=auth@file
+      - traefik.http.services.linkding.loadbalancer.server.port=9090
+      - homepage.group=Socials
+      - homepage.name=Linkding
+      - homepage.icon=https://bookmarks.${DOMAIN_NAME}/static/favicon.ico
+      - homepage.href=https://bookmarks.${DOMAIN_NAME}/
+      - homepage.description=Bookmarks manager
+      - homepage.target=_self
+      - homepage.weight=3
+    environment:
+      - LD_ENABLE_OIDC=True
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/authorization
+      - OIDC_OP_TOKEN_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/token
+      - OIDC_OP_USER_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/userinfo
+      - OIDC_OP_JWKS_ENDPOINT=https://auth.${DOMAIN_NAME}/jwks.json
+      - OIDC_RP_CLIENT_ID=linkding
+      - OIDC_RP_CLIENT_SECRET=myClientSecret
+      # TODO : change that to a file query
+    secrets:
+      - admin_pass
+    volumes:
+      - linkding_data:/etc/linkding/data
     networks:
       - proxy
 

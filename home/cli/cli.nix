@@ -99,7 +99,7 @@
     spotify-player
   ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
     fprintd
-    ttyclock
+    tty-clock
     acpi
   ];
 

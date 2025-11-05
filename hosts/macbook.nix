@@ -6,8 +6,6 @@
 
     ../home/cli/cli.nix
 
-    # TODO
-    # ../home/modules/mac-app-util/mac-app-util.nix
     ../home/modules/wallpapers/wallpapers.nix
 
     ../home/softwares/1password/1password.nix

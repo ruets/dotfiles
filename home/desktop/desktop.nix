@@ -24,9 +24,18 @@
   in [
     (gl hyprland)
     (gl hyprpaper)
-    hyprpanel
+    hyprshade
     hyprmon
+    hyprpanel
+# ashell
+
+    # hyprlock
+    # hypridle
     brightnessctl
+    pipewire
+    wireplumber
+
+    cliphist
 
     (gl waypaper)
     (gl nwg-dock-hyprland)
@@ -36,9 +45,6 @@
 
     (gl eog)
     (gl meld)
-
-    (gl networkmanager)
-    # (gl network-manager-applet)
   ];
 
   home = {
@@ -53,10 +59,12 @@
       ".config/waypaper/config.ini".source = ./waypaper/config.ini;
       ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
       ".config/dunst/dunstrc".source = ./dunst/dunstrc;
-      ".config/ml4w/".source = ./ml4w;
     };
 
     activation = {
+      cache = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p ${config.home.homeDirectory}/.cache/dotfiles
+      '';
       hyprland = config.lib.dag.entryAfter [ "writeBoundary" ] ''
         cp -f ${config.home.homeDirectory}/.config/hypr/hyprland_default.conf \
               ${config.home.homeDirectory}/.config/hypr/hyprland.conf
@@ -70,10 +78,6 @@
       #   # Symlink the PAM file from the hyprlock package
       #   /bin/sudo /bin/ln -sf ${pkgs.hyprlock}/etc/pam.d/hyprlock /etc/pam.d/hyprlock
       # '';
-    };
-
-    sessionVariables = {
-      HYPRLAND_CONFIG = "${config.home.homeDirectory}/.config/hypr/conf/monitor.conf";
     };
   };
 }

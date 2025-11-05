@@ -2,8 +2,6 @@
 
 {
   imports = [
-    ../config/config.nix
-
     ../home/cli/cli.nix
 
     ../home/modules/wallpapers/wallpapers.nix

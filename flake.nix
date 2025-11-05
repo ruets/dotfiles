@@ -25,6 +25,7 @@
 
     mac-app-util = {
       url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -41,7 +42,10 @@
             home-manager.lib.homeManagerConfiguration {
               pkgs = pkgs.${system};
               extraSpecialArgs = { inherit inputs; };
-              modules = [ ./hosts/${host}.nix ];
+              modules = [
+                # (if system == "aarch64-darwin" then inputs.mac-app-util.homeManagerModules.default else null)
+                ./hosts/${host}.nix
+              ];
             };
         in
         {

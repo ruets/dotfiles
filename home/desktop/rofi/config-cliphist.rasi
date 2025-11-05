@@ -27,17 +27,8 @@ configuration {
     
 }
 
-/* ---- Load font ---- */
-@import "~/.config/ml4w/settings/rofi-font.rasi"
-
 /* ---- Load pywal colors (custom wal template) ---- */
 @import "~/.cache/wal/colors-rofi-pywal"
-
-/* ---- Load wallpaper ---- */
-@import "~/.config/ml4w/cache/current_wallpaper.rasi"
-
-/* ---- Load border width ---- */
-@import "~/.config/ml4w/settings/rofi-border.rasi"
 
 /* ---- Window ---- */
 window {
@@ -47,8 +38,7 @@ window {
     spacing:                      0px;
     padding:                      0px;
     margin:                       0px; 
-    color:                        #FFFFFF;
-    border:                       @border-width;
+    border:                       3px;
     border-color:                 #FFFFFF;
     cursor:                       "default";
     transparency:                 "real";
@@ -67,7 +57,6 @@ mainbox {
     spacing:                      0px;
     margin:                       0px;
     background-color:             @background;
-    background-image:             @current-image;
     children:                     ["listbox"];
 }
 
@@ -171,7 +160,7 @@ element {
     cursor:                       pointer;
     background-color:             @background;
     border-radius:                10px;
-    border:                       @border-width;
+    border:                       3px;
 }
 
 element normal.normal {

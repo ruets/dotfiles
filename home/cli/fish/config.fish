@@ -116,25 +116,9 @@ alias gcheck="git checkout"
 alias gcredential="git config credential.helper store"
 
 # -----------------------------------------------------
-# SCRIPTS
-# -----------------------------------------------------
-alias ascii='~/.config/ml4w/scripts/figlet.sh'
-
-# -----------------------------------------------------
 # System
 # -----------------------------------------------------
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-
-# -----------------------------------------------------
-# VIRTUAL MACHINE
-# -----------------------------------------------------
-alias vm='~/.config/ml4w/scripts/launchvm.sh'
-alias lg='~/.config/ml4w/scripts/looking-glass.sh'
-
-# -----------------------------------------------------
-# RDP
-# -----------------------------------------------------
-alias rdp='~/.config/ml4w/scripts/launchrdp.sh'
 
 # -----------------------------------------------------
 # EDIT CONFIG FILES

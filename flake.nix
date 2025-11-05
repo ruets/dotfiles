@@ -47,6 +47,8 @@
               pkgs = pkgs.${system};
               extraSpecialArgs = { inherit inputs; };
               modules = [
+                ./config/config.nix
+                ./config/settings.nix
                 # (if system == "aarch64-darwin" then inputs.mac-app-util.homeManagerModules.default else null)
                 ./hosts/${host}.nix
               ];

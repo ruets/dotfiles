@@ -27,6 +27,10 @@
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprconfig = {
+      url = "github:olafkfreund/r-hyprconfig";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nixgl, ... }@inputs:

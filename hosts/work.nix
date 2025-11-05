@@ -8,6 +8,7 @@
     ../home/desktop/desktop.nix
 
     ../home/modules/wallpapers/wallpapers.nix
+    ../home/modules/bibata-cursors/bibata-cursors.nix
 
     ../home/softwares/1password/1password.nix
     ../home/softwares/cava/cava.nix

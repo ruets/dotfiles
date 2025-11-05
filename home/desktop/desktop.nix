@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, lib, ... }:
 
 {
+  imports = [
+    inputs.hyprconfig.homeManagerModules.default
+  ];
+
   programs = {
-    waybar = {
-      enable = true;
-      package = config.lib.nixGL.wrap pkgs.waybar;
-    };
     rofi = {
       enable = true;
       package = config.lib.nixGL.wrap pkgs.rofi;
@@ -14,21 +14,24 @@
       enable = true;
       package = config.lib.nixGL.wrap pkgs.wlogout;
     };
+    r-hyprconfig = {
+      enable = true;
+    };
   };
 
   home.packages = with pkgs; let
     gl = config.lib.nixGL.wrap;
   in [
     (gl hyprland)
-    (gl hypridle)
-    (gl hyprlock)
     (gl hyprpaper)
+    hyprpanel
+    hyprmon
+    brightnessctl
 
     (gl waypaper)
     (gl nwg-dock-hyprland)
     (gl smile)
 
-    (gl ags)
     (gl dunst)
 
     (gl eog)
@@ -38,23 +41,39 @@
     # (gl network-manager-applet)
   ];
 
-  home.file = {
-    ".config/waybar/".source = ./waybar;
+  home = {
+    file = {
+      ".config/hypr" = {
+        source = ./hypr;
+        recursive = true;
+      };
 
-    ".config/rofi/".source = ./rofi;
+      ".config/rofi/".source = ./rofi;
+      ".config/wlogout/".source = ./wlogout;
+      ".config/waypaper/config.ini".source = ./waypaper/config.ini;
+      ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
+      ".config/dunst/dunstrc".source = ./dunst/dunstrc;
+      ".config/ml4w/".source = ./ml4w;
+    };
 
-    ".config/wlogout/".source = ./wlogout;
+    activation = {
+      hyprland = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        cp -f ${config.home.homeDirectory}/.config/hypr/hyprland_default.conf \
+              ${config.home.homeDirectory}/.config/hypr/hyprland.conf
+        chmod +w ${config.home.homeDirectory}/.config/hypr/hyprland.conf
+      '';
 
-    ".config/hypr/".source = ./hypr;
+      # pam-hyprlock = config.lib.dag.entryAfter ["writeBoundary"] ''
+      #   echo -----------------------------------------------------------------------
+      #   echo Ensure hyprlock PAM configuration exists
+      #   echo -----------------------------------------------------------------------
+      #   # Symlink the PAM file from the hyprlock package
+      #   /bin/sudo /bin/ln -sf ${pkgs.hyprlock}/etc/pam.d/hyprlock /etc/pam.d/hyprlock
+      # '';
+    };
 
-    ".config/waypaper/config.ini".source = ./waypaper/config.ini;
-
-    ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
-
-    ".config/ags/".source = ./ags;
-
-    ".config/dunst/dunstrc".source = ./dunst/dunstrc;
-
-    ".config/ml4w/".source = ./ml4w;
+    sessionVariables = {
+      HYPRLAND_CONFIG = "${config.home.homeDirectory}/.config/hypr/conf/monitor.conf";
+    };
   };
 }

@@ -85,6 +85,9 @@
     dua
     posting
 
+    pandoc
+    go-grip
+
     gcc
     jq
 

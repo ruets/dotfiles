@@ -127,11 +127,6 @@ alias confp='$EDITOR ~/.config/picom/picom.conf'
 alias confb='$EDITOR ~/.config/fish/config.fish'
 
 # -----------------------------------------------------
-# EDIT NOTES
-# -----------------------------------------------------
-alias notes='$EDITOR ~/notes.txt'
-
-# -----------------------------------------------------
 # SYSTEM
 # -----------------------------------------------------
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'

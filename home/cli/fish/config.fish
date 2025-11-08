@@ -64,6 +64,22 @@ function reloadNix
     home-manager switch -b backup --flake "$HOME/.config/home-manager/#$CHOICE" --extra-experimental-features "nix-command flakes"
 end
 
+function cleanupNix
+    echo "🧹 Suppression des générations Home Manager de plus de 7 jours..."
+    home-manager expire-generations "-7 days"
+
+    echo "🧹 Suppression des anciennes générations système..."
+    nix-collect-garbage --delete-older-than 7d
+
+    echo "🧹 Garbage collect..."
+    nix store gc
+
+    echo "🧩 Optimisation du store..."
+    nix store optimise
+
+    echo "✅ Nettoyage terminé."
+end
+
 # -----------------------------------------------------
 # ML4W Apps
 # -----------------------------------------------------

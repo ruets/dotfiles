@@ -406,13 +406,9 @@ services:
       - homepage.weight=3
     environment:
       - LD_ENABLE_OIDC=True
-      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/authorization
-      - OIDC_OP_TOKEN_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/token
-      - OIDC_OP_USER_ENDPOINT=https://auth.${DOMAIN_NAME}/api/oidc/userinfo
-      - OIDC_OP_JWKS_ENDPOINT=https://auth.${DOMAIN_NAME}/jwks.json
-      - OIDC_RP_CLIENT_ID=linkding
-      - OIDC_RP_CLIENT_SECRET=myClientSecret
-      # TODO : change that to a file query
+      - LD_SUPERUSER_NAME=${MAIN_USER}
+      - LD_ENABLE_AUTH_PROXY=True
+      - LD_AUTH_PROXY_USERNAME_HEADER=HTTP_REMOTE_USER
     secrets:
       - admin_pass
     volumes:

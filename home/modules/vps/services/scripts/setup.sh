@@ -18,7 +18,7 @@ ask_yes_no() {
   done
 }
 ask_string() {
-  local prompt="$1" def="${2:-}"
+  local prompt="$1" def="${2:-""}"
   if has_gum; then
     gum input --placeholder "$prompt" --value "$def"
   else
@@ -62,22 +62,49 @@ SECDIR="./secrets"
 mkdir -p "$SECDIR"
 
 ### -----------------------------
-### .env questions
+### .env setup & questions
 ### -----------------------------
-DOMAIN_NAME=$(ask_string "Main domain name")
-GENERIC_TIMEZONE=$(ask_string "IANA Timezone" "Europe/Paris")
-SSL_EMAIL=$(ask_string "Let's Encrypt/ACME Email" "user@$DOMAIN_NAME")
-SMTP_USER=$(ask_string "SMTP username (Proton Bridge: 'info' output)" "")
-SMTP_PASS=$(ask_string "SMTP password (Proton Bridge: 'info' output)" "")
+ENV_FILE=".env"
+touch "$ENV_FILE"
+# Helper to read a value from the .env file
+get_kv() {
+  # grep for key=value, take first match, return everything after first "="
+  grep -E "^${1}=" "$ENV_FILE" | head -n 1 | cut -d'=' -f2-
+}
+
+DOMAIN_NAME=$(ask_string "Main domain name" "$(get_kv DOMAIN_NAME)")
+GENERIC_TIMEZONE=$(ask_string "IANA Timezone" "$(get_kv GENERIC_TIMEZONE || echo 'Europe/Paris')")
+
+# Default for SSL_EMAIL depends on DOMAIN_NAME, which may have just been entered
+DEFAULT_SSL_EMAIL=$(get_kv SSL_EMAIL)
+if [[ -z "$DEFAULT_SSL_EMAIL" && -n "$DOMAIN_NAME" ]]; then
+  DEFAULT_SSL_EMAIL="user@$DOMAIN_NAME"
+fi
+SSL_EMAIL=$(ask_string "Let's Encrypt/ACME Email" "$DEFAULT_SSL_EMAIL")
+
+MAIN_USER=$(ask_string "Main admin username" "$(get_kv MAIN_USER || echo 'admin')")
+
+# Conditionally ask for SMTP secrets only if they don't already exist
+SMTP_USER=""
+if ! [[ -s "$SECDIR/smtp_user" ]]; then
+  SMTP_USER=$(ask_string "SMTP username (Proton Bridge: 'info' output)" "")
+else
+  say "Secret 'smtp_user' already exists, skipping prompt."
+fi
+
+SMTP_PASS=""
+if ! [[ -s "$SECDIR/smtp_pass" ]]; then
+  SMTP_PASS=$(ask_string "SMTP password (Proton Bridge: 'info' output)" "")
+else
+  say "Secret 'smtp_pass' already exists, skipping prompt."
+fi
 
 LDAP_BASE_DN=$(echo "$DOMAIN_NAME" | awk -F. '{for(i=1;i<=NF;i++){printf "dc=%s", $i; if(i<NF) printf ","}}')
 
 ### -----------------------------
 ### Write .env (simple merge)
 ### -----------------------------
-ENV_FILE=".env"
 say "Writing $ENV_FILE"
-touch "$ENV_FILE"
 set_kv() {
   local k="$1" v="$2"
   if grep -qE "^${k}=" "$ENV_FILE"; then
@@ -90,6 +117,7 @@ set_kv DOMAIN_NAME "$DOMAIN_NAME"
 set_kv LDAP_BASE_DN "$LDAP_BASE_DN"
 set_kv GENERIC_TIMEZONE "$GENERIC_TIMEZONE"
 set_kv SSL_EMAIL "$SSL_EMAIL"
+set_kv MAIN_USER "$MAIN_USER"
 
 ### -----------------------------
 ### Generate secrets
@@ -97,15 +125,14 @@ set_kv SSL_EMAIL "$SSL_EMAIL"
 rand32() { openssl rand -base64 32; }
 write_secret() {
   local secname="${1:?missing secret name}"
-  local value="${2-}" path="$SECDIR/$secname"
+  local value="${2-""}" path="$SECDIR/$secname"
   [ -z "${value+x}" ] && value=""
 
   if [[ -s "$path" ]]; then
-    if ask_yes_no "Secret '$secname' exists. Overwrite?"; then :; else
-      say "Keeping: $secname"
-      return
-    fi
+    say "Keeping existing secret: $secname"
+    return
   fi
+
   printf "%s" "$value" >"$path"
   chmod 600 "$path"
   say "→ $path"

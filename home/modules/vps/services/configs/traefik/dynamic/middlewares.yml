@@ -15,6 +15,10 @@ http:
       forwardAuth:
         address: "http://authelia:9091/api/authz/forward-auth"
         trustforwardheader: true
+        authResponseHeaders:
+          - "Remote-User"
+          - "Remote-Email"
+          - "Remote-Groups"
     neko-firefox-sablier:
       plugin:
         sablier:

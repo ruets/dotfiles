@@ -158,6 +158,24 @@ services:
     networks:
       - proxy
 
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.whoami.middlewares=auth@file"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+      - "homepage.group=Admin"
+      - "homepage.name=Whoami (Debug)"
+      - "homepage.icon=https://raw.githubusercontent.com/traefik/whoami/master/docs/logo.png"
+      - "homepage.href=https://whoami.${DOMAIN_NAME}/"
+      - "homepage.description=Shows request headers"
+      - "homepage.weight=6"
+    networks:
+      - proxy
+
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage

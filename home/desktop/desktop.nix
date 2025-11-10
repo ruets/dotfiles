@@ -8,11 +8,9 @@
   programs = {
     rofi = {
       enable = true;
-      package = config.lib.nixGL.wrap pkgs.rofi;
     };
     wlogout = {
       enable = true;
-      package = config.lib.nixGL.wrap pkgs.wlogout;
     };
     r-hyprconfig = {
       enable = true;
@@ -23,7 +21,7 @@
     gl = config.lib.nixGL.wrap;
   in [
     (gl hyprland)
-    (gl hyprpaper)
+    hyprpaper
     hyprshade
     hyprmon
     hyprpanel
@@ -37,14 +35,14 @@
 
     cliphist
 
-    (gl waypaper)
-    (gl nwg-dock-hyprland)
-    (gl smile)
+    waypaper
+    nwg-dock-hyprland
+    smile
 
-    (gl dunst)
+    dunst
 
-    (gl eog)
-    (gl meld)
+    eog
+    meld
   ];
 
   home = {

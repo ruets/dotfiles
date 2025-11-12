@@ -9,6 +9,7 @@
     ../home/modules/bibata-cursors/bibata-cursors.nix
 
     ../home/softwares/1password/1password.nix
+    ../home/softwares/bruno/bruno.nix
     ../home/softwares/cava/cava.nix
     ../home/softwares/kitty/kitty.nix
     ../home/softwares/mission-center/mission-center.nix

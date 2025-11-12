@@ -10,7 +10,6 @@
 
     ../home/softwares/1password/1password.nix
     ../home/softwares/cava/cava.nix
-    ../home/softwares/docker/docker.nix
     ../home/softwares/kitty/kitty.nix
     ../home/softwares/mission-center/mission-center.nix
     ../home/softwares/qualculate/qalculate.nix

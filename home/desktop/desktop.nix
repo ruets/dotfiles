@@ -25,10 +25,12 @@
     hyprshade
     hyprmon
     hyprpanel
-# ashell
+    # ashell
 
     # hyprlock
     # hypridle
+    # swaylock
+    swaylock-effects
     brightnessctl
     pipewire
     wireplumber

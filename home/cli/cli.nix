@@ -87,6 +87,7 @@
 
     pandoc
     go-grip
+    sqlite
 
     gcc
     jq

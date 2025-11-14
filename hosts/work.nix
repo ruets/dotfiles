@@ -15,6 +15,7 @@
     ../home/softwares/google-chrome/google-chrome.nix
     ../home/softwares/kitty/kitty.nix
     ../home/softwares/mission-center/mission-center.nix
+    ../home/softwares/obs-studio/obs-studio.nix
     ../home/softwares/pinta/pinta.nix
     ../home/softwares/qualculate/qalculate.nix
     ../home/softwares/spotify/spotify.nix

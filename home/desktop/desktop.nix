@@ -34,6 +34,7 @@ in
     hyprmon
     hyprpanel
     # ashell
+    hyprpicker
 
     hypridle
     # hyprlock
@@ -46,6 +47,9 @@ in
     wireplumber
 
     cliphist
+    grimblast
+    # hdrop
+    # scratchpad
 
     waypaper
     nwg-dock-hyprland

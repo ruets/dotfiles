@@ -16,6 +16,8 @@ let
     { name = "system_monitor"; command = "mission-center"; }
     { name = "network_manager"; command = "nm-connection-editor"; }
 
+    { name = "screenshot"; command = "grimblast copy area"; }
+    { name = "screen_recorder"; command = "obs"; }
     { name = "wallpaper_engine"; command = "waypaper"; }
     { name = "emoji_picker"; command = "smile"; }
     { name = "calculator"; command = "dotfiles-terminal -e qalc"; }

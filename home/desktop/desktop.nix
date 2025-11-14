@@ -35,8 +35,8 @@ in
     hyprpanel
     # ashell
 
+    hypridle
     # hyprlock
-    # hypridle
     # swaylock
     # swaylock-effects
     swaylockEffectsNoPam

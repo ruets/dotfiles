@@ -30,6 +30,7 @@ in
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap hyprland)
     hyprpaper
+    swww
     hyprshade
     hyprmon
     hyprpanel
@@ -41,6 +42,8 @@ in
     # swaylock
     # swaylock-effects
     swaylockEffectsNoPam
+
+    sass
 
     brightnessctl
     pipewire

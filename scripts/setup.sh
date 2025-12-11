@@ -4,7 +4,7 @@ set -euo pipefail
 
 # === CONSTANTS ===
 DOTFILES_DIR="$HOME/.config/home-manager"
-DOTFILES_REPO="git@github.com:ruets/dotfiles.git"
+DOTFILES_REPO="https://github.com/ruets/dotfiles"
 
 REQUIRED_COMMANDS=(
   curl
@@ -15,6 +15,7 @@ REQUIRED_COMMANDS=(
 NIX_PACKAGES=(
   gum
 )
+
 WINGET_PACKAGES=(
   "Google.Chrome"
   "AgileBits.1Password"

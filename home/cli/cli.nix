@@ -23,6 +23,8 @@
     # claude-code.enable = true;
     gemini-cli.enable = true;
 
+    gallery-dl.enable = true;
+
     git = {
       enable = true;
       lfs.enable = true;
@@ -91,6 +93,7 @@
 
     gcc
     jq
+    hyperfine
 
     xclip
     gitleaks
@@ -99,7 +102,6 @@
 
     cmatrix
 
-    _1password-cli
     spotify-player
   ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
     fprintd

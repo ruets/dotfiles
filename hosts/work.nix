@@ -5,28 +5,43 @@
     ../home/cli/cli.nix
     ../home/desktop/desktop.nix
 
-    ../home/modules/wallpapers/wallpapers.nix
-    ../home/modules/fonts/fonts.nix
-    ../home/modules/bibata-cursors/bibata-cursors.nix
-
-    ../home/softwares/1password/1password.nix
-    ../home/softwares/bruno/bruno.nix
-    ../home/softwares/cava/cava.nix
-    ../home/softwares/discord/discord.nix
-    ../home/softwares/google-chrome/google-chrome.nix
-    ../home/softwares/kitty/kitty.nix
-    ../home/softwares/mission-center/mission-center.nix
-    ../home/softwares/obs-studio/obs-studio.nix
-    ../home/softwares/pinta/pinta.nix
-    ../home/softwares/qualculate/qalculate.nix
-    ../home/softwares/spotify/spotify.nix
-    ../home/softwares/zathura/zathura.nix
+    ../home/modules/wallpapers.nix
 
     ../home/languages/node.nix
     ../home/languages/python.nix
     ../home/languages/texlive.nix
   ];
 
-  home.username = "sruet";
-  home.homeDirectory = "/home/sruet";
+  programs = {
+    obs-studio = {
+      enable = true;
+
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+        obs-backgroundremoval
+        obs-pipewire-audio-capture
+        obs-vaapi #optional AMD hardware acceleration
+        obs-gstreamer
+        obs-vkcapture
+      ];
+    };
+  };
+
+  home = {
+    username = "sruet";
+    homeDirectory = "/home/sruet";
+
+    packages = with pkgs; [
+      _1password-gui
+      bruno
+      bruno-cli
+      discord
+      google-chrome
+      qbittorrent
+      libqalculate
+      spotify
+      scrcpy
+      waydroid
+    ];
+  };
 }

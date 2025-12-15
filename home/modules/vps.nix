@@ -8,9 +8,9 @@
       force = true;
     };
 
-    "services/configs".source = ./services/configs;
+    "services/configs".source = ./vps/configs;
 
-    "services/docker-compose.yml".source = ./services/docker-compose.yml;
+    "services/docker-compose.yml".source = ./vps/docker-compose.yml;
  
     "services/secrets/.keep".text = "";
   };

@@ -49,9 +49,12 @@
               modules = [
                 ./config/config.nix
                 ./config/settings.nix
-                # (if system == "aarch64-darwin" then inputs.mac-app-util.homeManagerModules.default else null)
+              ] ++ [
                 ./hosts/${host}.nix
-              ];
+              ] ++ nixpkgs.lib.optional (system == "aarch64-darwin") {
+                targets.darwin.copyApps.enable = true;
+                targets.darwin.linkApps.enable = false;
+              };
             };
         in
         {

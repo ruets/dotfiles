@@ -22,7 +22,29 @@
       qbittorrent
       libqalculate
       spotify
+
+      skhd
     ];
+
+  # TODO add yabai and move to nix darwin
+  file = {
+    ".skhdrc".text = ''
+      # skhd configuration file
+      # Reload skhd configuration
+      cmd + alt + ctrl - r : skhd --reload
+      # Open kitty terminal
+      cmd - return : open -a kitty
+    '';
+    };
+  };
+
+  launchd.agents.skhd = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "${pkgs.skhd}/bin/skhd" ];
+      RunAtLoad = true;
+      KeepAlive = true;
+    };
   };
 
   programs = {

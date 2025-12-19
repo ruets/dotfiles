@@ -20,7 +20,6 @@
       google-chrome
       notion-app
       qbittorrent
-      libqalculate
       spotify
 
       skhd

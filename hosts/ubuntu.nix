@@ -38,7 +38,6 @@
       discord
       google-chrome
       qbittorrent
-      libqalculate
       spotify
       scrcpy
       waydroid

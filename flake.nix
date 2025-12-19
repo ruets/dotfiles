@@ -35,7 +35,7 @@
 
   outputs = { self, nixpkgs, home-manager, nixgl, ... }@inputs:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       pkgs = forAllSystems (system: import nixpkgs { inherit system; });
     in
@@ -59,8 +59,9 @@
         in
         {
           "hostinger" = mkHome "hostinger"  "x86_64-linux";
-          "macbook"   = mkHome "macbook"    "aarch64-darwin";
-          "work"      = mkHome "work"       "x86_64-linux";
+          "darwin"    = mkHome "darwin"     "aarch64-darwin";
+          "ubuntu"    = mkHome "ubuntu"     "x86_64-linux";
+          "test"      = mkHome "test"       "aarch64-linux";
         };
     };
 }

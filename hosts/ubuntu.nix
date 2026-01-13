@@ -33,8 +33,6 @@
 
     packages = with pkgs; [
       _1password-gui
-      bruno
-      bruno-cli
       discord
       google-chrome
       qbittorrent

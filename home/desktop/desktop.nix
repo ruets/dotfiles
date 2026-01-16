@@ -116,6 +116,7 @@ in
 
     dunst
     showmethekey
+    solaar
 
     eog
     meld

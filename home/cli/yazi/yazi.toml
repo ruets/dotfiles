@@ -1,0 +1,29 @@
+[manager]
+show_hidden = false
+sort_by = "natural"
+sort_sensitive = false
+sort_reverse = false
+linemode = "size"
+
+[opener]
+edit = [
+  { run = "nvim \"$@\"", block = true }
+]
+
+pdf = [
+  { run = "zathura \"$@\"", orphan = true }
+]
+
+image = [
+  { run = "eog \"$@\"", orphan = true }
+]
+
+[open]
+rules = [
+  { mime = "application/pdf", use = "pdf" },
+  { mime = "text/*", use = "edit" },
+  { mime = "application/json", use = "edit" },
+  { mime = "application/javascript", use = "edit" },
+  { mime = "application/typescript", use = "edit" },
+  { mime = "inode/directory", use = "edit" }
+]

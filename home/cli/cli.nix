@@ -82,6 +82,7 @@
     libqalculate
 
     #distant
+    yazi
     w3m
     nnn
     dua
@@ -122,6 +123,11 @@
     ".config/wal/templates".source = ./wal/templates;
 
     ".config/nvim/".source = ./nvim;
+
+    ".config/yazi/" = {
+      source = ./yazi;
+      recursive = true;
+    };
 
     ".config/htop/htoprc".source = ./htop/htoprc;
   };

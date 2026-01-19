@@ -6,7 +6,7 @@ let
     { name = "editor";   command = "nvim"; }
 
     { name = "launcher"; command = "rofi -show drun -replace -i -theme ~/.config/rofi/config.rasi"; }
-    { name = "file_manager"; command = "dotfiles-terminal -e ranger"; }
+    { name = "file_manager"; command = "dotfiles-terminal -e yazi"; }
     { name = "browser"; command = "google-chrome-stable --enable-features=TouchpadOverscrollHistoryNavigation"; }
     { name = "mail"; command = "google-chrome-stable --app-id=jnpecgipniidlgicjocehkhajgdnjekh"; }
     { name = "ai"; command = "google-chrome-stable --app-id=cadlkienfkclaiaibeoongdcgmdikeeg"; }

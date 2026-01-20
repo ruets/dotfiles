@@ -80,6 +80,7 @@ in
     bibata-cursors
 
     (config.lib.nixGL.wrap hyprland)
+    hyprlandPlugins.hyprexpo
     hyprpaper
     swww
     hyprshade

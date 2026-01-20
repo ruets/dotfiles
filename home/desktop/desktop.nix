@@ -142,6 +142,12 @@ in
         source = ./hypr;
         recursive = true;
       };
+
+      ".config/solaar" = {
+        source = ./solaar;
+        recursive = true;
+      };
+
       ".config/cava/".source = ./cava;
       ".config/rofi/".source = ./rofi;
       ".config/wlogout/".source = ./wlogout;

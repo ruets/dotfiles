@@ -1,0 +1,15 @@
+%YAML 1.3
+---
+- Rule:
+  - MouseGesture: Mouse Right
+  - Execute: [hyprctl, dispatch, workspace, '+1']
+- Rule:
+  - MouseGesture: Mouse Left
+  - Execute: [hyprctl, dispatch, workspace, '-1']
+- Rule:
+  - MouseGesture: Mouse Up
+  - Execute: [hyprctl, dispatch, 'hyprexpo:expo', 'on']
+- Rule:
+  - MouseGesture: Mouse Down
+  - Execute: [hyprctl, dispatch, 'hyprexpo:expo', 'off']
+...

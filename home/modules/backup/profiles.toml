@@ -1,0 +1,27 @@
+version = "1"
+
+[default]
+  # repository = "s3:eu-west-2.wasabisys.com/my-backup-bucket"
+  # password-file = ""
+  env-file = "~/.config/resticprofile/.env"
+  initialize = true
+
+  # [default.env]
+  #   AWS_ACCESS_KEY_ID = "my-access-key-id"
+  #   AWS_SECRET_ACCESS_KEY = "my-secret-access"
+
+  [default.backup]
+    source = [ "/home", "/etc", "/var/lib/docker/volumes"]
+    exclude = [ "/etc/mtab", "/etc/.pwd.lock", "/var/lib/docker/volumes/tmp" ]
+    exclude-caches = true
+    schedule = "daily"
+    schedule-after-network-online = true
+    run-after = [ "resticprofile forget", "resticprofile snapshots" ]
+
+  [default.forget]
+    keep-daily = 7
+    keep-weekly = 4
+    prune = true
+
+  [default.snapshots]
+    latest = 5

@@ -22,6 +22,8 @@
       qbittorrent
       spotify
 
+      jetbrains-toolbox
+
       skhd
     ];
 

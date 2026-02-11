@@ -39,6 +39,8 @@
       spotify
       scrcpy
       waydroid
+
+      jetbrains-toolbox
     ];
   };
 }

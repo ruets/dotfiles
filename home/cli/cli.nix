@@ -20,7 +20,7 @@
     btop.enable = true;
 
     codex.enable = true;
-    # claude-code.enable = true;
+    claude-code.enable = true;
     gemini-cli.enable = true;
 
     gallery-dl.enable = true;

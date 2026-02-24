@@ -21,7 +21,7 @@ set -g fish_key_bindings fish_vi_key_bindings
 set EDITOR nvim
 
 # Define AI Tool
-set AI gemini
+set AI claude
 
 # -----------------------------------------------------
 # ALIASES

@@ -23,7 +23,7 @@
     claude-code.enable = true;
     gemini-cli.enable = true;
 
-    gallery-dl.enable = true;
+    # gallery-dl.enable = true;
 
     git = {
       enable = true;

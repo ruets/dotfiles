@@ -24,7 +24,7 @@
 
       jetbrains-toolbox
 
-      skhd
+      # skhd
     ];
 
   # TODO add yabai and move to nix darwin
@@ -39,14 +39,14 @@
     };
   };
 
-  launchd.agents.skhd = {
-    enable = true;
-    config = {
-      ProgramArguments = [ "${pkgs.skhd}/bin/skhd" ];
-      RunAtLoad = true;
-      KeepAlive = true;
-    };
-  };
+  # launchd.agents.skhd = {
+  #   enable = true;
+  #   config = {
+  #     ProgramArguments = [ "${pkgs.skhd}/bin/skhd" ];
+  #     RunAtLoad = true;
+  #     KeepAlive = true;
+  #   };
+  # };
 
   programs = {
     kitty = {

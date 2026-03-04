@@ -33,6 +33,10 @@
 
     packages = with pkgs; [
       _1password-gui
+      _1password-cli
+      bitwarden-desktop
+      bitwarden-cli
+
       discord
       google-chrome
       qbittorrent

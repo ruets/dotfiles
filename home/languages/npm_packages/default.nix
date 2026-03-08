@@ -40,6 +40,7 @@ in pkgs.buildNpmPackage rec {
   pname = "npm_packages";
   version = "1.0.0";
   src = ./.;
+  # prefetch-npm-dep
   npmDepsHash = "sha256-LF+IOZkG8pzf5+oGB6uNKNiNgL7/xuTpqXr9K742+Vk=";
   dontNpmBuild = true;
 

@@ -26,6 +26,9 @@
 
       jetbrains-toolbox
 
+      docker
+      docker-compose
+
       # skhd
     ];
 

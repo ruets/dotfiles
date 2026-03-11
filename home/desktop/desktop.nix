@@ -97,6 +97,7 @@ in
 
     sass
     kooha
+    freerdp
 
     brightnessctl
     pipewire

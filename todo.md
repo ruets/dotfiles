@@ -1,4 +1,22 @@
-# TODO - Configuration Solaar et Chrome Sandbox
+# TODO
+
+## Configuration Settings par Host
+
+Permettre aux hosts d'ajouter/override des settings (dotfiles-* wrappers) tout en gardant les defaults.
+
+### Approche
+- [ ] Modifier `config/settings.nix` pour accepter `customApps` en paramètre (merge avec defaultApps)
+- [ ] Passer `customApps` depuis chaque host (darwin.nix, ubuntu.nix, etc.)
+- [ ] Vérifier que les apps defaults sont toujours disponibles + les customs du host
+
+### Bénéfices
+- Chaque host peut ajouter ses propres wrappers
+- Les defaults restent partagés
+- Pas de duplication
+
+---
+
+## Configuration Solaar et Chrome Sandbox
 
 ## Problème Solaar
 Solaar ne peut pas lire les uinputs - besoin de permissions correctes et de configurer les règles

@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
-{
+let
+  username = "ruets";
+  homeDirectory = "/Users/ruets";
+  gitUserName = "ruets";
+  gitUserEmail = "dev@ruets.pro";
+in {
   imports = [
     ../home/cli/cli.nix
 
@@ -11,8 +16,8 @@
   ];
 
   home = {
-    username = "ruets";
-    homeDirectory = "/Users/ruets";
+    username = username;
+    homeDirectory = homeDirectory;
 
     packages = with pkgs; [
       _1password-gui
@@ -32,15 +37,15 @@
       # skhd
     ];
 
-  # TODO add yabai and move to nix darwin
-  file = {
-    ".skhdrc".text = ''
-      # skhd configuration file
-      # Reload skhd configuration
-      cmd + alt + ctrl - r : skhd --reload
-      # Open kitty terminal
-      cmd - return : open -a kitty
-    '';
+    # TODO add yabai and move to nix darwin
+    file = {
+      ".skhdrc".text = ''
+        # skhd configuration file
+        # Reload skhd configuration
+        cmd + alt + ctrl - r : skhd --reload
+        # Open kitty terminal
+        cmd - return : open -a kitty
+      '';
     };
   };
 
@@ -92,6 +97,15 @@
         # Create the file custom.conf in ~/.config/kitty to overwrite the default configuration
         # include ./custom.conf
       '';
+    };
+
+    git = {
+      settings = {
+        user = {
+          name = gitUserName;
+          email = gitUserEmail;
+        };
+      };
     };
   };
 }

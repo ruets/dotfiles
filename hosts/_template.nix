@@ -1,7 +1,11 @@
 { config, pkgs, ... }:
-# let
-#   gl = config.lib.nixGL.wrap;
-# in
+let
+  username = "";
+  homeDirectory = "";
+  gitUserName = "";
+  gitUserEmail = "";
+  # gl = config.lib.nixGL.wrap;
+in {
 {
   imports = [
     ../home/cli/cli.nix
@@ -14,21 +18,9 @@
     ../home/languages/texlive.nix
   ];
 
-  programs = {
-    PROGRAM.enable = true;
-
-    PROGRAM = {
-      enable = true;
-      package = gl pkgs.PRGRM;
-      extraConfig = ''
-        EXTRA_CONFIG
-      '';
-    };
-  };
-
   home = {
-    username = "ruets";
-    homeDirectory = "/home/ruets";
+    username = username;
+    homeDirectory = homeDirectory;
 
     packages = with pkgs; [
       # (gl pkgs.PACKAGE)
@@ -41,6 +33,27 @@
       ".config/APP_DIR/CONFIG_FILE" = {
         source = ./APP_DIR/CONFIG_FILE;
         recursive = true;
+      };
+    };
+  };
+
+  programs = {
+    PROGRAM.enable = true;
+
+    PROGRAM = {
+      enable = true;
+      package = gl pkgs.PRGRM;
+      extraConfig = ''
+        EXTRA_CONFIG
+      '';
+    };
+
+    git = {
+      settings = {
+        user = {
+          name = gitUserName;
+          email = gitUserEmail;
+        };
       };
     };
   };

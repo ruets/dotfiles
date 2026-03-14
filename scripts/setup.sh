@@ -95,13 +95,37 @@ check_user_var() {
 }
 
 ensure_home_symlink() {
-  if [ "$IS_ROOT" = "true" ]; then
-    [ -d "/home/$USER" ] || ln -s "$HOME" "/home/$USER"
+  local os home_path
+
+  os="$(uname -s)"
+  if [[ "$os" == "Darwin" ]]; then
+    home_path="/Users/$USER"
   else
-    [ -d "/home/$USER" ] || sudo ln -s "$HOME" "/home/$USER"
+    home_path="/home/$USER"
   fi
 
-  echo "✅ /home/$USER is ready."
+  # If the expected home path already exists as a directory, nothing to do.
+  if [ -d "$home_path" ]; then
+    echo "✅ $home_path is ready."
+    return 0
+  fi
+
+  # If something exists there but it's not a directory (file/symlink), don't clobber it.
+  if [ -e "$home_path" ] || [ -L "$home_path" ]; then
+    echo "⚠️ $home_path exists but is not a directory. Not modifying it."
+    return 0
+  fi
+
+  # Ensure parent directory exists, then create a symlink pointing to $HOME
+  if [ "$IS_ROOT" = "true" ]; then
+    mkdir -p "$(dirname "$home_path")"
+    ln -s "$HOME" "$home_path"
+  else
+    sudo mkdir -p "$(dirname "$home_path")"
+    sudo ln -s "$HOME" "$home_path"
+  fi
+
+  echo "✅ $home_path is ready."
 }
 
 check_required_commands() {

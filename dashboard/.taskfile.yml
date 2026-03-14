@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  build:
+    cmds:
+      - go build -o dotman main.go
+    desc: Build le projet
+
+  run:
+    cmds:
+      - go run main.go
+    desc: Lance le programme
+
+  install:
+    cmds:
+      - go install .
+    desc: Installe localement

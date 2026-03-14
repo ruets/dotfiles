@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
-{
+let
+  username = "ruets";
+  homeDirectory = "/home/ruets";
+  gitUserName = "ruets";
+  gitUserEmail = "dev@ruets.pro";
+in {
   imports = [
     ../home/cli/cli.nix
     ../home/desktop/desktop.nix
@@ -12,11 +17,22 @@
   ];
 
   home = {
-    username = "ruets";
-    homeDirectory = "/home/ruets";
+    username = username;
+    homeDirectory = homeDirectory;
 
     packages = with pkgs; [
       _1password-gui
     ];
+  };
+
+programs = {
+  git = {
+      settings = {
+        user = {
+          name = gitUserName;
+          email = gitUserEmail;
+        };
+      };
+    };
   };
 }

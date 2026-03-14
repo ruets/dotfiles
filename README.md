@@ -104,8 +104,29 @@ nix flake update nixpkgs  # a specific input
 
 ### Add a new host
 
-Copy `hosts/_template.nix` to `hosts/<name>.nix`, adapt it, then register the configuration in `flake.nix`:
+1. **Copy the template:**
+   ```bash
+   cp hosts/_template.nix hosts/<name>.nix
+   ```
 
-```nix
-"<name>" = mkHome "<name>" "<system>";  # e.g. "x86_64-linux"
-```
+2. **Configure the host** (edit `hosts/<name>.nix`):
+   - Set `username`, `homeDirectory`, `gitUserName`, `gitUserEmail`
+   - Select modules to import (cli, desktop, languages, etc.)
+   - Add packages specific to this host
+   - Configure programs as needed
+
+3. **Register in flake.nix:**
+   Add your configuration to the `homeConfigurations` set:
+   ```nix
+   "<name>" = mkHome "<name>" "<system>";  # e.g. "x86_64-linux"
+   ```
+
+   Common system values:
+   - `"aarch64-darwin"` – Apple Silicon macOS
+   - `"x86_64-linux"` – Linux (Intel/AMD)
+   - `"aarch64-linux"` – Linux ARM
+
+4. **Apply the configuration:**
+   ```bash
+   home-manager switch --flake .#<name>
+   ```

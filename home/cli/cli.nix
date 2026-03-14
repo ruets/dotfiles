@@ -30,10 +30,6 @@
       lfs.enable = true;
 
       settings = {
-        user = {
-          name = "ruets";
-          email = "dev@ruets.pro";
-        };
         core.editor = "nvim";
         init = { defaultBranch = "main"; };
       };

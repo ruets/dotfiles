@@ -58,6 +58,7 @@
             };
         in
         {
+          "beta"      = mkHome "beta"       "aarch64-darwin";
           "hostinger" = mkHome "hostinger"  "x86_64-linux";
           "darwin"    = mkHome "darwin"     "aarch64-darwin";
           "ubuntu"    = mkHome "ubuntu"     "x86_64-linux";

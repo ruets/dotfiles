@@ -89,6 +89,13 @@ in
     # ashell
     hyprpicker
 
+    pipewire
+    wireplumber
+    xdg-desktop-portal
+    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk
+
     hypridle
     # hyprlock
     # swaylock
@@ -136,6 +143,10 @@ in
     sessionVariables = {
       XCURSOR_THEME = "Bibata-Modern-Classic";
       XCURSOR_SIZE = "24";
+
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_DESKTOP = "Hyprland";
+      XDG_SESSION_TYPE = "wayland";
     };
 
     file = {
@@ -155,6 +166,20 @@ in
       ".config/waypaper/config.ini".source = ./waypaper/config.ini;
       ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
       ".config/dunst/dunstrc".source = ./dunst/dunstrc;
+
+      ".config/xdg-desktop-portal/portals.conf".text = ''
+        [portals]
+        default=hyprland;wlr
+        org.freedesktop.impl.portal.ScreenCast=hyprland;wlr
+        org.freedesktop.impl.portal.Screenshot=hyprland;wlr
+        org.freedesktop.impl.portal.Inhibit=hyprland;wlr
+      '';
+
+      ".config/systemd/user/pipewire.service".source = "${pkgs.pipewire}/share/systemd/user/pipewire.service";
+      ".config/systemd/user/pipewire.socket".source = "${pkgs.pipewire}/share/systemd/user/pipewire.socket";
+      ".config/systemd/user/wireplumber.service".source = "${pkgs.wireplumber}/share/systemd/user/wireplumber.service";
+      ".config/systemd/user/xdg-desktop-portal.service".source = "${pkgs.xdg-desktop-portal}/share/systemd/user/xdg-desktop-portal.service";
+      ".config/systemd/user/xdg-desktop-portal-hyprland.service".source = "${pkgs.xdg-desktop-portal-hyprland}/share/systemd/user/xdg-desktop-portal-hyprland.service";
     };
 
     activation = {
@@ -177,6 +202,28 @@ in
           echo "Le bit SetUID est déjà positionné sur $swaylockPath. Aucune action requise."
         fi
       '';
+    };
+  };
+
+  systemd = {
+    user = {
+      targets = {
+        desktop-portals = {
+          Unit = {
+            Description = "Desktop Portals and PipeWire";
+            After = [ "dbus.service" ];
+            Wants = [
+              "pipewire.service"
+              "wireplumber.service"
+              "xdg-desktop-portal.service"
+              "xdg-desktop-portal-hyprland.service"
+            ];
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        };
+      };
     };
   };
 }

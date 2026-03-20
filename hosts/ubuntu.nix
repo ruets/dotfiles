@@ -19,7 +19,7 @@ in {
 
   home = {
     username = username;
-    homeDirectory = homeDirextory;
+    homeDirectory = homeDirectory;
 
     packages = with pkgs; [
       _1password-gui
@@ -52,13 +52,11 @@ in {
       ];
     };
 
-    programs = {
-      git = {
-        settings = {
-          user = {
-            name = gitUserName;
-            email = gitUserEmail;
-          };
+    git = {
+      settings = {
+        user = {
+          name = gitUserName;
+          email = gitUserEmail;
         };
       };
     };

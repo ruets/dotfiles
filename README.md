@@ -21,7 +21,7 @@ home/
   cli/cli.nix           # common CLI tools (fish, neovim, git, tmux…)
   desktop/desktop.nix   # GUI packages
   languages/            # language toolchains (go, node, python, rust…)
-  modules/              # optional modules (vps, wallpapers, winapps)
+  modules/              # optional modules (vps, wallpapers)
 ```
 
 Each host imports only the `home/` modules it needs. For example, `darwin.nix` only imports `cli.nix` (no desktop), while `ubuntu.nix` imports both cli and desktop.

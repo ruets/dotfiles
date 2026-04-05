@@ -1,29 +1,14 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+let
+  mkConfigSymlinks = (import ../../lib/mkConfigSymlinks.nix lib).mkConfigSymlinks;
+in
 
 {
   programs = {
-    fish.enable = true;
-    fastfetch.enable = true;
-    starship.enable = true;
-    pywal.enable = true;
-    eza.enable = true;
-    bat.enable = true;
 
-    neovim.enable = true;
-    ripgrep.enable = true;
-    fzf.enable = true;
-    fd.enable = true;
 
-    ranger.enable = true;
-    lazygit.enable = true;
-    htop.enable = true;
-    btop.enable = true;
 
-    codex.enable = true;
-    claude-code.enable = true;
-    gemini-cli.enable = true;
-
-    # gallery-dl.enable = true;
+    # .enable = true;
 
     git = {
       enable = true;
@@ -50,25 +35,34 @@
 
       ];
     };
-
-    tmux = {
-      enable = true;
-      extraConfig = ''
-        # Enable true colors
-        set -g default-terminal "$TERM"
-        set -ag terminal-overrides ",$TERM:Tc"
-
-        # Enable mouse mode
-        set -g mouse on
-
-        # Start counting pane and window number at 1
-        set -g base-index 1
-        setw -g pane-base-index 1
-      '';
-    };
   };
 
   home.packages = with pkgs; [
+    fish
+    fastfetch
+    starship
+    pywal
+    eza
+    bat
+
+    tmux
+
+    neovim
+    ripgrep
+    fzf
+    fd
+
+    ranger
+    lazygit
+    htop
+    btop
+
+    codex
+    claude-code
+    gemini-cli
+
+    # gallery-dl
+
     gitnr
     android-tools
     lyto
@@ -106,25 +100,9 @@
     acpi
   ];
 
-  home.file = {
-    ".config/fish/" = {
-      source = ./fish;
-      recursive = true;
-    };
-
-    ".config/fastfetch/config.jsonc".source = ./fastfetch/config.jsonc;
-
-    ".config/starship/starship.toml".source = ./starship/starship.toml;
-
-    ".config/wal/templates".source = ./wal/templates;
-
-    ".config/nvim/".source = ./nvim;
-
-    ".config/yazi/" = {
-      source = ./yazi;
-      recursive = true;
-    };
-
-    ".config/htop/htoprc".source = ./htop/htoprc;
+  xdg.configFile = mkConfigSymlinks {
+    inherit config;
+    srcPath    = ./config;
+    srcAbsPath = "${config.home.homeDirectory}/.config/home-manager/home/cli/config";
   };
 }

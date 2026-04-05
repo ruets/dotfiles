@@ -1,5 +1,7 @@
 { inputs, config, pkgs, lib, ... }:
 let
+  mkConfigSymlinks = (import ../../lib/mkConfigSymlinks.nix lib).mkConfigSymlinks;
+
   swaylockEffectsNoPam = pkgs.swaylock-effects.overrideAttrs (oldAttrs: {
     mesonFlags = builtins.filter (flag: flag != "-Dpam=enabled") oldAttrs.mesonFlags ++ [
       "-Dpam=disabled"
@@ -16,20 +18,6 @@ in
   ];
 
   programs = {
-    zathura.enable = true;
-    cava = {
-      enable = true;
-    };
-    rofi = {
-      enable = true;
-    };
-    wlogout = {
-      enable = true;
-    };
-    r-hyprconfig = {
-      enable = true;
-    };
-
     kitty = {
       enable = true;
       package = config.lib.nixGL.wrap pkgs.kitty;
@@ -42,7 +30,7 @@ in
         #
         # Configuration
         font_family                 FiraCode Nerd Font
-        font_size	                12
+        font_size	                  12
         bold_font                   auto
         italic_font                 auto
         bold_italic_font            auto
@@ -73,6 +61,12 @@ in
   };
 
   home.packages = with pkgs; [
+    zathura
+    cava
+    rofi
+    wlogout
+    r-hyprconfig
+
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
     fira
@@ -150,31 +144,6 @@ in
     };
 
     file = {
-      ".config/hypr" = {
-        source = ./hypr;
-        recursive = true;
-      };
-
-      ".config/solaar" = {
-        source = ./solaar;
-        recursive = true;
-      };
-
-      ".config/cava/".source = ./cava;
-      ".config/rofi/".source = ./rofi;
-      ".config/wlogout/".source = ./wlogout;
-      ".config/waypaper/config.ini".source = ./waypaper/config.ini;
-      ".config/nwg-dock-hyprland/".source = ./nwg-dock-hyprland;
-      ".config/dunst/dunstrc".source = ./dunst/dunstrc;
-
-      ".config/xdg-desktop-portal/portals.conf".text = ''
-        [portals]
-        default=hyprland;wlr
-        org.freedesktop.impl.portal.ScreenCast=hyprland;wlr
-        org.freedesktop.impl.portal.Screenshot=hyprland;wlr
-        org.freedesktop.impl.portal.Inhibit=hyprland;wlr
-      '';
-
       ".config/systemd/user/pipewire.service".source = "${pkgs.pipewire}/share/systemd/user/pipewire.service";
       ".config/systemd/user/pipewire.socket".source = "${pkgs.pipewire}/share/systemd/user/pipewire.socket";
       ".config/systemd/user/wireplumber.service".source = "${pkgs.wireplumber}/share/systemd/user/wireplumber.service";
@@ -225,5 +194,11 @@ in
         };
       };
     };
+  };
+
+  xdg.configFile = mkConfigSymlinks {
+    inherit config;
+    srcPath    = ./config;
+    srcAbsPath = "${config.home.homeDirectory}/.config/home-manager/home/desktop/config";
   };
 }

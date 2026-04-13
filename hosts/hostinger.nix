@@ -9,6 +9,8 @@ in {
   imports = [
     ../home/cli/cli.nix
 
+    ../home/modules/backup.nix
+
     ../home/languages/node.nix
     ../home/languages/python.nix
   ];

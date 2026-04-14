@@ -89,6 +89,8 @@ in
     cmatrix
 
     spotify-player
+
+    exegol
   ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
     fprintd
     tty-clock

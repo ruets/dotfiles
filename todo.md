@@ -41,8 +41,6 @@ AppArmor empêche le sandbox de Chrome de fonctionner correctement
 - [ ] Rules actuelles:
   - MouseGesture Right → Workspace -1
   - MouseGesture Left → Workspace +1
-  - MouseGesture Up → hyprexpo on
-  - MouseGesture Down → hyprexpo off
 
 ### 4. Fixer le Chrome Sandbox (AppArmor)
 - [ ] Exécuter la commande:

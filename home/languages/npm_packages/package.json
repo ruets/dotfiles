@@ -1,9 +1,0 @@
-{
-  "name": "npm_tools",
-  "dependencies": {
-    "@ionic/cli": "^7.2.1",
-    "browser-sync": "^3.0.4",
-    "vite": "^7.1.12",
-    "@angular/cli": "^16.2.14"
-  }
-}

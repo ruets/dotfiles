@@ -35,6 +35,8 @@ in {
       waydroid
 
       jetbrains-toolbox
+
+      ionic-cli
     ];
   };
 

@@ -16,7 +16,7 @@
     };
   };
 
-  nixGL = lib.mkIf pkgs.stdenv.isLinux {
+  targets.genericLinux.nixGL = lib.mkIf pkgs.stdenv.isLinux {
     packages = inputs.nixgl.packages;
     defaultWrapper = "mesa";
     installScripts = [ "mesa" ];

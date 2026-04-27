@@ -18,6 +18,10 @@ in
   ];
 
   programs = {
+    r-hyprconfig = {
+      enable = true;
+    };
+
     kitty = {
       enable = true;
       package = config.lib.nixGL.wrap pkgs.kitty;
@@ -65,7 +69,6 @@ in
     cava
     rofi
     wlogout
-    r-hyprconfig
 
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono

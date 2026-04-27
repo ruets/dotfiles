@@ -18,6 +18,7 @@ let
     { name = "network_manager"; command = "nm-connection-editor"; }
 
     { name = "screenshot"; command = "grimblast copy area"; }
+    { name = "screen_recorder_lite"; command = "kooha"; }
     { name = "screen_recorder"; command = "obs"; }
     { name = "wallpaper_engine"; command = "waypaper"; }
     { name = "emoji_picker"; command = "smile"; }

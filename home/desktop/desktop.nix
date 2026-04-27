@@ -78,7 +78,7 @@ in
 
     (config.lib.nixGL.wrap hyprland)
     hyprpaper
-    swww
+    awww
     hyprshade
     hyprmon
     hyprpanel

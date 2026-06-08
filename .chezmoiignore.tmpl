@@ -1,0 +1,22 @@
+{{ if not (and (eq .chezmoi.os "linux") (not .is_server)) }}
+dot_config/cava
+dot_config/dunst
+dot_config/hypr
+dot_config/nwg-dock-hyprland
+dot_config/rofi
+dot_config/solaar
+dot_config/wal
+dot_config/waypaper
+dot_config/wlogout
+dot_config/xdg-desktop-portal
+dot_local/bin
+{{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+dot_Brewfile
+dot_skhdrc
+{{ end }}
+
+{{ if not .is_server }}
+dot_config/resticprofile
+{{ end }}

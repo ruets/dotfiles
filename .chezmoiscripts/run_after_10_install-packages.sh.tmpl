@@ -1,0 +1,38 @@
+#!/bin/bash
+# Package installation script - installs packages from centralized configuration
+
+set -e
+
+{{ if eq .chezmoi.os "darwin" }}
+# macOS: Homebrew
+echo "=== Installing macOS packages with Homebrew ==="
+
+if ! command -v brew &> /dev/null; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+if [ -f "$HOME/.Brewfile" ]; then
+    echo "Installing packages from Brewfile..."
+    brew bundle --global
+fi
+
+{{ else if eq .chezmoi.osRelease.id "ubuntu" }}
+# Ubuntu/Debian: apt
+echo "=== Installing Ubuntu packages with apt ==="
+
+sudo apt update
+
+echo "Installing packages..."
+{{ range $name, $pkg := .packages }}
+sudo apt install -y {{ $pkg }} || true
+{{ end }}
+
+{{ else }}
+echo "=== OS not supported ==="
+echo "Detected OS: {{ .chezmoi.os }}"
+exit 1
+
+{{ end }}
+
+echo "=== Package installation complete ==="

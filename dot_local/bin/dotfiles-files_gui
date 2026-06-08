@@ -1,0 +1,2 @@
+#!/bin/bash
+exec dotfiles-terminal -e dotfiles-files "$@"

@@ -1,0 +1,161 @@
+{{- $machineType := promptChoice "Machine type" (list "personal" "work") -}}
+{{- $isServer := promptBool "Is this a server?" false -}}
+
+data:
+  machine_type: "{{ $machineType }}"
+  is_server: {{ $isServer }}
+  git_name: "{{ if eq $machineType "work" }}Sébastien RUET{{ else }}ruets{{ end }}"
+  git_email: "{{ if eq $machineType "work" }}sebastien.ruet@insa-lyon.fr{{ else }}ruets@proton.me{{ end }}"
+
+  packages:
+    # Core packages for all systems
+    fish: brew "fish"
+    fastfetch: brew "fastfetch"
+    starship: brew "starship"
+    # pywal
+    eza: brew "eza"
+    bat: brew "bat"
+    tmux: brew "tmux"
+    neovim: brew "neovim"
+    lazygit: brew "lazygit"
+    htop: brew "htop"
+    btop: brew "btop"
+    claude-code: cask "claude-code"
+    less: brew "less"
+    libqalculate: brew "libqalculate"
+    yazi: brew "yazi"
+    dua: brew "dua-cli"
+    posting: brew "posting"
+    # texlive
+    sqlite: brew "sqlite"
+    jq: brew "jq"
+    commitizen: brew "commitizen"
+    git: brew "git"
+
+    gum: brew "gum"
+    ripgrep: brew "ripgrep"
+    fzf: brew "fzf"
+    fd: brew "fd"
+
+    docker: brew "docker"
+    docker-compose: brew "docker-compose"
+    # gallery-dl
+    # gitnr
+    # csvlens
+
+    # pandoc
+    # xclip
+    # lazycli
+    # cmatrix
+    # spotify-player
+
+    saucecodepro: cask "font-sauce-code-pro-nerd-font"
+
+    {{ if not .is_server }}
+    1password: cask "1password"
+    1password-cli: cask "1password-cli"
+    discord: cask "discord"
+    google-chrome: cask "google-chrome"
+    qbittorrent: cask "qbittorrent"
+    spotify: cask "spotify"
+    # Desktop packages (Linux desktop only)
+    # hyprland
+    # waybar
+    # rofi
+    # dunst
+    # cava
+    # waypaper
+    # awww
+    # wl-clipboard
+    # grimblast
+    # obs-studio
+    # hyprconfig
+    #
+    kitty: cask "kitty"
+    # zathura
+    # wlogout
+    # r-hyprconfig
+    # nerd-fonts.fira-code
+    # nerd-fonts.jetbrains-mono
+    # fira
+    # bibata-cursors
+    # hyprlandPlugins.hyprexpo
+    # hyprshade
+    # hyprmon
+    # hyprpanel
+    # hyprpicker
+    # pipewire
+    # wireplumber
+    # xdg-desktop-portal
+    # xdg-desktop-portal-hyprland
+    # xdg-desktop-portal-wlr
+    # xdg-desktop-portal-gtk
+    # hypridle
+    # swaylock-effects
+    # kooha
+    # freerdp
+    # brightnessctl
+    # pipewire
+    # wireplumber
+    # cliphist
+    # grimblast
+    # nwg-dock-hyprland
+    # smile
+    # swappy
+    # pinta
+    # mission-center
+    # mpv
+    # showmethekey
+    # solaar
+    {{ end }}
+    #
+    {{ if eq .chezmoi.os "darwin" }}
+    # # macOS specific packages
+    # docker: docker
+    # docker-compose: docker-compose
+    # 1password: 1password
+    # discord: discord
+    # google-chrome: google-chrome
+    # qbittorrent: qbittorrent
+    # spotify: spotify
+    #
+    # _1password-gui
+    # _1password-cli
+    #
+    # discord
+    # google-chrome
+    # notion-app
+    # qbittorrent
+    # spotify
+    #
+    # jetbrains-toolbox
+    #
+    # docker
+    # docker-compose
+    #
+    # skhd
+    {{ end }}
+    #
+    {{ if eq .chezmoi.os "linux" }}
+    # # Linux specific packages
+    # fprintd
+    # tty-clock
+    # acpi
+    #
+    # _1password-gui
+    # _1password-cli
+    # bitwarden-desktop
+    # bitwarden-cli
+    #
+    # discord
+    # google-chrome
+    # qbittorrent
+    # spotify
+    # scrcpy
+    # waydroid
+    #
+    # jetbrains-toolbox
+    {{ end }}
+    #
+    # # Work profile packages
+    # bitwarden: bitwarden

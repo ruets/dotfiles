@@ -1,0 +1,5 @@
+# skhd configuration file
+# Reload skhd configuration
+cmd + alt + ctrl - r : skhd --reload
+# Open kitty terminal
+cmd - return : open -a kitty

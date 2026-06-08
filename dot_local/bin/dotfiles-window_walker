@@ -1,0 +1,2 @@
+#!/bin/bash
+exec rofi -show window -replace -i -theme ~/.config/rofi/config.rasi "$@"

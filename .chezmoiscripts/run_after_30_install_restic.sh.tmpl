@@ -1,0 +1,20 @@
+#!/bin/bash
+# Install restic and resticprofile to make backup
+
+set -e
+
+IS_SERVER="{{ .is_server }}"
+
+if [ "$IS_SERVER" != "true" ]; then
+  echo "Not a server, skipping restic installation..."
+  exit 0
+fi
+
+echo "=== Installing backup tools ==="
+echo "Installing Restic..."
+sudo apt install -y restic
+
+echo "Installing Resticprofile..."
+curl -fsSL https://raw.githubusercontent.com/creativeprojects/resticprofile/master/install.sh | sudo sh -s -- -b /usr/local/bin
+
+echo "=== Backup tools installation complete ==="

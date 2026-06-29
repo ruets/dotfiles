@@ -37,8 +37,6 @@ data:
     fzf: brew "fzf"
     fd: brew "fd"
 
-    docker: brew "docker"
-    docker-compose: brew "docker-compose"
     # gallery-dl
     # gitnr
     # csvlens
@@ -58,6 +56,9 @@ data:
     google-chrome: cask "google-chrome"
     qbittorrent: cask "qbittorrent"
     spotify: cask "spotify"
+    {{ if eq .chezmoi.os "darwin" }}
+    orbstack: cask "orbstack"
+    {{ end }}
     # Desktop packages (Linux desktop only)
     # hyprland
     # waybar

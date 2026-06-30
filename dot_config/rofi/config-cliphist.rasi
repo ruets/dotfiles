@@ -27,8 +27,8 @@ configuration {
     
 }
 
-/* ---- Load pywal colors (custom wal template) ---- */
-@import "~/.cache/wal/colors-rofi-pywal"
+/* ---- Load Matugen colors ---- */
+@import "colors.rasi"
 
 /* ---- Window ---- */
 window {
@@ -39,7 +39,7 @@ window {
     padding:                      0px;
     margin:                       0px; 
     border:                       3px;
-    border-color:                 #FFFFFF;
+    border-color:                 @outline;
     cursor:                       "default";
     transparency:                 "real";
     location:                     northeast;
@@ -129,7 +129,7 @@ button {
 }
 
 button selected {
-    background-color:             @color11;
+    background-color:             @primary;
     text-color:                   @foreground;
 }
 
@@ -179,7 +179,7 @@ element normal.active {
 }
 
 element selected.normal {
-    background-color:            @color11;
+    background-color:            @primary;
     text-color:                  @foreground;
 }
 

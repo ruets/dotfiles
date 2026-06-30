@@ -1,0 +1,59 @@
+[config]
+version_check = false
+fallback_color = "#88d1ec"
+prefer = "closest-to-fallback"
+caching = false
+
+[templates.hyprland]
+input_path = "~/.config/matugen/templates/hyprland.conf"
+output_path = "~/.config/hypr/matugen.conf"
+post_hook = "hyprctl reload || true"
+
+[templates.hyprlock]
+input_path = "~/.config/matugen/templates/hyprlock.conf"
+output_path = "~/.config/hypr/matugen-hyprlock.conf"
+
+[templates.waybar]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/waybar/styles/top/tokens/colors.css"
+post_hook = "pkill -SIGUSR2 waybar || true"
+
+[templates.swaync]
+input_path = "~/.config/matugen/templates/swaync-variables.css"
+output_path = "~/.config/swaync/tokens/variables.css"
+post_hook = "swaync-client -rs || true"
+
+[templates.rofi]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors.rasi"
+
+[templates.wlogout]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/wlogout/colors.css"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/kitty.conf"
+output_path = "~/.config/kitty/matugen.conf"
+post_hook = "kitty +kitten themes --reload-in=all Matugen || true"
+
+[templates.terminal-sequences]
+input_path = "~/.config/matugen/templates/terminal-sequences"
+output_path = "~/.cache/matugen/terminal-sequences"
+post_hook = "while IFS= read -r seq; do printf \"$seq\" | tee /dev/pts/[0-9]* >/dev/null 2>/dev/null || true; done < ~/.cache/matugen/terminal-sequences"
+
+[templates.cava]
+input_path = "~/.config/matugen/templates/cava"
+output_path = "~/.config/cava/themes/matugen"
+post_hook = "pkill -USR1 cava || true"
+
+[templates.starship]
+input_path = "~/.config/matugen/templates/starship-colors.toml"
+output_path = "~/.config/starship/starship.toml"
+
+[templates.yazi]
+input_path = "~/.config/matugen/templates/yazi-theme.toml"
+output_path = "~/.config/yazi/theme.toml"
+
+[templates.waypaper]
+input_path = "~/.config/matugen/templates/waypaper.ini"
+output_path = "~/.config/waypaper/config.ini"

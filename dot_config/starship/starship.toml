@@ -1,7 +1,17 @@
+palette = "matugen"
+
 [character]
-success_symbol = "[>](bold green)"
-error_symbol = "[x](bold red)"
-vimcmd_symbol = "[<](bold green)"
+success_symbol = "[>](bold primary)"
+error_symbol = "[x](bold error)"
+vimcmd_symbol = "[<](bold secondary)"
+
+[palettes.matugen]
+primary = "#88d1ec"
+secondary = "#b3cad4"
+tertiary = "#c3c3eb"
+error = "#ffb4ab"
+surface = "#0f1416"
+on_surface = "#dee3e6"
 
 [git_commit]
 tag_symbol = " tag "

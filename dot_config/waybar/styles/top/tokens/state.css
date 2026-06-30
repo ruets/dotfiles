@@ -1,0 +1,30 @@
+window#waybar.top #custom-tray-arrow.inhibited-none,
+window#waybar.top #custom-tray-arrow.dnd-none,
+window#waybar.top #battery.charging,
+window#waybar.top #power-profiles-daemon.power-saver {
+  color: @primary;
+}
+
+
+window#waybar.top #idle_inhibitor.activated,
+window#waybar.top #cpu.warning,
+window#waybar.top #disk.warning,
+window#waybar.top #memory.warning,
+window#waybar.top #battery.warning:not(.charging),
+window#waybar.top #custom-tray-arrow.notification,
+window#waybar.top #custom-tray-arrow.dnd-notification,
+window#waybar.top #custom-tray-arrow.inhibited-notification {
+  color: @tertiary;
+}
+
+window#waybar.top #network.disabled,
+window#waybar.top #cpu.critical,
+window#waybar.top #disk.critical,
+window#waybar.top #memory.critical,
+window#waybar.top #temperature.critical,
+window#waybar.top #battery.critical:not(.charging),
+window#waybar.top #power-profiles-daemon.performance,
+window#waybar.top #custom-tray-arrow.dnd-inhibited-none,
+window#waybar.top #custom-tray-arrow.dnd-inhibited-notification {
+  color: @error;
+}

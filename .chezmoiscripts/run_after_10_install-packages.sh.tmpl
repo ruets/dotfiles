@@ -3,6 +3,24 @@
 
 set -e
 
+confirm() {
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm --default=false "$1"
+    return
+  fi
+
+  read -r -p "$1 [y/N] " response
+  case "$response" in
+    [yY]|[yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+if ! confirm "Do you want to run the system package installation script?"; then
+  echo "Skipping system package installation."
+  exit 0
+fi
+
 {{ if eq .chezmoi.os "darwin" }}
 # macOS: Homebrew
 echo "=== Installing macOS packages with Homebrew ==="
@@ -21,12 +39,66 @@ fi
 # Ubuntu/Debian: apt
 echo "=== Installing Ubuntu packages with apt ==="
 
+echo "Adding repositories..."
+sudo add-apt-repository -y universe || true
+
+# Add waydroid repository
+curl -s https://repo.waydro.id | sudo bash
+
+# Add debian.griffo.io for yazi
+curl -sS https://debian.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /usr/share/keyrings/debian.griffo.io-archive-keyring.gpg || true
+sudo tee /etc/apt/sources.list.d/debian.griffo.io.sources > /dev/null <<EOF
+Types: deb
+URIs: https://debian.griffo.io/apt
+Suites: $(lsb_release -sc 2>/dev/null)
+Components: main
+Signed-By: /usr/share/keyrings/debian.griffo.io-archive-keyring.gpg
+EOF
+
+# Add 1Password apt repository
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg || true
+ARCH=$(dpkg --print-architecture)
+sudo tee /etc/apt/sources.list.d/1password.sources > /dev/null <<EOF
+Types: deb
+URIs: https://downloads.1password.com/linux/debian/$ARCH
+Suites: stable
+Components: main
+Signed-By: /usr/share/keyrings/1password-archive-keyring.gpg
+EOF
+sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/ || true
+curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol > /dev/null || true
+sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22 || true
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg || true
+
+# Add Claude Desktop apt repository
+sudo curl -fsSLo /usr/share/keyrings/claude-desktop-archive-keyring.asc https://downloads.claude.ai/claude-desktop/key.asc || true
+sudo tee /etc/apt/sources.list.d/claude-desktop.sources > /dev/null <<EOF
+Types: deb
+URIs: https://downloads.claude.ai/claude-desktop/apt/stable
+Suites: stable
+Components: main
+Architectures: amd64 arm64
+Signed-By: /usr/share/keyrings/claude-desktop-archive-keyring.asc
+EOF
+
+# Add Claude Code apt repository
+sudo install -d -m 0755 /etc/apt/keyrings
+sudo curl -fsSLo /etc/apt/keyrings/claude-code.asc https://downloads.claude.ai/keys/claude-code.asc || true
+sudo tee /etc/apt/sources.list.d/claude-code.sources > /dev/null <<EOF
+Types: deb
+URIs: https://downloads.claude.ai/claude-code/apt/stable
+Suites: stable
+Components: main
+Signed-By: /etc/apt/keyrings/claude-code.asc
+EOF
+
 sudo apt update
 
 echo "Installing packages..."
-{{ range $name, $pkg := .packages }}
-sudo apt install -y {{ $pkg }} || true
-{{ end }}
+packages=({{ range $name, $pkg := .packages }}{{ if $pkg }} "{{ $pkg }}"{{ end }}{{ end }})
+if [ ${#packages[@]} -gt 0 ]; then
+    sudo apt install -y "${packages[@]}" || true
+fi
 
 {{ else }}
 echo "=== OS not supported ==="

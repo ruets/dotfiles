@@ -1,0 +1,110 @@
+@import "colors.css";
+
+/*======= MODULE INDEPENDENT =======*/
+window#waybar.top #distro-group {
+  margin: 4px 5px;
+  background-color: @surface_container;
+  border-radius: 20px;
+  color: @primary;
+}
+
+window#waybar.top #custom-distro {
+  color: @primary;
+  padding: 6px 15px 6px 10px;
+}
+
+window#waybar.top #custom-terminal {
+  color: @primary;
+  padding: 0px 10px;
+}
+
+window#waybar.top #custom-code {
+  color: @secondary;
+  padding: 0px 10px;
+}
+
+window#waybar.top #custom-office {
+  color: @tertiary;
+  padding: 0px 10px;
+}
+
+window#waybar.top #custom-obsidian {
+  color: @primary_fixed_dim;
+  padding: 0px 10px;
+}
+
+window#waybar.top #custom-files {
+  color: @tertiary_fixed_dim;
+  padding: 0px 10px 0px 8px;
+}
+
+window#waybar.top #custom-spotify {
+  color: @secondary_fixed_dim;
+  padding: 0px 10px;
+}
+
+window#waybar.top #custom-browser {
+  color: @tertiary;
+  padding: 0px 15px 0px 10px;
+}
+
+window#waybar.top #power-profiles-daemon,
+window#waybar.top #idle_inhibitor {
+  margin: 4px 5px;
+  padding: 6px 15px 6px 10px;
+  background-color: @surface_container;
+  border-radius: 20px;
+  color: @secondary_fixed_dim;
+}
+
+/*======= MODULE CAPSUL =======*/
+window#waybar.top #audio,
+window#waybar.top #connections,
+window#waybar.top #system,
+window#waybar.top #storage {
+  margin: 4px 5px;
+  padding: 6px 6px;
+  background-color: @surface_container;
+  border-radius: 20px;
+  color: @secondary_fixed_dim;
+}
+
+window#waybar.top #disk,
+window#waybar.top #memory,
+window#waybar.top #cpu,
+window#waybar.top #temperature,
+window#waybar.top #bluetooth {
+  margin-right: 2px;
+  padding: 0 8px;
+}
+
+window#waybar.top #network {
+  padding: 0px 10px 0px 4px;
+}
+
+window#waybar.top #pulseaudio {
+  margin-right: 12px;
+  margin-left: 8px;
+}
+
+/*======= TRAY =======*/
+window#waybar.top #tray-group {
+  margin: 4px 5px;
+  background-color: @surface_container;
+  border-radius: 20px;
+}
+
+window#waybar.top #custom-tray-arrow {
+  padding: 6px 14px 6px 10px;
+  color: @primary;
+}
+
+window#waybar.top #tray {
+  padding: 6px 10px;
+}
+
+window#waybar.top #tray>.passive,
+window#waybar.top #tray>.active,
+window#waybar.top #tray>.needs-attention {
+  -gtk-icon-effect: none;
+}

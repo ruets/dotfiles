@@ -1,0 +1,71 @@
+#!/bin/bash
+# Install uv, Python and pipx
+
+set -e
+
+PIPX_PACKAGES=(
+{{ if eq .chezmoi.osRelease.id "ubuntu" }}
+  hyprshade
+  waypaper
+{{ end }}
+)
+
+PIP_PACKAGES=(
+  # Add user-level pip packages here, for example:
+)
+
+confirm() {
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm --default=false "$1"
+    return
+  fi
+
+  read -r -p "$1 [y/N] " response
+  case "$response" in
+    [yY]|[yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+if ! confirm "Do you want to run the Python/pipx installation script?"; then
+  echo "Skipping Python/pipx installation."
+  exit 0
+fi
+
+if command -v uv >/dev/null 2>&1; then
+  echo "uv already installed, skipping..."
+else
+  echo "=== Installing Python ==="
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
+# Load uv for this script only.
+export PATH="$HOME/.local/bin:$PATH"
+
+if ! uv python find >/dev/null 2>&1; then
+  echo "Installing latest Python..."
+  uv python install
+fi
+
+if ! command -v pipx >/dev/null 2>&1; then
+  echo "Installing pipx..."
+  uv tool install pipx
+fi
+
+if [ ${#PIPX_PACKAGES[@]} -gt 0 ]; then
+  echo "Installing pipx packages..."
+  for package in "${PIPX_PACKAGES[@]}"; do
+    if pipx list --short | cut -d ' ' -f 1 | grep -Fxq "$package"; then
+      pipx upgrade "$package"
+    else
+      pipx install "$package"
+    fi
+  done
+fi
+
+if [ ${#PIP_PACKAGES[@]} -gt 0 ]; then
+  echo "Installing pip packages..."
+  python3 -m pip install --user --upgrade "${PIP_PACKAGES[@]}"
+fi
+
+echo "=== Python installation complete ==="

@@ -1,0 +1,93 @@
+#!/bin/bash
+# Install Go
+
+set -e
+
+GO_PACKAGES=(
+  # Add Go packages here
+)
+
+GO_GIT_REPOS=(
+  # Add Go repositories that cannot be installed with `go install module@version`.
+  https://github.com/erans/hyprmon.git
+)
+
+confirm() {
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm --default=false "$1"
+    return
+  fi
+
+  read -r -p "$1 [y/N] " response
+  case "$response" in
+    [yY]|[yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+if ! confirm "Do you want to run the Go installation script?"; then
+  echo "Skipping Go installation."
+  exit 0
+fi
+
+if command -v go >/dev/null 2>&1; then
+  echo "Go already installed, skipping..."
+else
+  echo "=== Installing Go ==="
+
+  case "$(uname -s)" in
+    Linux) go_os="linux" ;;
+    Darwin) go_os="darwin" ;;
+    *)
+      echo "Unsupported OS: $(uname -s)"
+      exit 1
+      ;;
+  esac
+
+  case "$(uname -m)" in
+    x86_64|amd64) go_arch="amd64" ;;
+    arm64|aarch64) go_arch="arm64" ;;
+    *)
+      echo "Unsupported architecture: $(uname -m)"
+      exit 1
+      ;;
+  esac
+
+  GO_VERSION="$(curl -s https://go.dev/VERSION?m=text | head -n1)"
+  archive="${GO_VERSION}.${go_os}-${go_arch}.tar.gz"
+  tmp_dir="$(mktemp -d)"
+
+  cleanup() {
+    rm -rf "$tmp_dir"
+  }
+  trap cleanup EXIT
+
+  curl -Lo "$tmp_dir/$archive" "https://go.dev/dl/$archive"
+
+  sudo rm -rf /usr/local/go
+  sudo tar -C /usr/local -xzf "$tmp_dir/$archive"
+fi
+
+# Load Go for this script only.
+export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+
+if [ ${#GO_PACKAGES[@]} -gt 0 ]; then
+  echo "Installing Go packages..."
+  for package in "${GO_PACKAGES[@]}"; do
+    go install "$package"
+  done
+fi
+
+if [ ${#GO_GIT_REPOS[@]} -gt 0 ]; then
+  echo "Installing Go packages from git repositories..."
+  for repo in "${GO_GIT_REPOS[@]}"; do
+    repo_dir="$(mktemp -d)"
+    if ! git clone --depth 1 "$repo" "$repo_dir" || ! (cd "$repo_dir" && go install .); then
+      rm -rf "$repo_dir"
+      exit 1
+    fi
+    rm -rf "$repo_dir"
+  done
+fi
+
+echo "=== Go installation complete ==="

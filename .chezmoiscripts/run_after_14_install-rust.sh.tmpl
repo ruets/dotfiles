@@ -1,0 +1,55 @@
+#!/bin/bash
+# Install Rust
+
+set -e
+
+CARGO_PACKAGES=(
+{{ if eq .chezmoi.osRelease.id "ubuntu" }}
+  "dua-cli"
+{{ end }}
+)
+
+confirm() {
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm --default=false "$1"
+    return
+  fi
+
+  read -r -p "$1 [y/N] " response
+  case "$response" in
+    [yY]|[yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+if ! confirm "Do you want to run the Rust/Cargo installation script?"; then
+  echo "Skipping Rust/Cargo installation."
+  exit 0
+fi
+
+if command -v cargo >/dev/null 2>&1; then
+  echo "Rust already installed, skipping..."
+else
+  echo "=== Installing Rust ==="
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
+
+# Load cargo for this script only.
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+if command -v rustup >/dev/null 2>&1; then
+  echo "Updating toolchain..."
+  rustup update
+fi
+
+if [ ${#CARGO_PACKAGES[@]} -gt 0 ]; then
+  echo "Installing Cargo packages..."
+  for package in "${CARGO_PACKAGES[@]}"; do
+    read -r -a cargo_args <<< "$package"
+    cargo install --force "${cargo_args[@]}"
+  done
+fi
+
+echo "=== Rust installation complete ==="

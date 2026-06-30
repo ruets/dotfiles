@@ -1,0 +1,61 @@
+#!/bin/bash
+# Install Nix profile packages
+
+set -e
+
+NIX_PROFILE_PACKAGES=(
+{{ if eq .chezmoi.osRelease.id "ubuntu" }}
+  "awww git+https://codeberg.org/LGFae/awww.git"
+{{ end }}
+)
+
+confirm() {
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm --default=false "$1"
+    return
+  fi
+
+  read -r -p "$1 [y/N] " response
+  case "$response" in
+    [yY]|[yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+if ! confirm "Do you want to run the Nix profile installation script?"; then
+  echo "Skipping Nix profile installation."
+  exit 0
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "=== Installing Nix in single-user mode ==="
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
+fi
+
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "nix is not available after installation. Restart your shell and rerun this script."
+  exit 1
+fi
+
+NIX_CMD=(nix --extra-experimental-features "nix-command flakes")
+
+if [ ${#NIX_PROFILE_PACKAGES[@]} -gt 0 ]; then
+  echo "Installing Nix profile packages..."
+  for package in "${NIX_PROFILE_PACKAGES[@]}"; do
+    read -r name installable <<< "$package"
+
+    if "${NIX_CMD[@]}" profile list | awk '/^Name:/ {print $2}' | grep -Fxq "$name"; then
+      "${NIX_CMD[@]}" profile upgrade "$name"
+    else
+      "${NIX_CMD[@]}" profile add "$installable"
+    fi
+  done
+fi
+
+echo "=== Nix profile installation complete ==="

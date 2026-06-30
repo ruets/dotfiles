@@ -123,6 +123,7 @@ alias gcredential="git config credential.helper store"
 # System
 # -----------------------------------------------------
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
+alias setkb='setxkbmap fr;echo "Keyboard set back to fr."'
 
 # -----------------------------------------------------
 # EDIT CONFIG FILES
@@ -131,12 +132,39 @@ alias confp='$EDITOR ~/.config/picom/picom.conf'
 alias confb='$EDITOR ~/.config/fish/config.fish'
 
 # -----------------------------------------------------
-# SYSTEM
+# Environment
 # -----------------------------------------------------
-alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias setkb='setxkbmap fr;echo "Keyboard set back to fr."'
+set -gx NVM_DIR "$HOME/.nvm"
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+set -gx GOPATH "$HOME/go"
+set -gx CARGO_HOME "$HOME/.cargo"
+set -gx RUSTUP_HOME "$HOME/.rustup"
 
-set PATH "/Users/ruets/Library/Python/3.9/bin:/home/ruets/.local/bin/:/home/ruets/.jdks/openjdk-21.0.2/platform-tools:/usr/lib/ccache/bin/:$PATH"
+fish_add_path -g "$HOME/.local/bin"
+fish_add_path -g "$PNPM_HOME"
+fish_add_path -g /usr/lib/ccache/bin
+fish_add_path -g /usr/local/go/bin
+fish_add_path -g "$GOPATH/bin"
+fish_add_path -g "$CARGO_HOME/bin"
+
+if test -d "$NVM_DIR/versions/node"
+    set -l node_bins "$NVM_DIR"/versions/node/*/bin
+    if test (count $node_bins) -gt 0
+        fish_add_path -g $node_bins[-1]
+    end
+end
+
+if test -d "$HOME/.jdks/openjdk-21.0.2/platform-tools"
+    fish_add_path -g "$HOME/.jdks/openjdk-21.0.2/platform-tools"
+end
+
+if test -d "$HOME/Library/Python/3.9/bin"
+    fish_add_path -g "$HOME/Library/Python/3.9/bin"
+end
+
+if test -d "$HOME/.lmstudio/bin"
+    fish_add_path -g "$HOME/.lmstudio/bin"
+end
 
 # -----------------------------------------------------
 # START STARSHIP
@@ -145,9 +173,13 @@ set PATH "/Users/ruets/Library/Python/3.9/bin:/home/ruets/.local/bin/:/home/ruet
 starship init fish | source
 
 # -----------------------------------------------------
-# PYWAL
+# Matugen terminal colors
 # -----------------------------------------------------
-cat ~/.cache/wal/sequences
+if test -f ~/.cache/matugen/terminal-sequences
+    while read -l sequence
+        printf $sequence
+    end < ~/.cache/matugen/terminal-sequences
+end
 
 # -----------------------------------------------------
 # Fastfetch if on wm
@@ -160,7 +192,3 @@ else
         echo "Start Hyprland with command Hyprland"
     end
 end
-
-# Added by LM Studio CLI (lms)
-set -gx PATH $PATH /Users/ruets/.lmstudio/bin
-# End of LM Studio CLI section

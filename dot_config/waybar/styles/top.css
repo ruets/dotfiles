@@ -1,0 +1,19 @@
+@import "top/tokens/colors.css";
+@import "top/tokens/state.css";
+@import "top/tokens/workspace.css";
+@import "top/tokens/widget.css";
+@import "top/tokens/batt-clock.css";
+@import "top/tokens/slider.css";
+
+window#waybar.top * {
+  margin: 0;
+  padding: 0;
+  min-height: 0px;
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window#waybar.top {
+  background: transparent;
+}

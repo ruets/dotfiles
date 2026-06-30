@@ -3,160 +3,114 @@
 
 data:
   machine_type: "{{ $machineType }}"
-  is_server: {{ $isServer }}
-  git_name: "{{ if eq $machineType "work" }}Sébastien RUET{{ else }}ruets{{ end }}"
-  git_email: "{{ if eq $machineType "work" }}sebastien.ruet@insa-lyon.fr{{ else }}ruets@proton.me{{ end }}"
+  is_server:     {{ $isServer }}
+  git_name:     "{{ if eq $machineType "work" }} Sébastien RUET              {{ else }} ruets           {{ end }}"
+  git_email:    "{{ if eq $machineType "work" }} sebastien.ruet@insa-lyon.fr {{ else }} ruets@proton.me {{ end }}"
 
   packages:
-    # Core packages for all systems
-    fish: brew "fish"
-    fastfetch: brew "fastfetch"
-    starship: brew "starship"
-    # pywal
-    eza: brew "eza"
-    bat: brew "bat"
-    tmux: brew "tmux"
-    neovim: brew "neovim"
-    lazygit: brew "lazygit"
-    htop: brew "htop"
-    btop: brew "btop"
-    claude-code: cask "claude-code"
-    less: brew "less"
-    libqalculate: brew "libqalculate"
-    yazi: brew "yazi"
-    dua: brew "dua-cli"
-    posting: brew "posting"
-    # texlive
-    sqlite: brew "sqlite"
-    jq: brew "jq"
-    commitizen: brew "commitizen"
-    git: brew "git"
+    saucecodepro:   {{ if eq .chezmoi.os "darwin" }} cask "font-sauce-code-pro-nerd-font" {{ else }} {{ end }}
 
-    gum: brew "gum"
-    ripgrep: brew "ripgrep"
-    fzf: brew "fzf"
-    fd: brew "fd"
+    fish:           {{ if eq .chezmoi.os "darwin" }} brew "fish"           {{ else }} fish           {{ end }}
+    starship:       {{ if eq .chezmoi.os "darwin" }} brew "starship"       {{ else }} starship       {{ end }}
+    fastfetch:      {{ if eq .chezmoi.os "darwin" }} brew "fastfetch"      {{ else }} fastfetch      {{ end }}
+   
+    eza:            {{ if eq .chezmoi.os "darwin" }} brew "eza"            {{ else }} eza            {{ end }}
+    git:            {{ if eq .chezmoi.os "darwin" }} brew "git"            {{ else }} git            {{ end }}
+    commitizen:     {{ if eq .chezmoi.os "darwin" }} brew "commitizen"     {{ else }} commitizen     {{ end }}
+    ripgrep:        {{ if eq .chezmoi.os "darwin" }} brew "ripgrep"        {{ else }} ripgrep        {{ end }}
+    fzf:            {{ if eq .chezmoi.os "darwin" }} brew "fzf"            {{ else }} fzf            {{ end }}
+    fd:             {{ if eq .chezmoi.os "darwin" }} brew "fd"             {{ else }} fd-find        {{ end }}
+    less:           {{ if eq .chezmoi.os "darwin" }} brew "less"           {{ else }} less           {{ end }}
+    bat:            {{ if eq .chezmoi.os "darwin" }} brew "bat"            {{ else }} bat            {{ end }}
+    jq:             {{ if eq .chezmoi.os "darwin" }} brew "jq"             {{ else }} jq             {{ end }}
+    gum:            {{ if eq .chezmoi.os "darwin" }} brew "gum"            {{ else }} gum            {{ end }}
+ 
+    htop:           {{ if eq .chezmoi.os "darwin" }} brew "htop"           {{ else }} htop           {{ end }}
+    btop:           {{ if eq .chezmoi.os "darwin" }} brew "btop"           {{ else }} btop           {{ end }}
+    tmux:           {{ if eq .chezmoi.os "darwin" }} brew "tmux"           {{ else }} tmux           {{ end }}
+    neovim:         {{ if eq .chezmoi.os "darwin" }} brew "neovim"         {{ else }} neovim         {{ end }}
+    claude-code:    {{ if eq .chezmoi.os "darwin" }} cask "claude-code"    {{ else }} claude-code    {{ end }}
+    lazygit:        {{ if eq .chezmoi.os "darwin" }} brew "lazygit"        {{ else }} lazygit        {{ end }}
+    yazi:           {{ if eq .chezmoi.os "darwin" }} brew "yazi"           {{ else }} yazi           {{ end }}
+ 
+    dua:            {{ if eq .chezmoi.os "darwin" }} brew "dua-cli"        {{ else }} # via cargo    {{ end }}
+    posting:        {{ if eq .chezmoi.os "darwin" }} brew "posting"        {{ else }} posting        {{ end }}
+    sqlite:         {{ if eq .chezmoi.os "darwin" }} brew "sqlite"         {{ else }} sqlite3        {{ end }}
+    libqalculate:   {{ if eq .chezmoi.os "darwin" }} brew "libqalculate"   {{ else }} qalc           {{ end }}
+    texlive:        {{ if eq .chezmoi.os "darwin" }}                       {{ else }} texlive        {{ end }}
+    pkg-config:     {{ if eq .chezmoi.os "darwin" }} brew "pkg-config"     {{ else }} pkg-config     {{ end }}
 
-    # gallery-dl
-    # gitnr
-    # csvlens
 
-    # pandoc
-    # xclip
-    # lazycli
-    # cmatrix
-    # spotify-player
+    {{ if not $isServer }}
+    kitty:          {{ if eq .chezmoi.os "darwin" }} cask "kitty"         {{ else }} kitty          {{ end }}
+    claude-desktop: {{ if eq .chezmoi.os "darwin" }}                      {{ else }} claude-desktop {{ end }}
+    1password:      {{ if eq .chezmoi.os "darwin" }} cask "1password"     {{ else }} 1password      {{ end }}
+    1password-cli:  {{ if eq .chezmoi.os "darwin" }} cask "1password-cli" {{ else }} 1password-cli  {{ end }}
+    discord:        {{ if eq .chezmoi.os "darwin" }} cask "discord"       {{ else }} # via flatpak  {{ end }}
+    google-chrome:  {{ if eq .chezmoi.os "darwin" }} cask "google-chrome" {{ else }} # via flatpak  {{ end }}
+    qbittorrent:    {{ if eq .chezmoi.os "darwin" }} cask "qbittorrent"   {{ else }} qbittorrent    {{ end }}
+    spotify:        {{ if eq .chezmoi.os "darwin" }} cask "spotify"       {{ else }} # via flatpak  {{ end }}
 
-    saucecodepro: cask "font-sauce-code-pro-nerd-font"
-
-    {{ if not .is_server }}
-    1password: cask "1password"
-    1password-cli: cask "1password-cli"
-    discord: cask "discord"
-    google-chrome: cask "google-chrome"
-    qbittorrent: cask "qbittorrent"
-    spotify: cask "spotify"
     {{ if eq .chezmoi.os "darwin" }}
+    skhd:
     orbstack: cask "orbstack"
+    {{ else }}
+    flatpak:                        flatpak
+    hyprland:                       hyprland
+    hyprland-qtutils:               hyprland-qtutils
+    hyprland-plugin-hyprexpo:       hyprland-plugin-hyprexpo
+    hypridle:                       hypridle
+    hyprlock:                       hyprlock
+    hyprshade:                      # installed via pipx
+    hyprpicker:                     hyprpicker
+    hyprmon:                        # installed via go
+    waybar:                         waybar
+    rofi:                           rofi
+    wlogout:                        wlogout
+    smile:                          # installed via flatpak
+    waypaper:                       # installed via pipx
+    waypaper-cairo-dev:             libcairo2-dev
+    waypaper-gir-dev:               libgirepository-2.0-dev
+    waypaper-gobject-introspection: gobject-introspection
+    awww:                           # installed via nix
+    matugen:                        matugen
+
+    swaync:                         sway-notification-center
+    fira-code:                      fonts-firacode
+    jetbrains-mono:                 fonts-jetbrains-mono
+    bibata-cursors:                 bibata-cursor-theme
+    xdg-desktop-portal:             xdg-desktop-portal
+    xdg-desktop-portal-hyprland:    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-wlr:         xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk:         xdg-desktop-portal-gtk
+    pipewire:                       pipewire
+    wireplumber:                    wireplumber
+
+    tty-clock:                      tty-clock
+    cava:                           cava
+    cmatrix:                        cmatrix
+    brightnessctl:                  brightnessctl
+    acpi:                           acpi
+    cliphist:                       cliphist
+    wl-clipboard:                   wl-clipboard
+    xclip:                          xclip
+
+
+    mission-center:                 # installed via flatpak
+    zathura:                        zathura
+    solaar:                         solaar
+    freerdp:                        freerdp-x11
+    scrcpy:                         scrcpy
+    waydroid:                       waydroid
+    grimb:                          grim
+    slurp:                          slurp
+    swappy:                         swappy
+    mpv:                            mpv
+    kooha:                          kooha
+    obs-studio:                     obs-studio
     {{ end }}
-    # Desktop packages (Linux desktop only)
-    # hyprland
-    # waybar
-    # rofi
-    # dunst
-    # cava
-    # waypaper
-    # awww
-    # wl-clipboard
-    # grimblast
-    # obs-studio
-    # hyprconfig
-    #
-    kitty: cask "kitty"
-    # zathura
-    # wlogout
-    # r-hyprconfig
-    # nerd-fonts.fira-code
-    # nerd-fonts.jetbrains-mono
-    # fira
-    # bibata-cursors
-    # hyprlandPlugins.hyprexpo
-    # hyprshade
-    # hyprmon
-    # hyprpanel
-    # hyprpicker
-    # pipewire
-    # wireplumber
-    # xdg-desktop-portal
-    # xdg-desktop-portal-hyprland
-    # xdg-desktop-portal-wlr
-    # xdg-desktop-portal-gtk
-    # hypridle
-    # swaylock-effects
-    # kooha
-    # freerdp
-    # brightnessctl
-    # pipewire
-    # wireplumber
-    # cliphist
-    # grimblast
-    # nwg-dock-hyprland
-    # smile
-    # swappy
-    # pinta
-    # mission-center
-    # mpv
-    # showmethekey
-    # solaar
     {{ end }}
-    #
-    {{ if eq .chezmoi.os "darwin" }}
-    # # macOS specific packages
-    # docker: docker
-    # docker-compose: docker-compose
-    # 1password: 1password
-    # discord: discord
-    # google-chrome: google-chrome
-    # qbittorrent: qbittorrent
-    # spotify: spotify
-    #
-    # _1password-gui
-    # _1password-cli
-    #
-    # discord
-    # google-chrome
-    # notion-app
-    # qbittorrent
-    # spotify
-    #
-    # jetbrains-toolbox
-    #
-    # docker
-    # docker-compose
-    #
-    # skhd
+ 
+    {{ if eq $machineType "work" }}
+    bitwarden:
     {{ end }}
-    #
-    {{ if eq .chezmoi.os "linux" }}
-    # # Linux specific packages
-    # fprintd
-    # tty-clock
-    # acpi
-    #
-    # _1password-gui
-    # _1password-cli
-    # bitwarden-desktop
-    # bitwarden-cli
-    #
-    # discord
-    # google-chrome
-    # qbittorrent
-    # spotify
-    # scrcpy
-    # waydroid
-    #
-    # jetbrains-toolbox
-    {{ end }}
-    #
-    # # Work profile packages
-    # bitwarden: bitwarden

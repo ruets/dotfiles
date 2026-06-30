@@ -1,132 +1,93 @@
 # dotfiles
 
-[Home Manager](https://github.com/nix-community/home-manager) configuration managed as a Nix flake, across multiple machines.
+Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/). This repository contains shell, terminal, editor, window manager, status bar, theme, and utility script configuration for my macOS and Linux environments.
 
-## How it works
+## Support
 
-The repo is structured in layers:
+Currently supported platforms:
 
+- macOS, with package installation through Homebrew.
+- Ubuntu, with package installation through `apt`.
+
+Other Linux distributions are not guaranteed at the moment. Support for Arch-based distributions, such as Arch Linux and EndeavourOS, and Fedora is planned, but there is no timeline yet.
+
+## Repository Structure
+
+This repository follows chezmoi naming conventions:
+
+```text
+.chezmoi.yaml.tmpl        # initialization prompts and template data
+.chezmoiignore.tmpl       # files excluded by OS and machine type
+.chezmoiscripts/          # scripts run after applying dotfiles
+.chezmoitemplates/        # shared templates
+dot_config/               # files targeting ~/.config
+dot_local/bin/            # scripts installed into ~/.local/bin
+dot_Brewfile.tmpl         # Homebrew packages for macOS
+dot_gitconfig.tmpl        # templated Git configuration
+dot_skhdrc                # macOS keyboard shortcuts
 ```
-flake.nix               # entry point — declares available configurations
-config/
-  config.nix            # base settings for all hosts (nixpkgs, nix, nixGL)
-  settings.nix          # dotfiles-* wrappers (dotfiles-terminal, dotfiles-editor…)
-hosts/
-  darwin.nix            # macOS (aarch64)
-  ubuntu.nix            # Linux desktop
-  hostinger.nix         # VPS
-  test.nix              # test config (aarch64-linux)
-  _template.nix         # template for a new host
-home/
-  cli/cli.nix           # common CLI tools (fish, neovim, git, tmux…)
-  desktop/desktop.nix   # GUI packages
-  languages/            # language toolchains (go, node, python, rust…)
-  modules/              # optional modules (vps, wallpapers)
-```
 
-Each host imports only the `home/` modules it needs. For example, `darwin.nix` only imports `cli.nix` (no desktop), while `ubuntu.nix` imports both cli and desktop.
+The main `dot_config/` areas cover Fish, Neovim, Kitty, tmux, Hyprland, Waybar, SwayNC, Rofi, Matugen, Yazi, Cava, and Wlogout.
 
 ## Installation
 
-### Automatic (recommended)
-
-The `scripts/setup.sh` script handles the entire process:
+Install chezmoi first, then initialize this repository:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/ruets/dotfiles/main/scripts/setup.sh)
+chezmoi init --apply ruets
 ```
 
-It runs the following steps:
+During initialization, chezmoi asks for:
 
-- 1. Installs Nix and Home Manager if not already present
-- 2. Clones this repo into `~/.config/home-manager`
-- 3. Detects and configures WSL if applicable (git via `ssh.exe`, Windows packages via `winget`)
-- 4. Prompts to choose a configuration and applies it
+- the machine type: `personal` or `work`;
+- whether the machine is a server;
+- Git identity values to inject into the generated configuration.
 
-### Manual
+Post-install scripts may then offer to install system packages and development environments. Each major step asks for confirmation before running.
 
-**1. Install Nix:**
+## What Gets Installed
+
+Depending on the platform and initialization answers, the scripts can configure:
+
+- system packages through Homebrew on macOS or `apt` on Ubuntu;
+- Fish as the default shell;
+- Node.js through `nvm` and `pnpm`;
+- Python through `uv` and `pipx`;
+- Go and selected Go tools;
+- Rust and selected Cargo tools;
+- Nix, if the dedicated script is accepted;
+- Flatpak packages and desktop assets on non-server Linux machines;
+- Restic and Resticprofile on machines marked as servers.
+
+## Daily Usage
+
+Preview changes before applying them:
 
 ```bash
-sh <(curl -L https://nixos.org/nix/install) --daemon
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+chezmoi diff
 ```
 
-**2. Install Home Manager:**
+Apply the dotfiles:
 
 ```bash
-nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-nix-channel --update
-nix-shell '<home-manager>' -A install
+chezmoi apply
 ```
 
-**3. Clone the repo:**
+Edit a file managed by chezmoi:
 
 ```bash
-git clone https://github.com/ruets/dotfiles ~/.config/home-manager
-cd ~/.config/home-manager
+chezmoi edit ~/.config/fish/config.fish
+chezmoi apply
 ```
 
-**4. Apply your host configuration:**
+Update the local checkout:
 
 ```bash
-home-manager switch --flake .#darwin     # macOS
-home-manager switch --flake .#ubuntu     # Linux desktop
-home-manager switch --flake .#hostinger  # VPS
+chezmoi update
 ```
 
-## Usage
+## Notes
 
-### Apply changes
+The Linux desktop profile primarily targets Ubuntu with Hyprland and its related tooling. On macOS, Linux-specific files are excluded through `.chezmoiignore.tmpl`.
 
-```bash
-home-manager switch --flake .#<host>
-```
-
-With a backup of replaced files:
-
-```bash
-home-manager switch -b backup --flake .#<host>
-```
-
-### Build without applying
-
-```bash
-home-manager build --flake .#<host>
-```
-
-### Update dependencies
-
-```bash
-nix flake update          # all inputs
-nix flake update nixpkgs  # a specific input
-```
-
-### Add a new host
-
-1. **Copy the template:**
-   ```bash
-   cp hosts/_template.nix hosts/<name>.nix
-   ```
-
-2. **Configure the host** (edit `hosts/<name>.nix`):
-   - Set `username`, `homeDirectory`, `gitUserName`, `gitUserEmail`
-   - Select modules to import (cli, desktop, languages, etc.)
-   - Add packages specific to this host
-   - Configure programs as needed
-
-3. **Register in flake.nix:**
-   Add your configuration to the `homeConfigurations` set:
-   ```nix
-   "<name>" = mkHome "<name>" "<system>";  # e.g. "x86_64-linux"
-   ```
-
-   Common system values:
-   - `"aarch64-darwin"` – Apple Silicon macOS
-   - `"x86_64-linux"` – Linux (Intel/AMD)
-   - `"aarch64-linux"` – Linux ARM
-
-4. **Apply the configuration:**
-   ```bash
-   home-manager switch --flake .#<name>
-   ```
+Before committing, review the rendered output with `chezmoi diff`. For shell scripts, run `shellcheck` when possible.

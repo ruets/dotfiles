@@ -1,3 +1,13 @@
-[flavor]
-light = "tokyo-night"
-dark = "tokyo-night"
+[manager]
+cwd = { fg = "#88d1ec" }
+hovered = { fg = "#003544", bg = "#88d1ec" }
+preview_hovered = { fg = "#1e333b", bg = "#b3cad4" }
+
+[status]
+separator_open = ""
+separator_close = ""
+
+[mode]
+normal_main = { fg = "#003544", bg = "#88d1ec" }
+select_main = { fg = "#1e333b", bg = "#b3cad4" }
+unset_main = { fg = "#690005", bg = "#ffb4ab" }

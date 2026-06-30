@@ -22,14 +22,10 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
+@import "colors.rasi"
+
 * {
     font:                        "JetBrains Mono Nerd Font 10";
-    background:                  #11092DDD;
-    background-alt:              #281657;
-    foreground:                  #FFFFFF;
-    selected:                    #DF5296;
-    active:                      #6E77FF;
-    urgent:                      #8E3596;
 }
 
 /*****----- Main Window -----*****/

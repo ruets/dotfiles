@@ -1,0 +1,30 @@
+/* Modules: App Launcher Strip */
+window#waybar.bottom #custom-chrome,
+window#waybar.bottom #custom-terminal,
+window#waybar.bottom #custom-music,
+window#waybar.bottom #custom-files {
+  background-color: alpha(@surface_container, 0.6);
+  padding: 2px 12px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-radius: 0;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+window#waybar.bottom #custom-chrome {
+  margin-left: 0;
+  border-radius: 8px 0 0 8px;
+}
+
+window#waybar.bottom #custom-files {
+  margin-right: 4px;
+  border-radius: 0 8px 8px 0;
+}
+
+window#waybar.bottom #custom-chrome:hover,
+window#waybar.bottom #custom-terminal:hover,
+window#waybar.bottom #custom-music:hover,
+window#waybar.bottom #custom-files:hover {
+  background-color: alpha(@surface_container_highest, 0.9);
+}

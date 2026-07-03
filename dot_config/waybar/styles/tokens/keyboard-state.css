@@ -1,0 +1,12 @@
+window#waybar.bottom #keyboard-state {
+  background: transparent;
+}
+
+window#waybar.bottom #keyboard-state label.locked {
+  background-color: alpha(@surface_container_highest, 0.9);
+  border: 1px solid @primary;
+  color: @on_surface;
+  padding: 0px 12px;
+  margin: 4px 0px;
+  border-radius: 8px;
+}

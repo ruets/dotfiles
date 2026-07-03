@@ -1,0 +1,21 @@
+{
+  "custom/todo": {
+    "format": " {}",
+    "exec": "~/.config/waybar/scripts/todo/todo.sh",
+    "on-double-click": "~/.config/waybar/scripts/todo/todo.sh mark_done",
+    "on-click-right": "~/.config/waybar/scripts/todo/todo.sh open_tui",
+    "on-click-middle": "~/.config/waybar/scripts/todo/todo.sh middle_click",
+    "return-type": "json",
+    "interval": 5,
+    "tooltip": true,
+  },
+  "custom/countdown": {
+    "exec": "~/.config/waybar/scripts/countdown/countdown.sh",
+    "return-type": "json",
+    "format": "{}",
+    "interval": 3600,
+    "on-click-right": "kitty bash ~/.config/waybar/scripts/countdown/countdown.sh interactive",
+    "on-scroll-up": "~/.config/waybar/scripts/countdown/countdown.sh scroll-up",
+    "on-scroll-down": "~/.config/waybar/scripts/countdown/countdown.sh scroll-down",
+  },
+}

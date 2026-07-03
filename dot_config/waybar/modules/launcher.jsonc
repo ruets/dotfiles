@@ -1,0 +1,9 @@
+{
+  "custom/launcher": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Menu",
+    "on-click": "dotfiles-launcher",
+    "on-click-right": "pkill -SIGUSR2 waybar || true",
+  },
+}

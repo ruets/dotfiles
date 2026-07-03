@@ -1,0 +1,35 @@
+{
+  "group/apps": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/chrome",
+      "custom/terminal",
+      "custom/music",
+      "custom/files",
+    ],
+  },
+  "custom/chrome": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Browser",
+    "on-click": "dotfiles-browser",
+  },
+  "custom/terminal": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Terminal",
+    "on-click": "dotfiles-terminal",
+  },
+  "custom/music": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Music",
+    "on-click": "flatpak run com.spotify.Client",
+  },
+  "custom/files": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "File Manager",
+    "on-click": "dotfiles-files_gui",
+  },
+}

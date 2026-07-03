@@ -1,0 +1,13 @@
+window#waybar.bottom #custom-launcher {
+  background-color: alpha(@surface_container, 0.6);
+  padding: 2px 12px;
+  margin: 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Modules: Hover Effects */
+window#waybar.bottom #custom-launcher:hover {
+  background-color: alpha(@surface_container_highest, 0.9);
+}

@@ -1,0 +1,64 @@
+{
+  "group/system": {
+    "orientation": "horizontal",
+    "modules": [
+      "cpu",
+      "custom/separator",
+      "memory",
+      "custom/separator",
+      "disk",
+      "custom/separator",
+      "temperature",
+    ],
+  },
+
+  "custom/separator": {
+    "format": "<span alpha='35%'>│</span>",
+    "tooltip": false,
+  },
+
+  "cpu": {
+    "interval": 5,
+    "tooltip": true,
+    "format": "󰻠 <span size='11pt'>{usage}%</span>",
+    "tooltip-format": "CPU\nUtilisation : {usage}%\nCharge : {load}",
+    "states": {
+      "warning": 75,
+      "critical": 90,
+    },
+  },
+
+  "memory": {
+    "interval": 10,
+    "tooltip": true,
+    "format": "󰍛 <span size='11pt'>{used:0.1f} GiB</span>",
+    "tooltip-format": "Mémoire\nUtilisée : {used:0.1f} GiB\nLibre : {avail:0.1f} GiB\nTotale : {total:0.1f} GiB\nUtilisation : {percentage}%",
+    "states": {
+      "warning": 75,
+      "critical": 85,
+    },
+  },
+
+  "disk": {
+    "path": "/",
+    "interval": 300,
+    "tooltip": true,
+    "format": "󱙋 <span size='11pt'>{percentage_used}%</span>",
+    "tooltip-format": "Disque /\nUtilisé : {used}\nLibre : {free}\nTotal : {total}",
+    "states": {
+      "warning": 80,
+      "critical": 90,
+    },
+  },
+
+  "temperature": {
+    "interval": 5,
+    "tooltip": true,
+    "thermal-zone": 8,
+    "critical-threshold": 80,
+    "format": "{icon} <span size='11pt'>{temperatureC}°C</span>",
+    "format-critical": "󱗗 <span size='11pt'>{temperatureC}°C</span>",
+    "tooltip-format": "Température CPU : {temperatureC}°C",
+    "format-icons": ["", "", ""],
+  },
+}

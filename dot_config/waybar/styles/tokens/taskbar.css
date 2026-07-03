@@ -1,0 +1,24 @@
+window#waybar.bottom #taskbar {
+  background: alpha(@surface_container, 0.6);
+  padding: 0px 8px;
+  margin: 4px;
+  border-radius: 8px;
+  border: 1px solid alpha(@outline_variant, 0.8);
+}
+
+window#waybar.bottom #taskbar button {
+  background: transparent;
+  padding: 0 8px;
+  margin: 0;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease-out;
+}
+
+window#waybar.bottom #taskbar button:hover {
+  border-bottom-color: @primary;
+}
+
+window#waybar.bottom #taskbar button.active {
+  background: alpha(@surface_container_highest, 0.9);
+  border-bottom-color: @primary;
+}

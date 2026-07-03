@@ -1,0 +1,11 @@
+{
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 20,
+    // "icon-theme": "Numix-Circle",
+    "tooltip-format": "{title:.50}",
+    "on-click": "minimize-raise",
+    "on-click-middle": "close",
+    "on-click-right": "fullscreen",
+  },
+}

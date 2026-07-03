@@ -1,0 +1,39 @@
+{
+  "group/power": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "not-power",
+      "transition-left-to-right": false,
+    },
+    "modules": ["custom/lock", "custom/quit", "custom/reboot", "custom/power"],
+  },
+
+  "custom/lock": {
+    "format": "󰍁",
+    "tooltip": true,
+    "tooltip-format": "Lock",
+    "on-click": "dotfiles-lock_screen",
+  },
+
+  "custom/power": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Shutdown",
+    "on-click": "bash ~/.config/waybar/scripts/power.sh --shutdown",
+  },
+
+  "custom/reboot": {
+    "format": "󰜉",
+    "tooltip": true,
+    "tooltip-format": "Reboot",
+    "on-click": "bash ~/.config/waybar/scripts/power.sh --reboot",
+  },
+
+  "custom/quit": {
+    "format": "󰗼",
+    "tooltip": true,
+    "tooltip-format": "Logout",
+    "on-click": "bash ~/.config/waybar/scripts/power.sh --logout",
+  },
+}

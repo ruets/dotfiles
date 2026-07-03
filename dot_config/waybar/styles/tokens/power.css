@@ -1,0 +1,23 @@
+window#waybar.bottom #custom-lock,
+window#waybar.bottom #custom-power,
+window#waybar.bottom #custom-reboot,
+window#waybar.bottom #custom-quit {
+  background-color: alpha(@surface_container, 0.6);
+  padding: 2px 12px;
+  margin: 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+window#waybar.bottom #custom-lock:hover {
+  background-color: alpha(@surface_container_highest, 0.9);
+  border-color: @error;
+}
+
+window#waybar.bottom #custom-power:hover,
+window#waybar.bottom #custom-reboot:hover,
+window#waybar.bottom #custom-quit:hover {
+  background-color: alpha(@surface_container_highest, 0.9);
+  border-color: @secondary;
+}

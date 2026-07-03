@@ -1,2 +1,81 @@
-@import "styles/bottom.css";
-@import "styles/top.css";
+@import "styles/colors.css";
+
+@import "styles/tokens/apps.css";
+@import "styles/tokens/keyboard-state.css";
+@import "styles/tokens/launcher.css";
+@import "styles/tokens/power.css";
+@import "styles/tokens/taskbar.css";
+@import "styles/tokens/state.css";
+@import "styles/tokens/workspace.css";
+@import "styles/tokens/widget.css";
+@import "styles/tokens/batt-clock.css";
+
+window#waybar.bottom * {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  min-height: 0;
+}
+
+window#waybar.bottom {
+  background-color: alpha(@surface, 0);
+  color: @on_surface;
+  border-top: 0px solid alpha(@outline_variant, 0.8);
+}
+
+tooltip {
+  border-radius: 12px;
+  background-color: alpha(@surface_container_high, 0.9);
+  border: 1px solid @primary;
+}
+
+window#waybar.top * {
+  margin: 0;
+  padding: 0;
+  min-height: 0px;
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window#waybar.top {
+  background: transparent;
+}
+
+window#waybar.top #custom-whoami,
+window#waybar.bottom #custom-todo,
+window#waybar.bottom #custom-countdown {
+  background-color: @surface_container;
+  padding: 2px 12px;
+  margin: 4px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Modules: Hover Effects */
+window#waybar.bottom #custom-todo:hover,
+window#waybar.bottom #custom-countdown:hover {
+  background-color: @surface_container_highest;
+}
+
+/* Modules: Specific Styles */
+window#waybar.bottom #custom-countdown,
+window#waybar.bottom #custom-todo {
+  font-weight: bold;
+  color: @primary;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  min-height: 0px;
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window#waybar {
+  background: transparent;
+}

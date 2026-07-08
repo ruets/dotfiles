@@ -43,7 +43,7 @@
   },
   "network": {
     "format-wifi": " {icon}",
-    "format-ethernet": "",
+    "format-ethernet": "󰈀",
     "format-linked": "󱘖",
     "format-disconnected": "󰤣",
     "format-disabled": "󰤮",

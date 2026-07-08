@@ -35,7 +35,7 @@
 
 .time {
   font-size: 10px;
-  color: var(--text-hover);
+  color: var(--text-secondary);
 }
 
 .summary {
@@ -49,7 +49,7 @@
   margin: 0 0 2px 4px;
   font-size: 13px;
   line-height: 1.5;
-  color: var(--bg-widget);
+  color: var(--text-secondary);
 }
 
 /* --- ACTIONS & BUTTONS --- */
@@ -74,6 +74,7 @@
 .notification-action:hover {
   background: var(--accent-hover);
   border-color: var(--accent);
+  color: var(--text-hover);
 }
 
 .close-button {

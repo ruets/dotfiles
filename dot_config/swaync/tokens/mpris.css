@@ -15,12 +15,12 @@
   margin: 0 0 2px 0;
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-hover);
+  color: var(--text-primary);
 }
 
 .widget-mpris-subtitle {
   font-size: 11px;
-  color: var(--bg-widget);
+  color: var(--text-secondary);
 }
 
 .widget-mpris-player>box>box:last-child {
@@ -28,7 +28,7 @@
 }
 
 .widget-mpris-content button {
-  color: var(--bg-widget);
+  color: var(--text-secondary);
   background: transparent;
   border: none;
   transition: color var(--t-fast), background var(--t-fast);

@@ -1,0 +1,45 @@
+#!/bin/bash
+# Install Rust and Cargo packages.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: Rust and Cargo %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: Rust and Cargo failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+
+printf '\n==> Dotfiles: Rust and Cargo\n'
+
+if [ "$IS_WINDOWS" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping Rust setup for this host."
+  exit 0
+fi
+
+CARGO_PACKAGES=(
+{{ range .packages.cargo }}  '{{ . }}'
+{{ end }})
+
+if ! command -v cargo >/dev/null 2>&1; then
+  printf '  -> Installing Rust toolchain\n'
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
+
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+if command -v rustup >/dev/null 2>&1; then
+  printf '  -> Updating Rust toolchain\n'
+  rustup update
+fi
+
+if [ "${#CARGO_PACKAGES[@]}" -eq 0 ]; then
+  echo "No Cargo packages configured."
+else
+  printf '  -> Installing Cargo packages\n'
+  for package in "${CARGO_PACKAGES[@]}"; do
+    read -r -a cargo_args <<< "$package"
+    cargo install --force "${cargo_args[@]}"
+  done
+fi

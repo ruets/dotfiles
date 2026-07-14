@@ -6,8 +6,9 @@ Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/). This reposito
 
 Currently supported platforms:
 
-- macOS, with package installation through Homebrew.
-- Ubuntu, with package installation through `apt`.
+- macOS, with user packages and applications through Homebrew.
+- Ubuntu, with user CLI packages through Homebrew, system packages through `apt`, and applications through Flatpak.
+- Windows application lists can target `winget`, but full Windows bootstrap support is not guaranteed.
 
 Other Linux distributions are not guaranteed at the moment. Support for Arch-based distributions, such as Arch Linux and EndeavourOS, and Fedora is planned, but there is no timeline yet.
 
@@ -18,11 +19,11 @@ This repository follows chezmoi naming conventions:
 ```text
 .chezmoi.yaml.tmpl        # initialization prompts and template data
 .chezmoiignore.tmpl       # files excluded by OS and machine type
-.chezmoiscripts/          # scripts run after applying dotfiles
+.chezmoiscripts/          # run_onchange scripts grouped by setup sphere
 .chezmoitemplates/        # shared templates
 dot_config/               # files targeting ~/.config
 dot_local/bin/            # scripts installed into ~/.local/bin
-dot_Brewfile.tmpl         # Homebrew packages for macOS
+dot_Brewfile.tmpl         # Homebrew-managed CLI packages and macOS apps
 dot_gitconfig.tmpl        # templated Git configuration
 dot_skhdrc                # macOS keyboard shortcuts
 ```
@@ -39,17 +40,19 @@ chezmoi init --apply ruets
 
 During initialization, chezmoi asks for:
 
-- the machine type: `personal` or `work`;
+- the machine type: `personal`, `gaming`, or `work`;
 - whether the machine is a server;
 - Git identity values to inject into the generated configuration.
 
-Post-install scripts may then offer to install system packages and development environments. Each major step asks for confirmation before running.
+Post-install scripts run when their rendered content changes and print progress for each setup area.
 
 ## What Gets Installed
 
 Depending on the platform and initialization answers, the scripts can configure:
 
-- system packages through Homebrew on macOS or `apt` on Ubuntu;
+- user CLI packages through Homebrew;
+- applications through Homebrew on macOS, Flatpak on Linux, or `winget` on Windows;
+- desktop and system packages through the OS package manager;
 - Fish as the default shell;
 - Node.js through `nvm` and `pnpm`;
 - Python through `uv` and `pipx`;

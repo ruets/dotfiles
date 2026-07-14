@@ -1,0 +1,79 @@
+#!/bin/bash
+# Install Go tools.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ -n "${tmp_dir:-}" ]; then rm -rf "$tmp_dir"; fi; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: Go tools %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: Go tools failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+
+printf '\n==> Dotfiles: Go tools\n'
+
+if [ "$IS_WINDOWS" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping Go setup for this host."
+  exit 0
+fi
+
+GO_PACKAGES=(
+{{ range index .packages "go-packages" }}  '{{ . }}'
+{{ end }})
+
+GO_GIT_REPOS=(
+{{ range index .packages "go-repos" }}  '{{ . }}'
+{{ end }})
+
+if ! command -v go >/dev/null 2>&1; then
+  printf '  -> Installing Go toolchain\n'
+  case "$(uname -s)" in
+    Linux) go_os="linux" ;;
+    Darwin) go_os="darwin" ;;
+    *)
+      echo "Unsupported OS: $(uname -s)"
+      exit 1
+      ;;
+  esac
+
+  case "$(uname -m)" in
+    x86_64|amd64) go_arch="amd64" ;;
+    arm64|aarch64) go_arch="arm64" ;;
+    *)
+      echo "Unsupported architecture: $(uname -m)"
+      exit 1
+      ;;
+  esac
+
+  go_version="$(curl -s https://go.dev/VERSION?m=text | head -n1)"
+  archive="${go_version}.${go_os}-${go_arch}.tar.gz"
+  tmp_dir="$(mktemp -d)"
+
+  curl -Lo "$tmp_dir/$archive" "https://go.dev/dl/$archive"
+  sudo rm -rf /usr/local/go
+  sudo tar -C /usr/local -xzf "$tmp_dir/$archive"
+fi
+
+export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+
+if [ "${#GO_PACKAGES[@]}" -eq 0 ] && [ "${#GO_GIT_REPOS[@]}" -eq 0 ]; then
+  echo "No Go packages configured."
+fi
+
+if [ "${#GO_PACKAGES[@]}" -gt 0 ]; then
+  printf '  -> Installing Go packages\n'
+  for package in "${GO_PACKAGES[@]}"; do
+    go install "$package"
+  done
+fi
+
+if [ "${#GO_GIT_REPOS[@]}" -gt 0 ]; then
+  printf '  -> Installing Go tools from repositories\n'
+  for repo in "${GO_GIT_REPOS[@]}"; do
+    repo_dir="$(mktemp -d)"
+    if ! git clone --depth 1 "$repo" "$repo_dir" || ! (cd "$repo_dir" && go install .); then
+      rm -rf "$repo_dir"
+      exit 1
+    fi
+    rm -rf "$repo_dir"
+  done
+fi

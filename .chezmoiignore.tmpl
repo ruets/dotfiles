@@ -1,29 +1,40 @@
-{{ if not (and (eq .chezmoi.os "linux") (not .is_server)) }}
-dot_config/cava
-dot_config/dotfiles
-dot_config/gtk-3.0
-dot_config/gtk-4.0
-dot_config/hypr
-dot_config/matugen
-dot_config/rofi
-dot_config/solaar
-dot_config/swaync
-dot_config/waybar
-dot_config/waypaper
-dot_config/wlogout
-dot_config/xdg-desktop-portal
-dot_icons
-dot_local
+{{ if not (and (.isLinux) (not .is_server)) }}
+.config/cava
+.config/dotfiles
+.config/gtk-3.0
+.config/gtk-4.0
+.config/hypr
+.config/matugen
+.config/rofi
+.config/solaar
+.config/swaync
+.config/waybar
+.config/waypaper
+.config/wlogout
+.config/xdg-desktop-portal
+.icons
+.local
 {{ end }}
 
-{{ if ne .chezmoi.os "darwin" }}
-dot_Brewfile
-dot_skhdrc
+{{ if not .isDarwin }}
+.skhdrc
 Library
 {{ end }}
 
+{{ if or .isWindows (and (eq (len .packages.cli) 0) (not (and .isDarwin (gt (len .packages.apps) 0)))) }}
+.Brewfile
+{{ end }}
+
 {{ if not .is_server }}
-dot_config/resticprofile
+.config/resticprofile
+{{ end }}
+
+{{ if .isWindows }}
+Library
+.config
+.icons
+.local
+.gitconfig
 {{ end }}
 
 README.md

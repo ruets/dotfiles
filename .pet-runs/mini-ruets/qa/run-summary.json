@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "run_dir": "/Users/ruets/.local/share/chezmoi/.pet-runs/mini-ruets",
+  "spritesheet": "/Users/ruets/.local/share/chezmoi/.pet-runs/mini-ruets/final/spritesheet.webp",
+  "validation": "/Users/ruets/.local/share/chezmoi/.pet-runs/mini-ruets/final/validation.json",
+  "contact_sheet": "/Users/ruets/.local/share/chezmoi/.pet-runs/mini-ruets/qa/contact-sheet.png",
+  "review": "/Users/ruets/.local/share/chezmoi/.pet-runs/mini-ruets/qa/review.json",
+  "package": "/Users/ruets/.codex/pets/mini-ruets"
+}

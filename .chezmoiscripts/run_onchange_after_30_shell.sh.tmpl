@@ -1,0 +1,45 @@
+#!/bin/bash
+# Set fish as the default shell when available.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: default shell %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: default shell failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+
+printf '\n==> Dotfiles: default shell\n'
+
+if [ "$IS_WINDOWS" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping shell setup for this host."
+  exit 0
+fi
+
+if ! command -v fish >/dev/null 2>&1; then
+  SCRIPT_RESULT="skipped"
+  echo "fish is not installed; skipping default shell setup."
+  exit 0
+fi
+
+fish_path="$(command -v fish)"
+target_user="${USER:-$(id -un)}"
+
+if command -v getent >/dev/null 2>&1; then
+  current_shell="$(getent passwd "$target_user" | cut -d: -f7)"
+else
+  current_shell="${SHELL:-}"
+fi
+
+if [ "$current_shell" = "$fish_path" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "fish is already the default shell."
+  exit 0
+fi
+
+if ! grep -Fxq "$fish_path" /etc/shells; then
+  echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+fi
+
+printf '  -> Setting default shell to fish\n'
+sudo chsh -s "$fish_path" "$target_user"

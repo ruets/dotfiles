@@ -1,8 +1,15 @@
-# Brewfile for macOS package management
-# Auto-generated from packages in .chezmoi.yaml
+{{- $hasCliPackages := gt (len .packages.cli) 0 -}}
+{{- $hasMacAppPackages := and .isDarwin (gt (len .packages.apps) 0) -}}
+{{- if or $hasCliPackages $hasMacAppPackages -}}
+# Brewfile for Homebrew-managed packages.
+# CLI packages come from .packages.cli. macOS apps come from .packages.apps.
 
-{{ range $name, $pkg := .packages }}
-{{ if $pkg }}
-{{ $pkg }}
-{{ end }}
-{{ end }}
+{{ range .packages.cli -}}
+{{ . }}
+{{ end -}}
+{{ if .isDarwin -}}
+{{ range .packages.apps -}}
+{{ . }}
+{{ end -}}
+{{ end -}}
+{{ end -}}

@@ -52,13 +52,17 @@ AppArmor empêche le sandbox de Chrome de fonctionner correctement
 ### 4. Fixer le Chrome Sandbox (AppArmor)
 
 - [ ] Exécuter la commande:
+
   ```bash
   echo "kernel.apparmor_restrict_unprivileged_userns=0" | sudo tee -a /etc/sysctl.d/99-apparmor.conf
   ```
+
 - [ ] Appliquer les paramètres:
+
   ```bash
   sudo sysctl -p
   ```
+
 - [ ] Redémarrer le système ou redémarrer Chrome pour que les modifications prennent effet
 
 ### 5. Tester
@@ -82,3 +86,5 @@ AppArmor empêche le sandbox de Chrome de fonctionner correctement
 - Fichier de règles Solaar: `home/desktop/solaar/rules.yaml`
 - Fichier de configuration desktop: `home/desktop/desktop.nix`
 - Config NixOS système: À localiser (probablement dans `hosts/`)
+
+### 7. Ajouter texlive à la Configuration

@@ -1,0 +1,61 @@
+#!/bin/bash
+# Install desktop and system packages through the OS package manager.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: desktop/system packages %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: desktop/system packages failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_UBUNTU="{{ .isUbuntu }}"
+IS_LINUX="{{ .isLinux }}"
+IS_SERVER="{{ .is_server }}"
+
+printf '\n==> Dotfiles: desktop/system packages\n'
+
+if [ "$IS_LINUX" != "true" ] || [ "$IS_SERVER" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping desktop/system package setup for this host."
+  exit 0
+fi
+
+if [ "$IS_UBUNTU" != "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Desktop/system package setup is only implemented for Ubuntu Linux right now."
+  exit 0
+fi
+
+DESKTOP_PACKAGES=(
+{{ range index .packages "desktop" }}  '{{ . }}'
+{{ end }})
+
+SYSTEM_PACKAGES=(
+{{ range index .packages "system" }}  '{{ . }}'
+{{ end }})
+
+{{ if .isUbuntu }}
+printf '  -> Installing apt prerequisites\n'
+sudo apt update
+sudo apt install -y \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release \
+  software-properties-common
+
+printf '  -> Adding Ubuntu desktop repositories\n'
+sudo add-apt-repository -y universe || true
+curl -s https://repo.waydro.id | sudo bash
+
+printf '  -> Refreshing apt metadata\n'
+sudo apt update
+
+if [ "${#DESKTOP_PACKAGES[@]}" -eq 0 ] && [ "${#SYSTEM_PACKAGES[@]}" -eq 0 ]; then
+  echo "No desktop/system packages configured."
+else
+  printf '  -> Installing desktop/system apt packages\n'
+  sudo apt install -y "${DESKTOP_PACKAGES[@]}" "${SYSTEM_PACKAGES[@]}"
+fi
+{{ else }}
+SCRIPT_RESULT="skipped"
+echo "No system package manager implementation for {{ .chezmoi.os }} desktop/system packages."
+{{ end }}

@@ -1,0 +1,119 @@
+#!/bin/bash
+# Install applications through the OS-appropriate user app manager.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: applications %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: applications failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_DARWIN="{{ .isDarwin }}"
+IS_LINUX="{{ .isLinux }}"
+IS_WINDOWS="{{ .isWindows }}"
+IS_SERVER="{{ .is_server }}"
+
+printf '\n==> Dotfiles: applications\n'
+
+if [[ "$IS_DARWIN" != "true" && "$IS_WINDOWS" != "true" && ! ( "$IS_LINUX" == "true" && "$IS_SERVER" != "true" ) ]]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping app setup for this host."
+  exit 0
+fi
+
+APP_PACKAGES=(
+{{ range .packages.apps }}  '{{ . }}'
+{{ end }})
+
+{{ if .isDarwin }}
+load_homebrew() {
+  if command -v brew >/dev/null 2>&1; then
+    return 0
+  fi
+
+  for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+    if [ -x "$brew_bin" ]; then
+      eval "$("$brew_bin" shellenv)"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+if ! load_homebrew; then
+  printf '  -> Installing Homebrew\n'
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  load_homebrew || {
+    echo "Homebrew installed but is not available in PATH yet."
+    exit 1
+  }
+fi
+
+if [ "${#APP_PACKAGES[@]}" -eq 0 ]; then
+  SCRIPT_RESULT="skipped"
+  echo "No macOS applications configured."
+  exit 0
+fi
+
+if [ ! -f "$HOME/.Brewfile" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "$HOME/.Brewfile was not generated; skipping macOS applications."
+  exit 0
+fi
+
+brewfile_fingerprint="$(cksum "$HOME/.Brewfile" | awk '{print $1 "-" $2}')"
+brew_bundle_sentinel="${TMPDIR:-/tmp}/dotfiles-brew-bundle-${CHEZMOI_PID:-$PPID}-${brewfile_fingerprint}.done"
+
+if [ -f "$brew_bundle_sentinel" ]; then
+  echo "brew bundle --global already ran during this apply."
+else
+  printf '  -> Running brew bundle --global\n'
+  brew bundle --global
+  : > "$brew_bundle_sentinel"
+fi
+
+{{ else if and .isLinux (not .is_server) }}
+if ! command -v flatpak >/dev/null 2>&1; then
+  {{ if .isUbuntu }}
+  printf '  -> Installing Flatpak\n'
+  sudo apt update
+  sudo apt install -y flatpak
+  {{ else }}
+  echo "flatpak is not available on this Linux host."
+  exit 1
+  {{ end }}
+fi
+
+printf '  -> Ensuring Flathub remote\n'
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+if [ "${#APP_PACKAGES[@]}" -eq 0 ]; then
+  SCRIPT_RESULT="skipped"
+  echo "No Flatpak applications configured."
+else
+  printf '  -> Installing Flatpak applications\n'
+  for package in "${APP_PACKAGES[@]}"; do
+    flatpak install -y flathub "$package" || true
+  done
+fi
+
+{{ else if .isWindows }}
+if [ "${#APP_PACKAGES[@]}" -eq 0 ]; then
+  SCRIPT_RESULT="skipped"
+  echo "No winget applications configured."
+  exit 0
+fi
+
+if ! command -v winget >/dev/null 2>&1; then
+  echo "winget is not available."
+  exit 1
+fi
+
+printf '  -> Installing winget applications\n'
+for package in "${APP_PACKAGES[@]}"; do
+  winget install --id "$package" --silent --accept-package-agreements --accept-source-agreements || true
+done
+
+{{ else }}
+SCRIPT_RESULT="skipped"
+echo "No application installer for this host."
+{{ end }}

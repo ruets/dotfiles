@@ -1,0 +1,47 @@
+#!/bin/bash
+# Install nvm, Node LTS, pnpm, and pnpm global packages.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: Node and pnpm %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: Node and pnpm failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+
+printf '\n==> Dotfiles: Node and pnpm\n'
+
+if [ "$IS_WINDOWS" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping Node setup for this host."
+  exit 0
+fi
+
+PNPM_GLOBAL_PACKAGES=(
+{{ range .packages.npm }}  '{{ . }}'
+{{ end }})
+
+if [ ! -d "$HOME/.nvm" ]; then
+  printf '  -> Installing nvm\n'
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+fi
+
+. "$HOME/.nvm/nvm.sh"
+
+printf '  -> Installing Node LTS\n'
+nvm install --lts
+nvm alias default 'lts/*'
+nvm use default
+
+export PNPM_HOME="$HOME/.local/share/pnpm"
+mkdir -p "$PNPM_HOME"
+export PATH="$PNPM_HOME:$PATH"
+
+printf '  -> Enabling pnpm with corepack\n'
+corepack enable --install-directory "$PNPM_HOME"
+corepack prepare pnpm@latest --activate
+pnpm config set global-bin-dir "$PNPM_HOME"
+
+if [ "${#PNPM_GLOBAL_PACKAGES[@]}" -gt 0 ]; then
+  printf '  -> Installing pnpm global packages\n'
+  pnpm add --global "${PNPM_GLOBAL_PACKAGES[@]}"
+fi

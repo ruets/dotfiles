@@ -1,0 +1,62 @@
+#!/bin/bash
+# Install uv, Python, pipx, and Python user tools.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: Python tools %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: Python tools failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+
+printf '\n==> Dotfiles: Python tools\n'
+
+if [ "$IS_WINDOWS" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping Python setup for this host."
+  exit 0
+fi
+
+PIP_PACKAGES=(
+{{ range .packages.pip }}  '{{ . }}'
+{{ end }})
+
+PIPX_PACKAGES=(
+{{ range .packages.pipx }}  '{{ . }}'
+{{ end }})
+
+if ! command -v uv >/dev/null 2>&1; then
+  printf '  -> Installing uv\n'
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if ! uv python find >/dev/null 2>&1; then
+  printf '  -> Installing Python through uv\n'
+  uv python install
+fi
+
+if ! command -v pipx >/dev/null 2>&1; then
+  printf '  -> Installing pipx\n'
+  uv tool install pipx
+fi
+
+if [ "${#PIP_PACKAGES[@]}" -eq 0 ] && [ "${#PIPX_PACKAGES[@]}" -eq 0 ]; then
+  echo "No Python packages configured."
+fi
+
+if [ "${#PIPX_PACKAGES[@]}" -gt 0 ]; then
+  printf '  -> Installing/upgrading pipx packages\n'
+  for package in "${PIPX_PACKAGES[@]}"; do
+    if pipx list --short | cut -d ' ' -f 1 | grep -Fxq "$package"; then
+      pipx upgrade "$package"
+    else
+      pipx install "$package"
+    fi
+  done
+fi
+
+if [ "${#PIP_PACKAGES[@]}" -gt 0 ]; then
+  printf '  -> Installing/upgrading pip packages\n'
+  python3 -m pip install --user --upgrade "${PIP_PACKAGES[@]}"
+fi

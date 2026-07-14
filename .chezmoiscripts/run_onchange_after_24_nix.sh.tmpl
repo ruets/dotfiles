@@ -1,0 +1,54 @@
+#!/bin/bash
+# Install Nix profile packages.
+
+set -euo pipefail
+
+SCRIPT_RESULT="complete"
+trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: Nix profile packages %s\n" "$SCRIPT_RESULT"; else printf "==> Dotfiles: Nix profile packages failed (exit %s)\n" "$status"; fi' EXIT
+
+IS_WINDOWS="{{ .isWindows }}"
+IS_DARWIN="{{ .isDarwin }}"
+
+printf '\n==> Dotfiles: Nix profile packages\n'
+
+if [ "$IS_WINDOWS" == "true" ] || [ "$IS_DARWIN" == "true" ]; then
+  SCRIPT_RESULT="skipped"
+  echo "Skipping Nix setup for this host."
+  exit 0
+fi
+
+NIX_PROFILE_PACKAGES=(
+{{ range .packages.nix }}  '{{ . }}'
+{{ end }})
+
+if ! command -v nix >/dev/null 2>&1; then
+  printf '  -> Installing Nix\n'
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
+fi
+
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "nix is not available after installation. Restart your shell and rerun this script."
+  exit 1
+fi
+
+NIX_CMD=(nix --extra-experimental-features "nix-command flakes")
+
+if [ "${#NIX_PROFILE_PACKAGES[@]}" -eq 0 ]; then
+  echo "No Nix profile packages configured."
+else
+  printf '  -> Installing/upgrading Nix profile packages\n'
+  for package in "${NIX_PROFILE_PACKAGES[@]}"; do
+    read -r name installable <<< "$package"
+    if "${NIX_CMD[@]}" profile list | awk '/^Name:/ {print $2}' | grep -Fxq "$name"; then
+      "${NIX_CMD[@]}" profile upgrade "$name"
+    else
+      "${NIX_CMD[@]}" profile add "$installable"
+    fi
+  done
+fi

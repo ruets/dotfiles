@@ -19,7 +19,7 @@ This repository follows chezmoi naming conventions:
 ```text
 .chezmoi.yaml.tmpl        # initialization prompts and template data
 .chezmoiignore.tmpl       # files excluded by OS and machine type
-.chezmoiscripts/          # run_onchange scripts grouped by setup sphere
+.chezmoiscripts/          # run_onchange scripts by setup sphere, with Windows scripts in windows/
 .chezmoitemplates/        # shared templates
 dot_config/               # files targeting ~/.config
 dot_local/bin/            # scripts installed into ~/.local/bin

@@ -1,3 +1,9 @@
+{{ if .isWindows }}
+.chezmoiscripts/*.sh
+{{ else }}
+.chezmoiscripts/windows/**
+{{ end }}
+
 {{ if not (and (.isLinux) (not .is_server)) }}
 .config/cava
 .config/dotfiles

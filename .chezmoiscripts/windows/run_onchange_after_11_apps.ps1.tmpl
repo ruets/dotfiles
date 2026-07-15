@@ -1,0 +1,41 @@
+#!/usr/bin/env pwsh
+# Install Windows applications through winget.
+
+$ErrorActionPreference = "Stop"
+$scriptResult = "complete"
+$scriptStatus = 0
+
+Write-Host ""
+Write-Host "==> Dotfiles: Windows applications"
+
+try {
+  $appPackages = @(
+{{ range .packages.apps }}    "{{ . }}"
+{{ end }}  )
+
+  if ($appPackages.Count -eq 0) {
+    $scriptResult = "skipped"
+    Write-Host "No winget applications configured."
+  } elseif (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    throw "winget is not available."
+  } else {
+    Write-Host "  -> Installing winget applications"
+    foreach ($package in $appPackages) {
+      winget install --id $package --silent --accept-package-agreements --accept-source-agreements
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host "Failed to install winget application: $package"
+      }
+    }
+  }
+} catch {
+  $scriptStatus = 1
+  Write-Host "ERROR: $($_.Exception.Message)"
+} finally {
+  if ($scriptStatus -eq 0) {
+    Write-Host "==> Dotfiles: Windows applications $scriptResult"
+  } else {
+    Write-Host "==> Dotfiles: Windows applications failed (exit $scriptStatus)"
+  }
+}
+
+exit $scriptStatus

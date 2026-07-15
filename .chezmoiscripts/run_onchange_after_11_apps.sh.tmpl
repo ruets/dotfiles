@@ -8,12 +8,11 @@ trap 'status=$?; if [ "$status" -eq 0 ]; then printf "==> Dotfiles: applications
 
 IS_DARWIN="{{ .isDarwin }}"
 IS_LINUX="{{ .isLinux }}"
-IS_WINDOWS="{{ .isWindows }}"
 IS_SERVER="{{ .is_server }}"
 
 printf '\n==> Dotfiles: applications\n'
 
-if [[ "$IS_DARWIN" != "true" && "$IS_WINDOWS" != "true" && ! ( "$IS_LINUX" == "true" && "$IS_SERVER" != "true" ) ]]; then
+if [[ "$IS_DARWIN" != "true" && ! ( "$IS_LINUX" == "true" && "$IS_SERVER" != "true" ) ]]; then
   SCRIPT_RESULT="skipped"
   echo "Skipping app setup for this host."
   exit 0
@@ -95,23 +94,6 @@ else
     flatpak install -y flathub "$package" || true
   done
 fi
-
-{{ else if .isWindows }}
-if [ "${#APP_PACKAGES[@]}" -eq 0 ]; then
-  SCRIPT_RESULT="skipped"
-  echo "No winget applications configured."
-  exit 0
-fi
-
-if ! command -v winget >/dev/null 2>&1; then
-  echo "winget is not available."
-  exit 1
-fi
-
-printf '  -> Installing winget applications\n'
-for package in "${APP_PACKAGES[@]}"; do
-  winget install --id "$package" --silent --accept-package-agreements --accept-source-agreements || true
-done
 
 {{ else }}
 SCRIPT_RESULT="skipped"

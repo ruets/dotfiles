@@ -154,9 +154,6 @@ data:
     {{- end }}
 
     cargo:
-    {{- if $isUbuntu }}
-      - dua-cli
-    {{- end }}
 
     nix:
     {{- if and $isUbuntu (not $isServer) }}

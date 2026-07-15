@@ -7,16 +7,16 @@
 
 data:
   machine_type: "{{ $machineType }}"
-  is_server:     {{ $isServer }}
-  git_name:     "{{ if eq $machineType "work"  }} Sébastien RUET              {{ else }} ruets           {{ end }}"
-  git_email:    "{{ if eq $machineType "work"  }} sebastien.ruet@insa-lyon.fr {{ else }} ruets@proton.me {{ end }}"
-  isDarwin:      {{ $isDarwin }}
-  isLinux:       {{ $isLinux }}
-  isWindows:     {{ $isWindows }}
-  isUbuntu:      {{ $isUbuntu }}
+  is_server:    {{ $isServer }}
+  git_name:     "{{- if eq $machineType "work" }}Sébastien RUET              {{- else }}ruets           {{- end }}"
+  git_email:    "{{- if eq $machineType "work" }}sebastien.ruet@insa-lyon.fr {{- else }}ruets@proton.me {{- end }}"
+  isDarwin:     {{ $isDarwin }}
+  isLinux:      {{ $isLinux }}
+  isWindows:    {{ $isWindows }}
+  isUbuntu:     {{ $isUbuntu }}
 
   packages:
-    {{ if not $isWindows }}
+    {{- if not $isWindows }}
     cli:
       - brew "fish"
       - brew "starship"
@@ -45,31 +45,34 @@ data:
       - brew "sqlite"
       - brew "libqalculate"
       - brew "pkg-config"
-    {{ end }}
+
+    {{- end }}
 
     apps:
-      - {{ if $isDarwin }} cask "google-chrome" {{ else if $isLinux }} com.google.Chrome           {{ else if $isWindows }} Google.Chrome           {{ end }}
-      - {{ if $isDarwin }} cask "discord"       {{ else if $isLinux }} com.discordapp.Discord      {{ else if $isWindows }} Discord.Discord         {{ end }}
-      - {{ if $isDarwin }} cask "spotify"       {{ else if $isLinux }} com.spotify.Client          {{ else if $isWindows }} Spotify.Spotify         {{ end }}
-      - {{ if $isDarwin }} cask "1password"     {{ else if $isLinux }} com.onepassword.OnePassword {{ else if $isWindows }} AgileBits.1Password     {{ end }}
-      - {{ if $isDarwin }} cask "qbittorrent"   {{ else if $isLinux }} org.qbittorrent.qBittorrent {{ else if $isWindows }} qBittorrent.qBittorrent {{ end }}
-      - {{ if $isDarwin }} cask "protonvpn"     {{ else if $isLinux }} com.protonvpn.www           {{ else if $isWindows }} Proton.ProtonVPN        {{ end }}
+      - {{-  if $isDarwin }} cask "google-chrome" {{- else if $isLinux }} com.google.Chrome           {{- else if $isWindows }} Google.Chrome           {{ end }}
+      - {{-  if $isDarwin }} cask "discord"       {{- else if $isLinux }} com.discordapp.Discord      {{- else if $isWindows }} Discord.Discord         {{ end }}
+      - {{-  if $isDarwin }} cask "spotify"       {{- else if $isLinux }} com.spotify.Client          {{- else if $isWindows }} Spotify.Spotify         {{ end }}
+      - {{-  if $isDarwin }} cask "1password"     {{- else if $isLinux }} com.onepassword.OnePassword {{- else if $isWindows }} AgileBits.1Password     {{ end }}
+      - {{-  if $isDarwin }} cask "qbittorrent"   {{- else if $isLinux }} org.qbittorrent.qBittorrent {{- else if $isWindows }} qBittorrent.qBittorrent {{ end }}
+      - {{-  if $isDarwin }} cask "protonvpn"     {{- else if $isLinux }} com.protonvpn.www           {{- else if $isWindows }} Proton.ProtonVPN        {{ end }}
 
-      {{ if $isDarwin }}
+      {{- if $isDarwin }}
+
       # - skhd
       - cask "kitty"
       - cask "1password-cli"
       - cask "orbstack"
       - cask "font-sauce-code-pro-nerd-font"
-      {{ else if $isLinux }}
+      {{- else if $isLinux }}
+
       - com.github.tchx84.Flatseal
       - org.pwmt.zathura
       - io.github.pwr_solaar.solaar
       - io.github.IshuSinghSE.aurynk
       - io.missioncenter.MissionCenter
       - it.mijorus.smile
-      {{ else if $isWindows }}
-      {{ if eq $machineType "gaming" }}
+      {{- else if and $isWindows (eq $machineType "gaming") }}
+
       - Logitech.GHUB
       - MedalB.V.Medal
       - RivaFarabi.Deckboard
@@ -80,10 +83,10 @@ data:
       - Mojang.MinecraftLauncher
       - Overwolf.CurseForge
       - ppy.osu
-      {{ end }}
-      {{ end }}
+      {{- end }}
 
-    {{ if and $isLinux (not $isServer) }}
+    {{- if and $isLinux (not $isServer) }}
+
     desktop:
       - kitty
 
@@ -115,6 +118,7 @@ data:
       - kooha
       - obs-studio
       - freerdp-x11
+
     system:
       - libcairo2-dev               # for waypaper
       - libgirepository-2.0-dev     # for waypaper
@@ -130,31 +134,31 @@ data:
       - cliphist
       - wl-clipboard
       - xclip
-    {{ end }}
+    {{- end }}
 
     npm:
 
     pip:
 
     pipx:
-      {{ if and $isUbuntu (not $isServer) }}
+    {{- if and $isUbuntu (not $isServer) }}
       - hyprshade
       - waypaper
-      {{ end }}
+    {{- end }}
 
     go-packages:
 
     go-repos:
-      {{ if and $isUbuntu (not $isServer) }}
+    {{- if and $isUbuntu (not $isServer) }}
       - https://github.com/erans/hyprmon.git
-      {{ end }}
+    {{- end }}
 
     cargo:
-      {{ if $isUbuntu }}
+    {{- if $isUbuntu }}
       - dua-cli
-      {{ end }}
+    {{- end }}
 
     nix:
-      {{ if and $isUbuntu (not $isServer) }}
+    {{- if and $isUbuntu (not $isServer) }}
       - awww git+https://codeberg.org/LGFae/awww.git
-      {{ end }}
+    {{- end }}

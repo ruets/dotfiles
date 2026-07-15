@@ -147,6 +147,22 @@ fish_add_path -g /usr/local/go/bin
 fish_add_path -g "$GOPATH/bin"
 fish_add_path -g "$CARGO_HOME/bin"
 
+for brew_prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew
+    if test -x "$brew_prefix/bin/brew"
+        set -gx HOMEBREW_PREFIX "$brew_prefix"
+        fish_add_path -g "$brew_prefix/bin" "$brew_prefix/sbin"
+        break
+    end
+end
+
+if test -d "$HOME/.local/share/flatpak/exports/bin"
+    fish_add_path -g "$HOME/.local/share/flatpak/exports/bin"
+end
+
+if test -d /var/lib/flatpak/exports/bin
+    fish_add_path -g /var/lib/flatpak/exports/bin
+end
+
 if test -d "$NVM_DIR/versions/node"
     set -l node_bins "$NVM_DIR"/versions/node/*/bin
     if test (count $node_bins) -gt 0

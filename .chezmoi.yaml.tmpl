@@ -16,6 +16,7 @@ data:
   isUbuntu:      {{ $isUbuntu }}
 
   packages:
+    {{ if not $isWindows }}
     cli:
       - brew "fish"
       - brew "starship"
@@ -44,6 +45,7 @@ data:
       - brew "sqlite"
       - brew "libqalculate"
       - brew "pkg-config"
+    {{ end }}
 
     apps:
       - {{ if $isDarwin }} cask "google-chrome" {{ else if $isLinux }} com.google.Chrome           {{ else if $isWindows }} Google.Chrome           {{ end }}

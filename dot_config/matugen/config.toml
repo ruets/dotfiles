@@ -33,12 +33,12 @@ output_path = "~/.config/wlogout/colors.css"
 [templates.kitty]
 input_path = "~/.config/matugen/templates/kitty.conf"
 output_path = "~/.config/kitty/matugen.conf"
-post_hook = "kitty +kitten themes --reload-in=all Matugen || true"
+post_hook = "kitty @ set-colors --all --configured ~/.config/kitty/matugen.conf || true"
 
 [templates.terminal-sequences]
 input_path = "~/.config/matugen/templates/terminal-sequences"
 output_path = "~/.cache/matugen/terminal-sequences"
-post_hook = "while IFS= read -r seq; do printf \"$seq\" | tee /dev/pts/[0-9]* >/dev/null 2>/dev/null || true; done < ~/.cache/matugen/terminal-sequences"
+post_hook = "sh -c 'while IFS= read -r seq; do printf \"%b\" \"$seq\" | tee /dev/pts/[0-9]* >/dev/null 2>/dev/null || true; done < ~/.cache/matugen/terminal-sequences'"
 
 [templates.cava]
 input_path = "~/.config/matugen/templates/cava"

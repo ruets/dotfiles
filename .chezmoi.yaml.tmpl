@@ -17,6 +17,9 @@ data:
 
   packages:
     {{- if not $isWindows }}
+    taps:
+      - daptify14/tap
+
     cli:
       - brew "fish"
       - brew "starship"
@@ -45,6 +48,9 @@ data:
       - brew "sqlite"
       - brew "libqalculate"
       - brew "pkg-config"
+
+      - cask "claude-code"
+      - cask "chezit"
 
     {{- end }}
 

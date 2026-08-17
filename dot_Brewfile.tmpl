@@ -1,8 +1,15 @@
+{{- $hasTaps := gt (len .packages.taps) 0 -}}
 {{- $hasCliPackages := gt (len .packages.cli) 0 -}}
 {{- $hasMacAppPackages := and .isDarwin (gt (len .packages.apps) 0) -}}
-{{- if or $hasCliPackages $hasMacAppPackages -}}
+{{- if or $hasTaps $hasCliPackages $hasMacAppPackages -}}
 # Brewfile for Homebrew-managed packages.
-# CLI packages come from .packages.cli. macOS apps come from .packages.apps.
+{{- if $hasTaps }}
+# Taps
+{{ range .packages.taps -}}
+tap "{{ . }}"
+{{ end }}
+{{- end }}
+# CLI packages from .packages.cli. macOS apps from .packages.apps.
 
 {{ range .packages.cli -}}
 {{ . }}

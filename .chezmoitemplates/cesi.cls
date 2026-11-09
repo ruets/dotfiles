@@ -29,7 +29,12 @@
 \RequirePackage{amssymb}
 \RequirePackage{float}
 \RequirePackage{tabularx}
-\usetikzlibrary{calc}
+\RequirePackage{listings}
+\RequirePackage{lstautogobble}
+\RequirePackage{adjustbox}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc, babel, positioning, arrows.meta, fit, backgrounds}
 
 % =============================================================
 % Configuration — cesisetup
@@ -102,7 +107,8 @@
     linkcolor   = cesiblack,
     urlcolor    = cesigray,
     pdfauthor   = {\@cesiauthor},
-    pdftitle    = {\@cesititle}
+    pdftitle    = {\@cesititle},
+    hypertexnames = false   % évite les « duplicate destination »
   }%
 }
 
@@ -265,15 +271,15 @@
     \vspace{0.6cm}
 
     % Sous-titre
-    \ifx\@cesisubtitle\empty\else
+    \ifdefempty{\@cesisubtitle}{}{%
       {\fontsize{16}{20}\sffamily\bfseries\color{cesiblack}\@cesisubtitle\par}
-      \vspace{0.2cm}
-    \fi
+      \vspace{0.2cm}%
+    }
 
     % Description courte
-    \ifx\@cesidescription\empty\else
-      {\fontsize{11}{14}\sffamily\color{cesigray}\@cesidescription\par}
-    \fi
+    \ifdefempty{\@cesidescription}{}{%
+      {\fontsize{11}{14}\sffamily\color{cesigray}\@cesidescription\par}%
+    }
 
     \vfill
 
@@ -295,20 +301,113 @@
 }
 
 % =============================================================
+% Outils de rédaction communs aux prosits
+% =============================================================
+
+% --- Colonnes de tableaux alignées à gauche (évite les Underfull \hbox)
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{B}[1]{>{\bfseries\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% --- Tableau CESI : \begin{cesitable}{spec colonnes}{légende}
+%     (toprule/bottomrule automatiques, mettre \midrule après l'en-tête)
+\newenvironment{cesitable}[2]{%
+  \table[H]\centering\small\renewcommand{\arraystretch}{1.3}%
+  \def\cesi@tablecaption{#2}%
+  \tabularx{\linewidth}{#1}\toprule}
+ {\bottomrule\endtabularx\caption{\cesi@tablecaption}\endtable}
+
+% --- Schéma : \begin{cesischema}{légende} <tikzpicture> \end{cesischema}
+%     réduit à la largeur de la page seulement si nécessaire
+\newenvironment{cesischema}[1]{%
+  \begin{figure}[H]\centering\def\cesi@schemacaption{#1}%
+  \begin{adjustbox}{max width=\linewidth}}
+ {\end{adjustbox}\caption{\cesi@schemacaption}\end{figure}}
+
+% --- Encadré titré : \begin{encadre}[Constat] ... \end{encadre}
+\newenvironment{encadre}[1][À retenir]
+  {\begin{infobox}\textbf{#1 :} \ignorespaces}
+  {\end{infobox}}
+
+% --- Styles TikZ des schémas
+\tikzset{
+  bloc/.style   = {draw=cesiblack, fill=white, rounded corners=2pt, align=center,
+                  font=\sffamily\footnotesize, minimum height=0.9cm, text width=2.9cm,
+                  execute at begin node={\hyphenpenalty=10000\relax}},
+  etape/.style  = {bloc, fill=cesilightgray},  % traitement
+  cible/.style  = {bloc, fill=cesiyellow},     % résultat, cible
+  zone/.style   = {draw=cesimidgray, dashed, rounded corners=4pt, inner sep=6pt},
+  titre/.style  = {font=\sffamily\bfseries\scriptsize, text=cesigray},
+  fleche/.style = {-{Stealth[length=2.5mm]}, thick, cesiblack},
+}
+% Ligne de détail dans un bloc : \node[bloc] {HDFS\detail{zone brute}};
+\newcommand{\detail}[1]{\\\scriptsize #1}
+
+% --- Code
+\lstset{
+  basicstyle   = \ttfamily\small,
+  keywordstyle = \bfseries,
+  frame        = single,
+  rulecolor    = \color{cesimidgray},
+  breaklines   = true,
+  columns      = fullflexible,
+  xleftmargin  = 4pt,
+  xrightmargin = 4pt,
+  autogobble   = true,   % le code peut être indenté dans le .tex
+}
+\lstdefinelanguage{HiveQL}[]{SQL}{
+  morekeywords = {PARTITIONED, CLUSTERED, SORTED, BUCKETS, STORED, ORC,
+    PARQUET, TEXTFILE, OVERWRITE, MATERIALIZED, REBUILD, EXTERNAL, LOCATION,
+    TBLPROPERTIES, ANALYZE, COMPUTE, STATISTICS, EXPLAIN, DEPENDENCY, OVER},
+}
+
+% --- Graphiques pgfplots : \begin{axis}[cesigraph, ybar, ...]
+\pgfplotsset{
+  cesigraph/.style={
+    width=\linewidth, height=7cm,
+    axis lines*=left, ymajorgrids, grid style={cesilightgray},
+    tick label style={font=\sffamily\footnotesize},
+    label style={font=\sffamily\footnotesize},
+    legend style={font=\sffamily\footnotesize, draw=none, fill=none,
+                  at={(0.5,1.02)}, anchor=south, legend columns=-1},
+    /pgf/number format/assume math mode=true,
+    bar cycle list/.style={/pgfplots/cycle list={
+      {fill=cesimidgray, draw=cesimidgray},
+      {fill=cesiyellow,  draw=cesiyellow},
+      {fill=cesiblack,   draw=cesiblack},
+      {fill=cesigray,    draw=cesigray}}},
+  },
+}
+\tikzset{seuil/.style={dashed, thick, cesiblack}}
+
+% --- Verdicts des hypothèses : \hypothesis{...}{\validee}
+\newcommand{\cesibadge}[3]{%
+  {\fboxsep=2pt\colorbox{#1}{\color{#2}\sffamily\bfseries\footnotesize\strut #3}}}
+\newcommand{\validee}   {\cesibadge{cesiyellow}{cesiblack}{Validée}}
+\newcommand{\partielle} {\cesibadge{cesimidgray}{cesiblack}{Partiellement validée}}
+\newcommand{\nonvalidee}{\cesibadge{cesiblack}{white}{Non validée}}
+
+% --- N'affiche une sous-partie que si le champ est rempli
+\newcommand{\cesi@sisrempli}[2]{%
+  \expandafter\ifdefempty\csname @cer#1\endcsname{}%
+    {#2{\csname @cer#1\endcsname}}%
+}
+
+% =============================================================
 % Sections générées automatiquement
 % =============================================================
 \newcommand{\intro}{%
   \newpage
   \section{Introduction}
-  \philo{\@cerphilo}
-  \keydefs{\@cerkeydefs}
-  \contexte{\@cercontexte}
-  \problematiques{\@cerproblematiques}
-  \contraintes{\@cercontraintes}
-  \generalisation{\@cergeneralisation}
-  \livrables{\@cerlivrables}
-  \hypotheses{\@cerhypotheses}
-  \plan{\@cerplan}
+  \cesi@sisrempli{philo}{\philo}
+  \cesi@sisrempli{keydefs}{\keydefs}
+  \cesi@sisrempli{contexte}{\contexte}
+  \cesi@sisrempli{problematiques}{\problematiques}
+  \cesi@sisrempli{contraintes}{\contraintes}
+  \cesi@sisrempli{generalisation}{\generalisation}
+  \cesi@sisrempli{livrables}{\livrables}
+  \cesi@sisrempli{hypotheses}{\hypotheses}
+  \cesi@sisrempli{plan}{\plan}
 }
 
 \newcommand{\ressources}{%
@@ -324,8 +423,8 @@
 \newcommand{\conclusion}{%
   \newpage
   \section{Conclusion}
-  \validation{\@cerhypotheses}
-  \synthese{\@cersynthese}
+  \cesi@sisrempli{hypotheses}{\validation}
+  \cesi@sisrempli{synthese}{\synthese}
 }
 
 % =============================================================
